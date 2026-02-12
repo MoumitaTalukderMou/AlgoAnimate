@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.algoanimate.SortingController"
+            stylesheets="@style.css"
+            prefWidth="1100" prefHeight="750"
+            styleClass="root">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+
+            <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
+
+            <Label text="Bubble Sort Visualization" styleClass="card-title" style="-fx-font-size: 20px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Randomize" onAction="#handleRandomize" styleClass="login-btn" style="-fx-background-color: #ef4444;"/>
+            <Button text="Start Sorting" onAction="#handleSort" styleClass="login-btn" style="-fx-background-color: #22c55e;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <Pane fx:id="displayPane" style="-fx-background-color: transparent;">
+        </Pane>
+    </center>
+
+</BorderPane>

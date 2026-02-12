@@ -1,16 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.algoanimate.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<BorderPane fx:id="mainLayout" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.algoanimate.HelloController"
+            stylesheets="@style.css"
+            prefWidth="1100" prefHeight="750">
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+    <top>
+        <VBox alignment="CENTER" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets top="20" right="20" bottom="10" left="20"/>
+            </padding>
+
+            <HBox styleClass="floating-navbar" alignment="CENTER_LEFT" spacing="10">
+                <padding>
+                    <Insets top="10" right="20" bottom="10" left="30"/>
+                </padding>
+
+                <TextFlow styleClass="logo-flow">
+                    <Text text="Algo" styleClass="logo-text-primary"/>
+                    <Text text="Animate" styleClass="logo-text-accent"/>
+                </TextFlow>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="25" styleClass="nav-links-container">
+                    <Button text="Home" styleClass="nav-link"/>
+                    <Button text="Features" styleClass="nav-link"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="15">
+                    <Button text="Login/Signup" styleClass="login-btn"/>
+
+                    <Button fx:id="themeToggleBtn" text="☀" onAction="#handleThemeToggle" styleClass="theme-btn"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-scroll-pane">
+            <content>
+                <VBox alignment="TOP_CENTER" spacing="15">
+                    <padding>
+                        <Insets top="20" right="0" bottom="0" left="0"/>
+                    </padding>
+
+                    <Label text="Visualize Algorithms with Ease" styleClass="sub-header"/>
+
+                    <FlowPane fx:id="cardContainer" hgap="25" vgap="25" alignment="CENTER">
+                        <padding>
+                            <Insets top="30" right="30" bottom="30" left="30"/>
+                        </padding>
+                    </FlowPane>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

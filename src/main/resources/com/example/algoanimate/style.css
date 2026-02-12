@@ -1,0 +1,149 @@
+/* --- 1. GLOBAL SETTINGS --- */
+.root {
+    -fx-background-color: #0f172a; /* Dark Background */
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+.main-scroll-pane, .main-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* --- 2. FLOATING NAVBAR (The Capsule) --- */
+.floating-navbar {
+    -fx-background-color: #1e293b; /* Dark Slate (Matches Card) */
+    -fx-background-radius: 50;      /* Makes it Round/Pill shaped */
+    -fx-border-radius: 50;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+
+    /* The Shadow makes it float */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 20, 0, 0, 5);
+}
+
+/* --- LOGO STYLES --- */
+.logo-flow {
+    -fx-text-alignment: center;
+}
+.logo-text-primary {
+    -fx-fill: white;
+    -fx-font-weight: 900;
+    -fx-font-size: 24px;
+}
+.logo-text-accent {
+    -fx-fill: #3b82f6; /* Bright Blue */
+    -fx-font-weight: 900;
+    -fx-font-size: 24px;
+}
+
+/* --- MENU LINKS --- */
+.nav-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5e1; /* Light Grey */
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+.nav-link:hover {
+    -fx-text-fill: #ffffff;
+}
+
+/* MenuButton (About, Services) */
+.nav-menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+.nav-menu-btn .label {
+    -fx-text-fill: #cbd5e1;
+}
+.nav-menu-btn:hover .label {
+    -fx-text-fill: #ffffff;
+}
+
+/* --- BUTTONS --- */
+.login-btn {
+    -fx-background-color: #2563eb; /* Royal Blue */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 50;
+    -fx-padding: 8 25;
+    -fx-cursor: hand;
+}
+.login-btn:hover {
+    -fx-background-color: #1d4ed8;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.4), 10, 0, 0, 0);
+}
+
+.theme-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+}
+.theme-btn:hover {
+     -fx-effect: dropshadow(gaussian, white, 5, 0, 0, 0);
+}
+
+/* --- CARDS --- */
+.algo-card {
+    -fx-background-color: #1e293b;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
+    -fx-cursor: hand;
+    -fx-padding: 20;
+}
+.algo-card:hover {
+    -fx-translate-y: -5;
+    -fx-border-color: #3b82f6;
+}
+.card-title { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
+.card-desc { -fx-text-fill: #cbd5e1; -fx-font-size: 12px; }
+.sub-header { -fx-text-fill: #94a3b8; -fx-font-size: 18px; -fx-font-weight: bold;}
+.icon-badge {
+    -fx-background-color: rgba(37, 99, 235, 0.1);
+    -fx-background-radius: 50;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-alignment: center;
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+#cardContainer {
+
+    -fx-max-width: 1000px;
+    -fx-alignment: center;
+}
+
+/* =========================================
+   LIGHT THEME OVERRIDES
+   ========================================= */
+.light-theme {
+    -fx-background-color: #f1f5f9; /* Light Grey BG */
+}
+
+/* Floating Navbar in Light Mode */
+.light-theme .floating-navbar {
+    -fx-background-color: #ffffff; /* White Capsule */
+    -fx-border-color: rgba(0,0,0,0.05);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 20, 0, 0, 5);
+}
+
+.light-theme .logo-text-primary { -fx-fill: #0f172a; } /* Black text */
+.light-theme .nav-link { -fx-text-fill: #475569; }
+.light-theme .nav-link:hover { -fx-text-fill: #2563eb; } /* Blue on hover */
+
+.light-theme .nav-menu-btn .label { -fx-text-fill: #475569; }
+.light-theme .nav-menu-btn:hover .label { -fx-text-fill: #2563eb; }
+
+.light-theme .theme-btn { -fx-text-fill: #0f172a; }
+
+.light-theme .algo-card {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);
+}
+.light-theme .card-title { -fx-text-fill: #0f172a; }
+.light-theme .card-desc { -fx-text-fill: #64748b; }
