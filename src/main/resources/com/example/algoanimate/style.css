@@ -1,6 +1,6 @@
 /* --- 1. GLOBAL SETTINGS --- */
 .root {
-    -fx-background-color: #0f172a; /* Dark Background */
+    -fx-background-color: #020617; /* Dark Background */
     -fx-font-family: 'Segoe UI', sans-serif;
 }
 .main-scroll-pane, .main-scroll-pane > .viewport {
@@ -23,9 +23,10 @@
     -fx-text-alignment: center;
 }
 .logo-text-primary {
-    -fx-fill: white;
-    -fx-font-weight: 900;
-    -fx-font-size: 24px;
+    -fx-fill: #FFFFFF; /* উজ্জ্বল সাদা */
+        -fx-font-weight: 900;
+        -fx-font-size: 28px;
+        -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.8), 15, 0, 0, 0);
 }
 .logo-text-accent {
     -fx-fill: #3b82f6; /* Bright Blue */
@@ -118,6 +119,271 @@
     -fx-alignment: center;
 }
 
+
+/* --- Sorting Control Panel --- */
+.control-panel {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.light-theme .control-panel {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+/* --- Colorful Buttons --- */
+.btn-blue {
+    -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-cursor: hand;
+}
+.btn-green {
+    -fx-background-color: #22c55e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-cursor: hand;
+}
+.btn-red {
+    -fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-cursor: hand;
+}
+.btn-blue:hover { -fx-background-color: #2563eb; }
+.btn-green:hover { -fx-background-color: #16a34a; }
+.btn-red:hover { -fx-background-color: #dc2626; }
+
+/* --- Stats Labels --- */
+.stat-label { -fx-text-fill: #94a3b8; -fx-font-size: 12px; }
+.stat-value { -fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold; }
+.light-theme .stat-value { -fx-text-fill: #0f172a; }
+
+/* --- Array Blocks (The Squares) --- */
+.array-block {
+    -fx-background-color: #3b82f6; /* Blue Default */
+    -fx-background-radius: 8;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-alignment: center;
+}
+.block-text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+/* Block States */
+.block-compare { -fx-background-color: #eab308; } /* Yellow */
+.block-swap { -fx-background-color: #ef4444; }    /* Red */
+.block-sorted { -fx-background-color: #22c55e; }  /* Green */
+
+/* --- ComboBox Styling --- */
+.combo-box-custom {
+    -fx-background-color: #334155;
+    -fx-mark-color: white;
+}
+.combo-box-custom .list-cell {
+    -fx-text-fill: white;
+}
+.light-theme .combo-box-custom {
+    -fx-background-color: #f1f5f9;
+    -fx-mark-color: black;
+}
+.light-theme .combo-box-custom .list-cell {
+    -fx-text-fill: black;
+}
+
+
+/* --- EXISTING STYLES KEEP SAME --- */
+/* Add these NEW styles below */
+
+/* --- 1. SQUARE BLOCKS (Visualizer) --- */
+.array-block {
+    -fx-background-color: #3b82f6; /* Beautiful Blue */
+    -fx-background-radius: 12;      /* Rounded Corners */
+    -fx-min-width: 65px;            /* SQUARE WIDTH */
+    -fx-min-height: 65px;           /* SQUARE HEIGHT */
+    -fx-max-width: 65px;
+    -fx-max-height: 65px;
+    -fx-alignment: center;
+
+    /* 3D Floating Effect */
+    -fx-effect: dropshadow(three-pass-box, rgba(59, 130, 246, 0.4), 10, 0, 0, 5);
+}
+
+.block-text {
+    -fx-fill: white;
+    -fx-font-weight: 900; /* Extra Bold */
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 0); /* Text Shadow for pop */
+}
+
+/* Colors for Animation */
+.block-compare {
+    -fx-background-color: #eab308; /* Yellow */
+    -fx-effect: dropshadow(gaussian, #eab308, 15, 0.5, 0, 0); /* Glow */
+}
+.block-swap {
+    -fx-background-color: #ef4444; /* Red */
+    -fx-effect: dropshadow(gaussian, #ef4444, 15, 0.5, 0, 0); /* Glow */
+}
+.block-sorted {
+    -fx-background-color: #22c55e; /* Green */
+    -fx-effect: dropshadow(gaussian, #22c55e, 10, 0.3, 0, 0);
+}
+
+/* --- 2. DROPDOWN FIX (Visibility) --- */
+.combo-box-custom {
+    -fx-background-color: #334155;
+    -fx-mark-color: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* This fixes the popup text color */
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: #1e293b;
+    -fx-padding: 10px;
+}
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #3b82f6; /* Blue highlight on hover */
+}
+
+/* --- 3. INPUT FIELD --- */
+.input-field {
+    -fx-background-color: #0f172a;
+    -fx-text-fill: white;
+    -fx-border-color: #475569;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+/* --- 4. BOLD STATS --- */
+.stat-value {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 5, 0, 0, 0);
+}
+
+
+
+/* --- EXISTING STYLES (Keep Header/Buttons) --- */
+
+/* --- VISUALIZATION BARS --- */
+.bar-container {
+    -fx-alignment: bottom-center;
+}
+
+.vis-bar {
+    -fx-fill: #22d3ee; /* Cyan (Video Style) */
+    -fx-effect: dropshadow(three-pass-box, rgba(34, 211, 238, 0.3), 10, 0, 0, 0);
+    -fx-arc-width: 5;
+    -fx-arc-height: 5;
+}
+
+.bar-val-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.bar-idx-label {
+    -fx-text-fill: #94a3b8; /* Grey Index */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0 0 0;
+}
+
+/* --- BAR COLORS (Animation) --- */
+.bar-compare { -fx-fill: #4ade80; } /* Green (Compare) */
+.bar-swap { -fx-fill: #facc15; }    /* Yellow/Orange (Swap) */
+.bar-sorted { -fx-fill: #0ea5e9; }  /* Darker Blue (Sorted) */
+
+/* --- CODE PANEL --- */
+.code-panel {
+    -fx-background-color: #0f172a;
+    -fx-border-color: #334155;
+    -fx-border-width: 0 0 0 1;
+}
+
+.code-list {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+.code-list .list-cell {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-family: 'Consolas', 'Monospaced';
+    -fx-font-size: 14px;
+    -fx-padding: 5;
+}
+
+/* Highlighted Code Line (Yellow Background like video) */
+.code-list .list-cell:filled:selected,
+.code-list .list-cell:filled:hover {
+    -fx-background-color: #facc15; /* Yellow */
+    -fx-text-fill: #000000; /* Black text */
+    -fx-font-weight: bold;
+}
+
+/* --- VARIABLE BOX --- */
+.var-box {
+    -fx-background-color: #1e293b;
+    -fx-padding: 15;
+    -fx-background-radius: 8;
+}
+.var-text {
+    -fx-text-fill: #38bdf8; /* Light Blue Text */
+    -fx-font-size: 14px;
+    -fx-font-family: 'Consolas', 'Monospaced';
+}
+
+
+/* --- HEADER TEXT FIX --- */
+.logo-text-primary {
+    -fx-fill: white; /* Make sure it's white in Dark Mode */
+    -fx-font-weight: 900;
+    -fx-font-size: 26px;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.6), 15, 0, 0, 0); /* Glow Effect */
+}
+
+/* --- MODERN BUTTONS (Gradient Style) --- */
+.btn-gradient-blue {
+    -fx-background-color: linear-gradient(to right, #2563eb, #3b82f6);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.4), 10, 0, 0, 2);
+}
+.btn-gradient-blue:hover {
+    -fx-background-color: linear-gradient(to right, #1d4ed8, #2563eb);
+    -fx-translate-y: -2;
+}
+
+.btn-gradient-green {
+    -fx-background-color: linear-gradient(to right, #16a34a, #22c55e);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(34, 197, 94, 0.4), 10, 0, 0, 2);
+}
+.btn-gradient-green:hover { -fx-translate-y: -2; }
+
+/* --- VISUALIZATION BARS (Wider & Centered) --- */
+.vis-container {
+    -fx-alignment: center; /* Center everything */
+}
+
+.vis-bar {
+    -fx-fill: linear-gradient(to top, #06b6d4, #22d3ee); /* সাইয়ান কালার */
+        -fx-arc-width: 8;
+        -fx-arc-height: 8;
+}
+
+/* Animation Highlights */
+.bar-compare { -fx-fill: #facc15; -fx-effect: dropshadow(gaussian, #facc15, 20, 0.5, 0, 0); } /* Yellow Glow */
+.bar-swap { -fx-fill: #ef4444; -fx-effect: dropshadow(gaussian, #ef4444, 20, 0.5, 0, 0); }    /* Red Glow */
+.bar-sorted { -fx-fill: #22c55e; }
 /* =========================================
    LIGHT THEME OVERRIDES
    ========================================= */
@@ -147,3 +413,42 @@
 }
 .light-theme .card-title { -fx-text-fill: #0f172a; }
 .light-theme .card-desc { -fx-text-fill: #64748b; }
+
+/* --- PREMIUM BUTTONS --- */
+.btn-premium-blue {
+    -fx-background-color: linear-gradient(to bottom, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 8 18;
+}
+
+.btn-premium-green {
+    -fx-background-color: linear-gradient(to bottom, #22c55e, #16a34a);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 8 18;
+}
+
+/* --- CODE PANEL FIX --- */
+.code-panel {
+    -fx-background-color: #0f172a;
+    -fx-border-color: #1e293b;
+    -fx-border-width: 0 0 0 2;
+}
+
+.code-list .list-cell {
+    -fx-text-fill: #94a3b8; /* স্লেট কালার টেক্সট */
+    -fx-font-family: 'Consolas', monospace;
+    -fx-font-size: 14px;
+}
+
+/* সর্টিং চলাকালীন যে লাইনটি হাইলাইট হবে */
+.code-list .list-cell:filled:selected {
+    -fx-background-color: #facc15; /* উজ্জ্বল হলুদ */
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}

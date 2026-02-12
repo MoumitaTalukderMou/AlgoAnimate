@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.algoanimate.SortingController"
-            stylesheets="@style.css"
-            prefWidth="1100" prefHeight="750"
-            styleClass="root">
+            stylesheets="@style.css" prefWidth="1200" prefHeight="800" styleClass="root">
 
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
-            <padding>
-                <Insets top="15" right="20" bottom="15" left="20"/>
-            </padding>
-
+            <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
             <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
-
-            <Label text="Bubble Sort Visualization" styleClass="card-title" style="-fx-font-size: 20px;"/>
-
+            <Label text="Sorting Visualizer" styleClass="logo-text-primary"/>
             <Region HBox.hgrow="ALWAYS"/>
-
-            <Button text="Randomize" onAction="#handleRandomize" styleClass="login-btn" style="-fx-background-color: #ef4444;"/>
-            <Button text="Start Sorting" onAction="#handleSort" styleClass="login-btn" style="-fx-background-color: #22c55e;"/>
+            <ComboBox fx:id="algoComboBox" prefWidth="180" styleClass="combo-box-custom"/>
         </HBox>
     </top>
 
     <center>
-        <Pane fx:id="displayPane" style="-fx-background-color: transparent;">
-        </Pane>
-    </center>
+        <HBox spacing="0">
+            <VBox HBox.hgrow="ALWAYS" spacing="25" alignment="TOP_CENTER">
+                <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
+                <HBox spacing="15" alignment="CENTER" styleClass="control-panel-mini">
+                    <Button text="Gen Random" onAction="#handleRandomize" styleClass="btn-premium-blue"/>
+                    <TextField fx:id="inputField" promptText="50, 10, 30..." styleClass="input-field" prefWidth="150"/>
+                    <Button text="Set" onAction="#handleCustomInput" styleClass="btn-premium-blue"/>
+                    <Button text="Start" onAction="#handleSort" styleClass="btn-premium-green"/>
+                    <Slider fx:id="speedSlider" min="100" max="1000" value="500" prefWidth="120"/>
+                </HBox>
+
+                <HBox fx:id="displayPane" spacing="10" alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS"
+                      style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0;"/>
+            </VBox>
+
+            <VBox styleClass="code-panel" prefWidth="400" spacing="15">
+                <padding><Insets top="30" right="20" bottom="20" left="20"/></padding>
+                <Label text="ALGORITHM STEP-TRACE" styleClass="sub-header" style="-fx-text-fill: #38bdf8;"/>
+                <ListView fx:id="codeListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
+
+                <VBox spacing="10" styleClass="var-box">
+                    <Label fx:id="lblStatus" text="Status: Waiting" styleClass="var-text"/>
+                    <Label fx:id="lblComparisons" text="Comparisons: 0" styleClass="var-text"/>
+                    <Label fx:id="lblSwaps" text="Swaps: 0" styleClass="var-text"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
 </BorderPane>
