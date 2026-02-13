@@ -97,7 +97,24 @@ public class HelloController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
             }
-        } else {
+        }
+        else if (algoName.equals("Linked List")) {
+            try {
+                // ১. Sorting FXML ফাইল লোড করা
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LinkedList-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+
+                // ২. বর্তমান স্টেজ (উইন্ডো) খুঁজে বের করা
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+
+                // ৩. নতুন সিন সেট করা
+                stage.setScene(scene);
+
+            } catch (IOException e) {
+                e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
+            }
+        }
+        else {
             // বাকি কার্ডগুলোর জন্য আপাতত অ্যালার্ট
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Coming Soon");

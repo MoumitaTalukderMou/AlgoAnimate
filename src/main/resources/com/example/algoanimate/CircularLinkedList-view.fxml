@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="800" prefWidth="1200" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.algoanimate.SinglyLinkedListController">
+
+    <!-- Top Navbar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="navbar">
+            <padding><Insets bottom="15" left="30" right="30" top="15" /></padding>
+            <Button fx:id="btnBack" onAction="#onBackClick" prefHeight="31.0" prefWidth="88.0" styleClass="bar-compare" text="Back">
+                <font>
+                    <Font name="System Bold" size="15.0" />
+                </font></Button>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="                                         Circular LinkedList Visualizer" wrappingWidth="798.9368710517883">
+                <font>
+                    <Font name="System Bold" size="25.0" />
+                </font>
+                <fill>
+                    <LinearGradient endX="1.0" endY="1.0" startX="0.037878792394291275" startY="0.6666666449922504">
+                        <stops>
+                            <Stop>
+                                <color>
+                                    <Color red="0.8709655404090881" green="0.9263157844543457" blue="0.5111891031265259" />
+                                </color>
+                            </Stop>
+                            <Stop offset="1.0">
+                                <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                </color>
+                            </Stop>
+                        </stops>
+                    </LinearGradient>
+                </fill>
+            </Text>
+            <ChoiceBox fx:id="SLLChoiceBox" prefHeight="28.0" prefWidth="258.0" styleClass="combo-box-custom" />
+        </HBox>
+    </top>
+
+    <!-- Center -->
+    <center>
+        <HBox spacing="0">
+
+            <!-- Left: Node List (like displayPane) -->
+            <VBox alignment="TOP_CENTER" spacing="25" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="30" left="30" right="30" top="30" /></padding>
+
+                <!-- ListView for Node values -->
+                <ListView fx:id="nodeListView" styleClass="code-list" VBox.vgrow="ALWAYS" />
+            </VBox>
+
+            <!-- Right: Action Panel / Code or Steps -->
+            <VBox prefWidth="400" spacing="15" styleClass="code-panel">
+                <padding><Insets bottom="20" left="20" right="20" top="30" /></padding>
+                <Text fill="#fffda1" strokeType="OUTSIDE" strokeWidth="0.0" text="                 Action and Step Trace                   " underline="true" wrappingWidth="356.53668785095215">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Text>
+                <ListView fx:id="actionListView" opacity="0.5" styleClass="code-list" VBox.vgrow="ALWAYS" />
+
+                <VBox spacing="10" styleClass="var-box">
+                    <Label fx:id="lblStatus" styleClass="var-text" text="Status: Waiting" />
+                    <Label fx:id="lblSize" styleClass="var-text" text="Size: 0" />
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

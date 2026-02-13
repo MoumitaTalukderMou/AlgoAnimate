@@ -10,7 +10,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.algoanimate.HelloController"
             stylesheets="@style.css"
-            prefWidth="1100" prefHeight="750">
+            prefWidth="1200" prefHeight="800">
 
     <top>
         <VBox alignment="CENTER" style="-fx-background-color: transparent;">
