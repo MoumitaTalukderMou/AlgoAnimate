@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class SinglyLinkedListOperation  {
 
-    Node head;
+
 
     static class Node {
         int data;
@@ -17,27 +17,43 @@ public class SinglyLinkedListOperation  {
         Node(int data) { this.data = data; next = null;}
     }
 
-    public void insertAtHead() {
-//        String valueText = inputField.getText(); // user input নাও
-//        int value = Integer.parseInt(valueText); // convert String to int
-//        Node newNode = new Node(value);
-//        newNode.next = head;
-//        head = newNode;
-//        System.out.println(value + " inserted at head");
+    Node head;
+    Node tail;
 
+    public Node insertAtHead(int data) {
+        Node newNode = new Node(data);
+
+        if(head == null) {
+            head = newNode;
+            tail = newNode;
+        }
+        else {
+            newNode.next = head;
+            head = newNode;
+        }
+        return head;
     }
 
-    public void insertAtTail(int value) {
+    public Node insertAtTail(int value) {
         Node newNode = new Node(value);
         if (head == null) {
-            head = newNode;
-            return;
+            head = tail =newNode;
         }
-        Node curr = head;
-        while (curr.next != null) curr = curr.next;
-        curr.next = newNode;
+        else {
+            tail.next = newNode;
+            tail = newNode;
+        }
+        return tail;
     }
 
+    public Node getHead()
+    {
+        return head;
+    }
+    public Node getTail()
+    {
+        return tail;
+    }
     public void deleteNode(int value) {
         if (head == null) return;
         if (head.data == value) { head = head.next; return; }

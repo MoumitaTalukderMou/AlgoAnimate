@@ -26,6 +26,11 @@ import javafx.animation.KeyFrame;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+
 
 
 import java.io.IOException;
@@ -44,6 +49,13 @@ public class SinglyLinkedListController {
     @FXML
     private ListView<String> actionListView; // right panel
 
+
+    private SinglyLinkedListOperation list = new SinglyLinkedListOperation();
+    private Map<SinglyLinkedListOperation.Node, HBox> nodeMap = new HashMap<>();
+    private HBox headHBox;  // actual HBox head track
+    private HBox tailHBox;
+
+
     @FXML
     private void onBackClick(ActionEvent actionEvent) {
         try {
@@ -58,47 +70,91 @@ public class SinglyLinkedListController {
 
 
     // Head tracking variable
-    private HBox headHBox;  // actual HBox head track
 
-     //Head কে visually mark করার method
+    //Head কে visually mark করার method
 
     private void markHeadVisually() {
-        // প্রথমে সব node থেকে HEAD marker সরান
-        for (Node node : animationPane.getChildren()) {
+
+        for(Node node : animationPane.getChildren()) {
             if (node instanceof HBox) {
                 HBox hbox = (HBox) node;
-                // যদি ৩টির বেশি child থাকে (মানে HEAD marker আছে)
-                while (hbox.getChildren().size() > 2) {
-                    hbox.getChildren().remove(2); // HEAD marker remove
-                    // Node কে normal color এ ফিরিয়ে দিন
-                    StackPane stack = (StackPane) hbox.getChildren().get(0);
-                    Rectangle rect = (Rectangle) stack.getChildren().get(0);
+//                // ৩টির বেশি child মানে previous HEAD marker আছে → remove
+//                while (hbox.getChildren().size() > 3) {
+//                    hbox.getChildren().remove(3); // HEAD text remove
+//                }
+                // node color reset
+                StackPane stack = (StackPane) hbox.getChildren().get(0);
+                Rectangle rect = (Rectangle) stack.getChildren().get(0);
+                if(rect.getFill() == Color.DARKGRAY) {
                     rect.setFill(Color.LIGHTYELLOW);
                 }
+
             }
         }
 
         // Add head Marker at new Head
         if (headHBox != null  && animationPane.getChildren().contains(headHBox)) {
-            Text headText = new Text("HEAD");
-            headText.setFont(Font.font(15));
-            headText.setFill(Color.GREENYELLOW);
-            headText.setTranslateY(-30); // node এর উপরে দেখানোর জন্য
+//            Text headText = new Text("HEAD");
+//            headText.setFont(Font.font(15));
+//            headText.setFill(Color.GREENYELLOW);
+//            headText.setTranslateY(-30); // node এর উপরে দেখানোর জন্য
 
             // Head node কে slightly different color দিন
             StackPane stack = (StackPane) headHBox.getChildren().get(0);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
             rect.setFill(Color.DARKGRAY);  // head আলাদা color
-            headHBox.getChildren().add(headText);
+//            headHBox.getChildren().add(headText);
 
         }
     }
-
     // Head update method
     private void updateHead(HBox newHead) {
         this.headHBox = newHead;
-        //markHeadVisually(); // Head update করার সাথে সাথে visually mark করুন
+        markHeadVisually(); // Head update করার সাথে সাথে visually mark করুন
     }
+
+    private void markTailVisually() {
+
+        for(Node node : animationPane.getChildren()) {
+            if (node instanceof HBox) {
+                HBox hbox = (HBox) node;
+//                // ৩টির বেশি child মানে previous HEAD marker আছে → remove
+//                while (hbox.getChildren().size() > 4) {
+//                    hbox.getChildren().remove(4); // TAIL text remove
+//                }
+                // node color reset
+                StackPane stack = (StackPane) hbox.getChildren().get(0);
+                Rectangle rect = (Rectangle) stack.getChildren().get(0);
+                if(rect.getFill() == Color.GHOSTWHITE) {
+                    rect.setFill(Color.LIGHTYELLOW);
+                }
+
+            }
+        }
+
+        // Add head Marker at new Head
+        if (tailHBox != null  && animationPane.getChildren().contains(tailHBox)) {
+//            Text tailText = new Text("TAIL");
+//            tailText.setFont(Font.font(15));
+//            tailText.setFill(Color.GREENYELLOW);
+//            tailText.setTranslateY(35); // node er niche
+
+            // Head node কে slightly different color দিন
+            StackPane stack = (StackPane) tailHBox.getChildren().get(0);
+            Rectangle rect = (Rectangle) stack.getChildren().get(0);
+            rect.setFill(Color.GHOSTWHITE);  // tail আলাদা color
+            //            tailHBox.getChildren().add(tailText);
+
+
+        }
+    }
+    // Tail update method
+    private void updateTail(HBox newTail) {
+        this.tailHBox = newTail;
+        markTailVisually(); // Head update করার সাথে সাথে visually mark করুন
+    }
+
+
 
     // Node create function
     private HBox createNodeView(int data , boolean isLast) {
@@ -166,13 +222,12 @@ public class SinglyLinkedListController {
 
             hbox.getChildren().add(NullStack);
         }
-
-
         return hbox;
     }
 
     // Insert at head animation
-    private void insertAtHeadAnimation(int data) {
+    private HBox insertAtHeadAnimation(int data) {
+
         boolean isLast = animationPane.getChildren().isEmpty();
 
         HBox newNode = createNodeView(data, isLast);
@@ -189,8 +244,7 @@ public class SinglyLinkedListController {
 
         updateHead(newNode);
        // markHeadVisually();
-
-
+        return newNode;
     }
 
     // Insert at head with input dialog
@@ -203,8 +257,11 @@ public class SinglyLinkedListController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(value -> {
             try {
-                int searchValue = Integer.parseInt(value);
-                insertAtHeadAnimation(searchValue);
+                int insertValue = Integer.parseInt(value);
+               SinglyLinkedListOperation.Node realNode = list.insertAtHead(insertValue); // LinkedList Logic
+                HBox uiNode = insertAtHeadAnimation(insertValue);
+                nodeMap.put(realNode, uiNode);
+
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
@@ -222,8 +279,16 @@ public class SinglyLinkedListController {
     }
 
     // Insert at tail animation
-    private void insertAtTailAnimation(int data) {
+    private HBox insertAtTailAnimation(int data) {
+
+        boolean isLast = true; // last node
+        HBox newNode = createNodeView(data, isLast);
         // If list not empty → remove NULL from previous last node
+        if (animationPane.getChildren().isEmpty()) {
+            // First Node so Head
+            updateHead(newNode);
+
+        }
         if (!animationPane.getChildren().isEmpty()) {
             HBox lastNode = (HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1);
 
@@ -233,8 +298,6 @@ public class SinglyLinkedListController {
             }
         }
 
-        boolean isLast = true; // last node
-        HBox newNode = createNodeView(data, isLast);
 
 
         double x = 140; // start head position
@@ -249,15 +312,8 @@ public class SinglyLinkedListController {
         tt.setToX(x);
         tt.play();
 
-        //if it is first Node then update head
-        tt.setOnFinished(e -> {
-            if (animationPane.getChildren().size() == 1) {
-                // First Node so Head
-                updateHead(newNode);
-
-            }
-        });
-
+       updateTail(newNode);
+        return newNode;
     }
 
     // Insert at tail with input dialog
@@ -270,98 +326,156 @@ public class SinglyLinkedListController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(value -> {
             try {
-                int searchValue = Integer.parseInt(value);
-                insertAtTailAnimation(searchValue);
+                int insertValue = Integer.parseInt(value);
+                SinglyLinkedListOperation.Node realNode = list.insertAtTail(insertValue); //LinkedList Logic Updated
+               HBox uiNode = insertAtTailAnimation(insertValue);
+                nodeMap.put(realNode, uiNode);
+
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
         });
     }
 
-    // Search animation method
-    private void searchAnimation(int searchValue) {
-        if (animationPane.getChildren().isEmpty()) {
-            actionListView.getItems().add("List is empty! Nothing to search.");
+/*private void searchAnimation(int searchValue) {
+    if (animationPane.getChildren().isEmpty()) {
+        actionListView.getItems().add("List is empty! Nothing to search.");
+        return;
+    }
+
+    SinglyLinkedListOperation.Node current = list.getHead();
+    int index = 0;
+    actionListView.getItems().add("Searching for value: " + searchValue);
+    int listSize = animationPane.getChildren().size();
+
+    while (current != null) {
+        HBox uiNode = nodeMap.get(current);
+        StackPane stackPane = (StackPane) uiNode.getChildren().get(0);
+        Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
+        int value = current.data;
+
+        Duration delay = Duration.seconds(index * 1.0);
+        PauseTransition pause = new PauseTransition(delay);
+
+        final int idx = index;
+        pause.setOnFinished(e -> {
+            rect.setFill(Color.ORANGE);
+            actionListView.getItems().add("Checking node with value: " + value);
+
+            if (value == searchValue) {
+                rect.setFill(Color.LIGHTGREEN);
+                actionListView.getItems().add("✓ Found value " + searchValue + " at position " + idx);
+
+                Timeline blink = new Timeline(
+                        new KeyFrame(Duration.millis(300), ev ->
+                                rect.setFill(rect.getFill() == Color.LIGHTGREEN ? Color.YELLOW : Color.LIGHTGREEN)
+                        )
+                );
+                blink.setCycleCount(6);
+                blink.play();
+            } else {
+                PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
+                // revert.setOnFinished(ev -> rect.setFill(Color.LIGHTYELLOW));
+
+                if (uiNode == headHBox) {
+                    revert.setOnFinished(ev -> rect.setFill(Color.DARKGRAY));
+                } else if (uiNode == tailHBox) {
+                    revert.setOnFinished(ev -> rect.setFill(Color.GHOSTWHITE));
+                } else {
+                    revert.setOnFinished(ev -> rect.setFill(Color.LIGHTYELLOW));
+
+                }
+                revert.play();
+            }
+        });
+        pause.play();
+        current = current.next;
+        index++;
+
+    }
+}*/
+
+private void searchAnimation(int searchValue) {
+    if (animationPane.getChildren().isEmpty()) {
+        actionListView.getItems().add("List is empty! Nothing to search.");
+        return;
+    }
+
+    actionListView.getItems().add("Searching for value: " + searchValue);
+
+    SinglyLinkedListOperation.Node headNode = list.getHead();
+    AtomicBoolean foundFlag = new AtomicBoolean(false); // mutable flag
+    searchNext(headNode, 0, searchValue , foundFlag);
+}
+
+    // Recursive helper method for sequential search animation
+    private void searchNext(SinglyLinkedListOperation.Node current, int index, int searchValue, AtomicBoolean foundFlag) {
+        if (current == null) {
+            if(!foundFlag.get()) {
+                actionListView.getItems().add("✗ Value " + searchValue + " not found in the list");
+            }
+            actionListView.getItems().add("Search Operation successful!");
             return;
         }
 
-        actionListView.getItems().add("Searching for value: " + searchValue);
-        int listSize = animationPane.getChildren().size();
-        // Sequential search animation
-        for (int i = 0; i < listSize; i++) {
-            final int currentIndex = i;  // final variable for lambda
-            Node node = animationPane.getChildren().get(i);
 
-            if (node instanceof HBox) {
-                HBox nodeBox = (HBox) node;
+        HBox uiNode = nodeMap.get(current);
+        StackPane stackPane = (StackPane) uiNode.getChildren().get(0);
+        Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
+        int value = current.data;
 
-                // Find the StackPane inside HBox which contains the rectangle and text
-                StackPane stackPane = (StackPane) nodeBox.getChildren().get(0);
-                Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
-                Text text = (Text) stackPane.getChildren().get(1);
+        PauseTransition pause = new PauseTransition(Duration.seconds(1.0));
+        pause.setOnFinished(e -> {
+            rect.setFill(Color.ORANGE);
+            actionListView.getItems().add("Checking node with value: " + value);
 
-                int nodeValue = Integer.parseInt(text.getText());
+            PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
+            revert.setOnFinished(ev -> {
+//                final boolean foundValue = found;
 
-                // Create a delay for sequential animation
-                Duration delay = Duration.seconds(i * 1.0);
+                if (value == searchValue) {
+                    foundFlag.set(true); // mark as found
+                    rect.setFill(Color.LIGHTGREEN);
+                    actionListView.getItems().add("✓ Found value " + searchValue + " at position " + index);
 
-                // Highlight current node being checked
-                PauseTransition pause = new PauseTransition(delay);
-                pause.setOnFinished(e -> {
-                    // Change color to show we're checking this node
-                    rect.setFill(Color.ORANGE);
-                    actionListView.getItems().add("Checking node with value: " + nodeValue);
-
-                    // Check if this is the value we're looking for
-                    if (nodeValue == searchValue) {
-                        // Found! Highlight in green
-                        rect.setFill(Color.LIGHTGREEN);
-                        actionListView.getItems().add("✓ Found value " + searchValue + " at position " + currentIndex);
-
-                        // Add a blinking effect
-                        Timeline blink = new Timeline(
-                                new KeyFrame(Duration.millis(300), event -> {
-                                    rect.setFill(rect.getFill() == Color.LIGHTGREEN ? Color.YELLOW : Color.LIGHTGREEN);
-                                })
-                        );
-                        blink.setCycleCount(6); // blink 3 times (300ms * 6 = 1800ms)
-                        blink.play();
-                    } else {
-                        // Not found, revert color after a moment
-                        PauseTransition revertPause = new PauseTransition(Duration.seconds(0.5));
-                        revertPause.setOnFinished(event -> {
-                            rect.setFill(Color.LIGHTYELLOW);
-                        });
-                        revertPause.play();
-                    }
-                });
-                pause.play();
-            }
-        }
-
-        // Check if value exists at all after animation completes
-        PauseTransition finalCheck = new PauseTransition(
-                Duration.seconds(animationPane.getChildren().size() * 1.0 + 0.5)
-        );
-        finalCheck.setOnFinished(e -> {
-            boolean found = false;
-            for (Node node : animationPane.getChildren()) {
-                if (node instanceof HBox) {
-                    HBox nodeBox = (HBox) node;
-                    StackPane stackPane = (StackPane) nodeBox.getChildren().get(0);
-                    Text text = (Text) stackPane.getChildren().get(1);
-                    if (Integer.parseInt(text.getText()) == searchValue) {
-                        found = true;
-                        break;
-                    }
+                    // blinking effect
+                    Timeline blink = new Timeline(
+                            new KeyFrame(Duration.millis(300), evt ->
+                                    rect.setFill(rect.getFill() == Color.LIGHTGREEN ? Color.YELLOW : Color.LIGHTGREEN)
+                            )
+                    );
+                    blink.setCycleCount(6);
+                    blink.setOnFinished(b -> {
+                        // reset head/tail color after blink
+                        resetNodeColor(uiNode);
+                        searchNext(current.next, index + 1, searchValue, foundFlag);
+                    });
+                    blink.play();
+                } else {
+                    resetNodeColor(uiNode);
+                    searchNext(current.next, index + 1, searchValue, foundFlag);
                 }
-            }
-            if (!found) {
-                actionListView.getItems().add("✗ Value " + searchValue + " not found in the list");
-            }
+            });
+            revert.play();
         });
-        finalCheck.play();
+        pause.play();
     }
+
+    // Helper method: reset node color based on head/tail
+    private void resetNodeColor(HBox uiNode) {
+        StackPane stack = (StackPane) uiNode.getChildren().get(0);
+        Rectangle rect = (Rectangle) stack.getChildren().get(0);
+
+        if (uiNode == headHBox) {
+            rect.setFill(Color.DARKGRAY);
+        } else if (uiNode == tailHBox) {
+            rect.setFill(Color.GHOSTWHITE);
+        } else {
+            rect.setFill(Color.LIGHTYELLOW);
+        }
+    }
+
+
 
     // Search with input dialog
     private void showSearchDialog() {
@@ -381,8 +495,66 @@ public class SinglyLinkedListController {
         });
     }
 
+    private void traverseAnimation() {
+        if (animationPane.getChildren().isEmpty()) {
+            actionListView.getItems().add("List is empty! Nothing to search.");
+            return;
+        }
+
+        SinglyLinkedListOperation.Node current = list.getHead();
+        int index = 0;
+        actionListView.getItems().add("Traversing the List...\n");
+        int listSize = animationPane.getChildren().size();
+
+        traverseNext(current, index);
+    }
+
+    private void traverseNext(SinglyLinkedListOperation.Node current, int index) {
+
+        if(current == null) {
+            actionListView.getItems().add("Total Nodes: " + index + "\n");
+            actionListView.getItems().add("Traversal Complete Successfully!");
+            return;
+        }
 
 
+            HBox uiNode = nodeMap.get(current);
+            StackPane stackPane = (StackPane) uiNode.getChildren().get(0);
+            Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
+            int value = current.data;
+            final int idx = index;
+            final SinglyLinkedListOperation.Node curr = current;
+
+
+            PauseTransition pause = new PauseTransition(Duration.seconds( 1.0));
+
+            pause.setOnFinished(e -> {
+                rect.setFill(Color.ORANGE);
+                actionListView.getItems().add("Position " + idx +" : " + value);
+
+
+                PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
+                revert.setOnFinished(ev ->{
+                if(uiNode == headHBox) {
+                    rect.setFill(Color.DARKGRAY);
+                }
+                    else if(uiNode == tailHBox) {
+
+                     rect.setFill(Color.GHOSTWHITE);
+                }
+                    else {
+                    rect.setFill(Color.LIGHTYELLOW);
+                }
+                    traverseNext(curr.next, idx + 1); // next node
+
+                });
+                    revert.play();
+
+            });
+            pause.play();
+
+
+    }
     @FXML
     public void initialize() {
         SLLChoiceBox.getItems().addAll(
@@ -402,6 +574,8 @@ public class SinglyLinkedListController {
 
     }
 
+
+
     private void handleChoiceSelection() {
         String selected = SLLChoiceBox.getValue();
         actionListView.getItems().clear();
@@ -409,12 +583,16 @@ public class SinglyLinkedListController {
         switch (selected) {
             case "Create":
                 actionListView.getItems().add("Creating new Linked List...");
-                animationPane.getChildren().clear();
+                list = new SinglyLinkedListOperation();  // reset real list
+                nodeMap.clear();                         // reset mapping
+                animationPane.getChildren().clear();     // reset UI
+                headHBox = null;
                 for(int i = 0 ; i < 4 ; i++)
                 {
-
-                        insertAtTailAnimation((int)(Math.random() * 100));
-
+                    int value = (int)(Math.random() * 100);
+                    SinglyLinkedListOperation.Node realNode = list.insertAtTail(value); //LinkedList Logic Updated
+                    HBox uiNode = insertAtTailAnimation(value);
+                    nodeMap.put(realNode, uiNode);
                 }
                 break;
 
@@ -478,6 +656,7 @@ public class SinglyLinkedListController {
 
             case "Traverse":
                 actionListView.getItems().add("Traverse operation (pseudo code)");
+                traverseAnimation();
                 break;
         }
     }
