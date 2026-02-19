@@ -114,6 +114,28 @@ public class HelloController implements Initializable {
                 e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
             }
         }
+
+        else if (algoName.equals("Stack")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("stack-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // --- NEW: Queue Routing ---
+        else if (algoName.equals("Queue")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("queue-viw.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         else {
             // বাকি কার্ডগুলোর জন্য আপাতত অ্যালার্ট
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
