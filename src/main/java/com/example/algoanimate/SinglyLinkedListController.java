@@ -29,6 +29,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.scene.control.Dialog;        // Dialog
+import javafx.scene.control.ButtonBar;     // ButtonType,s position
+import javafx.scene.control.Label;         // to show "Value:" / "Position:"
+import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
+import javafx.util.Pair;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.geometry.Pos;
+
 
 
 
@@ -55,7 +76,6 @@ public class SinglyLinkedListController {
     private HBox headHBox;  // actual HBox head track
     private HBox tailHBox;
 
-
     @FXML
     private void onBackClick(ActionEvent actionEvent) {
         try {
@@ -71,17 +91,13 @@ public class SinglyLinkedListController {
 
     // Head tracking variable
 
-    //Head কে visually mark করার method
-
+    //Head ke visually mark korar method
     private void markHeadVisually() {
 
         for(Node node : animationPane.getChildren()) {
             if (node instanceof HBox) {
                 HBox hbox = (HBox) node;
-//                // ৩টির বেশি child মানে previous HEAD marker আছে → remove
-//                while (hbox.getChildren().size() > 3) {
-//                    hbox.getChildren().remove(3); // HEAD text remove
-//                }
+
                 // node color reset
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
@@ -94,23 +110,16 @@ public class SinglyLinkedListController {
 
         // Add head Marker at new Head
         if (headHBox != null  && animationPane.getChildren().contains(headHBox)) {
-//            Text headText = new Text("HEAD");
-//            headText.setFont(Font.font(15));
-//            headText.setFill(Color.GREENYELLOW);
-//            headText.setTranslateY(-30); // node এর উপরে দেখানোর জন্য
-
             // Head node কে slightly different color দিন
             StackPane stack = (StackPane) headHBox.getChildren().get(0);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
             rect.setFill(Color.DARKGRAY);  // head আলাদা color
-//            headHBox.getChildren().add(headText);
-
         }
     }
     // Head update method
     private void updateHead(HBox newHead) {
         this.headHBox = newHead;
-        markHeadVisually(); // Head update করার সাথে সাথে visually mark করুন
+        markHeadVisually(); // Head update & visually mark
     }
 
     private void markTailVisually() {
@@ -118,10 +127,6 @@ public class SinglyLinkedListController {
         for(Node node : animationPane.getChildren()) {
             if (node instanceof HBox) {
                 HBox hbox = (HBox) node;
-//                // ৩টির বেশি child মানে previous HEAD marker আছে → remove
-//                while (hbox.getChildren().size() > 4) {
-//                    hbox.getChildren().remove(4); // TAIL text remove
-//                }
                 // node color reset
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
@@ -134,18 +139,10 @@ public class SinglyLinkedListController {
 
         // Add head Marker at new Head
         if (tailHBox != null  && animationPane.getChildren().contains(tailHBox)) {
-//            Text tailText = new Text("TAIL");
-//            tailText.setFont(Font.font(15));
-//            tailText.setFill(Color.GREENYELLOW);
-//            tailText.setTranslateY(35); // node er niche
-
             // Head node কে slightly different color দিন
             StackPane stack = (StackPane) tailHBox.getChildren().get(0);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
             rect.setFill(Color.GHOSTWHITE);  // tail আলাদা color
-            //            tailHBox.getChildren().add(tailText);
-
-
         }
     }
     // Tail update method
@@ -153,8 +150,6 @@ public class SinglyLinkedListController {
         this.tailHBox = newTail;
         markTailVisually(); // Head update করার সাথে সাথে visually mark করুন
     }
-
-
 
     // Node create function
     private HBox createNodeView(int data , boolean isLast) {
@@ -225,27 +220,52 @@ public class SinglyLinkedListController {
         return hbox;
     }
 
-    // Insert at head animation
+
     private HBox insertAtHeadAnimation(int data) {
 
         boolean isLast = animationPane.getChildren().isEmpty();
 
+        // Create the new node first (but don't add yet)
         HBox newNode = createNodeView(data, isLast);
-        newNode.setLayoutX(-10); // start outside pane
-        animationPane.getChildren().add(newNode);
 
-        // Animate: move to first position
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), newNode);
-        tt.setToX(50); // head position
-        tt.play();
+        newNode.setLayoutY(50);
+        newNode.setLayoutX(50); // final head position
 
-        // shift old nodes
-        tt.setOnFinished(e -> shiftNodesRight(newNode));
+        // Shift old nodes right first
+        if (!animationPane.getChildren().isEmpty()) {
+            shiftNodesRightFromIndexFixed(0, () -> {
+                // After shifting, add the new node at head
+                animationPane.getChildren().add(0, newNode);
 
-        updateHead(newNode);
-       // markHeadVisually();
+                // Now update head so marking works
+                updateHead(newNode);
+
+                // Fade in animation if you want
+                FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+            });
+        } else {
+            // List is empty, just add directly
+            animationPane.getChildren().add(newNode);
+
+            // Update head and tail
+            updateHead(newNode);
+            if (isLast) {
+                updateTail(newNode);
+            }
+        }
+
+        // Update head/tail references
+        if (isLast && !animationPane.getChildren().isEmpty()) {
+            updateTail(newNode);
+        }
+
+
         return newNode;
     }
+
 
     // Insert at head with input dialog
     private void showInsertAtHeadDialog() {
@@ -268,26 +288,27 @@ public class SinglyLinkedListController {
         });
     }
     // Existing nodes right shift
-    private void shiftNodesRight(HBox newNode) {
-        for (Node node : animationPane.getChildren()) {
-            if (node != newNode) {
-                TranslateTransition shift = new TranslateTransition(Duration.seconds(0.5), node);
-                shift.setByX(95); // spacing
-                shift.play();
-            }
-        }
-    }
+   // private void shiftNodesRight(HBox newNode) {//All From the head node
+//        for (Node node : animationPane.getChildren()) {
+//            if (node != newNode) {
+//                TranslateTransition shift = new TranslateTransition(Duration.seconds(0.5), node);
+//                shift.setByX(95); // spacing
+//                shift.play();
+//            }
+//        }
+//    }
 
     // Insert at tail animation
     private HBox insertAtTailAnimation(int data) {
 
         boolean isLast = true; // last node
-        HBox newNode = createNodeView(data, isLast);
+       HBox newNode = createNodeView(data, isLast);
+
+
         // If list not empty → remove NULL from previous last node
         if (animationPane.getChildren().isEmpty()) {
             // First Node so Head
             updateHead(newNode);
-
         }
         if (!animationPane.getChildren().isEmpty()) {
             HBox lastNode = (HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1);
@@ -316,6 +337,7 @@ public class SinglyLinkedListController {
         return newNode;
     }
 
+
     // Insert at tail with input dialog
     private void showInsertAtTailDialog() {
         TextInputDialog dialog = new TextInputDialog();
@@ -328,7 +350,7 @@ public class SinglyLinkedListController {
             try {
                 int insertValue = Integer.parseInt(value);
                 SinglyLinkedListOperation.Node realNode = list.insertAtTail(insertValue); //LinkedList Logic Updated
-               HBox uiNode = insertAtTailAnimation(insertValue);
+                HBox uiNode = insertAtTailAnimation(insertValue);
                 nodeMap.put(realNode, uiNode);
 
             } catch (NumberFormatException e) {
@@ -337,65 +359,7 @@ public class SinglyLinkedListController {
         });
     }
 
-/*private void searchAnimation(int searchValue) {
-    if (animationPane.getChildren().isEmpty()) {
-        actionListView.getItems().add("List is empty! Nothing to search.");
-        return;
-    }
-
-    SinglyLinkedListOperation.Node current = list.getHead();
-    int index = 0;
-    actionListView.getItems().add("Searching for value: " + searchValue);
-    int listSize = animationPane.getChildren().size();
-
-    while (current != null) {
-        HBox uiNode = nodeMap.get(current);
-        StackPane stackPane = (StackPane) uiNode.getChildren().get(0);
-        Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
-        int value = current.data;
-
-        Duration delay = Duration.seconds(index * 1.0);
-        PauseTransition pause = new PauseTransition(delay);
-
-        final int idx = index;
-        pause.setOnFinished(e -> {
-            rect.setFill(Color.ORANGE);
-            actionListView.getItems().add("Checking node with value: " + value);
-
-            if (value == searchValue) {
-                rect.setFill(Color.LIGHTGREEN);
-                actionListView.getItems().add("✓ Found value " + searchValue + " at position " + idx);
-
-                Timeline blink = new Timeline(
-                        new KeyFrame(Duration.millis(300), ev ->
-                                rect.setFill(rect.getFill() == Color.LIGHTGREEN ? Color.YELLOW : Color.LIGHTGREEN)
-                        )
-                );
-                blink.setCycleCount(6);
-                blink.play();
-            } else {
-                PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
-                // revert.setOnFinished(ev -> rect.setFill(Color.LIGHTYELLOW));
-
-                if (uiNode == headHBox) {
-                    revert.setOnFinished(ev -> rect.setFill(Color.DARKGRAY));
-                } else if (uiNode == tailHBox) {
-                    revert.setOnFinished(ev -> rect.setFill(Color.GHOSTWHITE));
-                } else {
-                    revert.setOnFinished(ev -> rect.setFill(Color.LIGHTYELLOW));
-
-                }
-                revert.play();
-            }
-        });
-        pause.play();
-        current = current.next;
-        index++;
-
-    }
-}*/
-
-private void searchAnimation(int searchValue) {
+    private void searchAnimation(int searchValue) {
     if (animationPane.getChildren().isEmpty()) {
         actionListView.getItems().add("List is empty! Nothing to search.");
         return;
@@ -475,8 +439,6 @@ private void searchAnimation(int searchValue) {
         }
     }
 
-
-
     // Search with input dialog
     private void showSearchDialog() {
         TextInputDialog dialog = new TextInputDialog();
@@ -555,13 +517,468 @@ private void searchAnimation(int searchValue) {
 
 
     }
+
+    private HBox insertAtPosAnimation(int val, int pos) {
+
+        if (animationPane.getChildren().isEmpty() && pos != 0) {
+            actionListView.getItems().add("List is empty! position " + pos + " not found.\n");
+            return null;
+        }
+
+        actionListView.getItems().add("Inserting value " + val + " at position: " + pos);
+
+        // Find previous UI node
+        SinglyLinkedListOperation.Node current = list.getHead();
+        for (int i = 0; i < pos - 1; i++) {
+            current = current.next;
+        }
+
+        HBox prevUI = nodeMap.get(current);
+
+        if (prevUI == null) {
+            actionListView.getItems().add("Error: Previous node not found in UI!");
+            return null;
+        }
+
+        int insertIndex = animationPane.getChildren().indexOf(prevUI) + 1;
+
+        // Middle insert → never last
+        HBox newNode = createNodeView(val, false);
+
+        newNode.setLayoutY(50);
+
+        double prevActualX = prevUI.getLayoutX() + prevUI.getTranslateX();
+        double newX = prevActualX + 95;
+
+        shiftNodesRightFromIndexFixed(insertIndex, () -> {
+
+            animationPane.getChildren().add(insertIndex, newNode);
+
+            newNode.setLayoutX(newX);
+            newNode.setTranslateX(0);
+
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+
+            actionListView.getItems().add("✓ Inserted " + val + " at position " + pos);
+        });
+
+        return newNode;
+    }
+
+    /*private HBox insertAtPosAnimation(int val, int pos) {
+    if (animationPane.getChildren().isEmpty() && pos != 0) {
+        actionListView.getItems().add("List is empty! position " + pos + " not found.\n");
+        return null;
+    }
+
+    actionListView.getItems().add("Inserting value " + val + " at position: " + pos);
+
+    // Find previous node
+    SinglyLinkedListOperation.Node prev = null;
+    HBox prevUI = null;
+    int insertIndex;
+
+    //if (pos == 0) {
+        // Insert at head
+        //SinglyLinkedListOperation.Node realNode = list.insertAtHead(val);
+        //HBox uiNode = insertAtHeadAnimation(val);
+        //nodeMap.put(realNode, uiNode);
+        //return uiNode;
+   // } else {
+        // Find previous node
+        SinglyLinkedListOperation.Node current = list.getHead();
+        for (int i = 0; i < pos - 1; i++) {
+            if (current == null) {
+                actionListView.getItems().add("Error: Position " + pos + " is out of bounds!");
+                return null;
+            }
+            current = current.next;
+        }
+        prev = current;
+        prevUI = nodeMap.get(prev);
+    //}
+
+    if (prevUI == null) {
+        actionListView.getItems().add("Error: Previous node not found in UI!");
+        return null;
+    }
+
+    // Get the index where new node will be inserted
+    insertIndex = animationPane.getChildren().indexOf(prevUI) + 1;
+
+    // Create new node (not last by default, will be updated if actually last)
+    //boolean isLast = (pos == list.getSize());
+        boolean isLast = false;
+    HBox newNode = createNodeView(val, isLast);
+    newNode.setLayoutY(50);
+
+    // Calculate the final position based on previous node
+    double prevActualX = prevUI.getLayoutX() + prevUI.getTranslateX();
+    double newX = prevActualX + 95;
+
+    // First, shift all nodes from insertIndex onwards to the right
+    shiftNodesRightFromIndexFixed(insertIndex, () -> {
+        // After shifting, add the new node at the correct index
+        animationPane.getChildren().add(insertIndex, newNode);
+
+        // Set its final position
+        newNode.setLayoutX(newX);
+        newNode.setTranslateX(0);
+
+        // Fade in animation
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        // Update tail if inserting at the end
+//        if (pos == list.getSize() - 1) {
+//            updateTail(newNode);
+//        }
+
+        actionListView.getItems().add("✓ Inserted " + val + " at position " + pos);
+    });
+
+    return newNode;
+}*/
+
+    // Fixed shift method - only one version
+    private void shiftNodesRightFromIndexFixed(int startIndex, Runnable onComplete) {
+        int count = animationPane.getChildren().size();
+        AtomicInteger finishedCount = new AtomicInteger(0);
+        int nodesToShift = count - startIndex;
+
+        if (nodesToShift == 0) {
+            onComplete.run();
+            return;
+        }
+
+        for (int i = startIndex; i < count; i++) {
+            Node node = animationPane.getChildren().get(i);
+
+            // Get current position including any ongoing translation
+            double currentActualX = node.getLayoutX() + node.getTranslateX();
+
+            TranslateTransition shift = new TranslateTransition(Duration.seconds(0.5), node);
+            shift.setByX(95);
+
+            final int index = i;
+            final double finalCurrentX = currentActualX;
+
+            shift.setOnFinished(e -> {
+                // IMPORTANT: Update layoutX to the new permanent position
+                // and reset translateX to 0
+                node.setLayoutX(finalCurrentX + 95);
+                node.setTranslateX(0);
+
+                if (finishedCount.incrementAndGet() == nodesToShift) {
+                    onComplete.run();
+                }
+            });
+            shift.play();
+        }
+    }
+
+    private void showInsertAtPosDialog() {
+        // Creating a custom dialog
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Insert at Position");
+        dialog.setHeaderText("Enter Value and Position to Insert:");
+
+        // Fixing Button type (OK & Cancel)
+        ButtonType insertButtonType = new ButtonType("Insert", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(insertButtonType, ButtonType.CANCEL);
+
+        // Grid Plan
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField valueField = new TextField();
+        valueField.setPromptText("Value");
+        TextField posField = new TextField();
+        posField.setPromptText("Position(0-based)");
+
+        grid.add(new Label("Value:"), 0, 0);
+        grid.add(valueField, 1, 0);
+        grid.add(new Label("Position:"), 0, 1);
+        grid.add(posField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        //Result converter
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == insertButtonType) {
+                return new Pair<>(valueField.getText(), posField.getText());
+            }
+            return null;
+        });
+
+        // Dialog show and Result handling
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(pair -> {
+            try {
+                int value = Integer.parseInt(pair.getKey());
+                int position = Integer.parseInt(pair.getValue());
+                // calling Insertion Method
+                HBox uiNode ;
+                SinglyLinkedListOperation.Node realNode;
+
+                int currentSize = list.getSize(); // capture current size BEFORE insert
+
+                if(position == 0)
+                {
+                    realNode = list.insertAtHead(value);
+                    uiNode = insertAtHeadAnimation(value);
+
+                } else if (position == currentSize)
+                {
+                    realNode = list.insertAtTail(value);
+                    uiNode = insertAtTailAnimation(value);
+                }
+                else if (position > 0 && position < currentSize){
+                    realNode = list.insertAtPosition(value, position);
+                    uiNode = insertAtPosAnimation(value, position);
+                } else {
+                    actionListView.getItems().add("Error: Invalid position!");
+                    return;
+                }
+                nodeMap.put(realNode, uiNode);
+
+
+            } catch (NumberFormatException e) {
+                actionListView.getItems().add("Error: Please enter valid integers!");
+            }
+        });
+    }
     @FXML
+
+
+    // Fixed shift method - only one version
+    private void shiftNodesLeftFromIndexFixed(int startIndex, Runnable onComplete) {
+        int count = animationPane.getChildren().size();
+        AtomicInteger finishedCount = new AtomicInteger(0);
+        int nodesToShift = count - startIndex;
+
+        if (nodesToShift == 0) {
+            onComplete.run();
+            return;
+        }
+
+        for (int i = startIndex; i < count; i++) {
+            Node node = animationPane.getChildren().get(i);
+
+            // Get current position including any ongoing translation
+            double currentActualX = node.getLayoutX() + node.getTranslateX();
+
+            TranslateTransition shift = new TranslateTransition(Duration.seconds(0.5), node);
+            shift.setByX(-95);
+
+            final int index = i;
+            final double finalCurrentX = currentActualX;
+
+            shift.setOnFinished(e -> {
+                // IMPORTANT: Update layoutX to the new permanent position
+                // and reset translateX to 0
+                node.setLayoutX(finalCurrentX - 95);
+                node.setTranslateX(0);
+
+                if (finishedCount.incrementAndGet() == nodesToShift) {
+                    onComplete.run();
+                }
+            });
+            shift.play();
+        }
+    }
+
+    //Dialog for Deleting
+    private void showDeleteValueDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Delete Value");
+        dialog.setHeaderText("Enter value to Delete:");
+        dialog.setContentText("Value:");
+
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(value -> {
+            try {
+                int delValue = Integer.parseInt(value);
+                //int countOfValue = list.countValue(delValue);
+                int pos = findFirstOccurrence(delValue);
+                deleteAnimation(pos);
+
+
+            } catch (NumberFormatException e) {
+                actionListView.getItems().add("Please enter a valid number!");
+            }
+        });
+    }
+    private int findFirstOccurrence(int value) {
+        for (int i = 0; i < animationPane.getChildren().size(); i++) {
+            Node node = animationPane.getChildren().get(i);
+
+            if (node instanceof HBox) {
+                HBox hbox = (HBox) node;
+                StackPane stack = (StackPane) hbox.getChildren().get(0);
+                Text text = (Text) stack.getChildren().get(1); // assuming index 1 is the value text
+
+                if (Integer.parseInt(text.getText()) == value) {
+                    return i; // first occurrence found
+                }
+            }
+        }
+        return -1; // value not found
+    }
+
+    private void showDeletePosDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Delete Position");
+        dialog.setHeaderText("Enter position to Delete:");
+        dialog.setContentText("Position:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(value -> {
+            try {
+                int pos = Integer.parseInt(value);
+                deleteAnimation(pos);
+
+            } catch (NumberFormatException e) {
+                actionListView.getItems().add("Please enter a valid Position!");
+            }
+        });
+    }
+
+    private void deleteAnimation(int pos){
+        // Delete Node at pos
+
+        int count = animationPane.getChildren().size();
+
+        if (pos < 0 || pos >= count) return;
+
+        Node nodeToDelete = animationPane.getChildren().get(pos);
+
+        // 1️⃣ Fade out animation
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), nodeToDelete);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+
+        fade.setOnFinished(e -> {
+
+            // 2️⃣ Remove node from pane AFTER fade completes
+            animationPane.getChildren().remove(pos);
+
+            // 🔹 Delete from real linked list
+            list.deleteNodeAtPosition(pos);
+
+            // 🔹 Update head/tail if needed
+            if (pos == 0) { // deleted head
+                if (!animationPane.getChildren().isEmpty()) {
+                    updateHead((HBox) animationPane.getChildren().get(0));
+                } else {
+                    headHBox = null;
+                }
+            }
+
+            if (pos == count - 1) { // deleted tail
+                if (!animationPane.getChildren().isEmpty()) {
+                    updateTail((HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1));
+                } else {
+                    tailHBox = null;
+                }
+            }
+
+            //  CHECK if deleted node was TAIL
+            boolean deletedTail = (pos == count - 1);
+
+            // 3️⃣ Shift remaining nodes LEFT starting from same position
+            shiftNodesLeftFromIndexFixed(pos, () -> {
+
+                if (deletedTail) {
+                    //updateTailAfterDeletion();
+                }
+                actionListView.getItems().add("Deleted node at position " + pos);
+            });
+        });
+
+        fade.play();
+    }
+//    private void updateTailAfterDeletion() {
+//
+//        int newCount = animationPane.getChildren().size();
+//
+//        if (newCount == 0) {
+//            tailHBox = null;
+//            return;
+//        }
+//
+//        // 🔹 new tail = last HBox in pane
+//        HBox newTail = (HBox) animationPane.getChildren().get(newCount - 1);
+//
+//        // 🔹 Remove any old NULL box first
+//        if (newTail.getChildren().size() > 1) {
+//            newTail.getChildren().remove(1);
+//        }
+//
+//        // 🔹 Create fresh NULL box
+//        Rectangle nullRect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+//        nullRect.setArcWidth(10);
+//        nullRect.setArcHeight(10);
+//
+//        Text nullText = new Text("NULL");
+//        nullText.setFont(Font.font(15));
+//        nullText.setFill(Color.DARKBLUE);
+//
+//        StackPane nullStack = new StackPane(nullRect, nullText);
+//        nullStack.setPrefSize(60, 40);
+//
+//       // newTail.getChildren().add(nullStack);
+//
+//        // 🔹 Create arrow pointing to NULL node
+//        Line line = new Line(0, 0, 20, 0);
+//        line.setStroke(Color.WHITESMOKE);
+//        line.setStrokeWidth(2);
+//
+//        Polygon arrowHead = new Polygon();
+//        arrowHead.getPoints().addAll(
+//                50.0, 0.0,   // tip
+//                40.0, -5.0,  // top
+//                40.0, 5.0    // bottom
+//        );
+//        arrowHead.setFill(Color.WHITESMOKE);
+//
+//        HBox arrowPane = new HBox(line, arrowHead);
+//        arrowPane.setAlignment(Pos.CENTER_LEFT);
+//        arrowPane.setPrefHeight(nullRect.getHeight());
+//        arrowPane.setSpacing(0);
+//
+//        // 🔹 Combine stack + arrow inside a new HBox for NULL
+//        HBox nullNode = new HBox(nullStack, arrowPane);
+//        nullNode.setSpacing(0);
+//        nullNode.setLayoutY(50);
+//
+//        // 🔹 Add NULL node after new tail
+//        animationPane.getChildren().add(nullNode);
+//
+//        // 🔹 Update tail reference + visually mark it
+//
+//        // 🔹 update tail reference + color
+//        updateTail(newTail);
+//    }
+
+
     public void initialize() {
         SLLChoiceBox.getItems().addAll(
                 "Create",
                 "Insert at Head",
                 "Insert at Tail",
-                "Delete",
+                "Insert at Position" ,
+                "Delete Value",
+                "Delete Position",
                 "Search",
                 "Traverse"
         );
@@ -645,8 +1062,17 @@ private void searchAnimation(int searchValue) {
                 showInsertAtTailDialog();
                 break;
 
-            case "Delete":
+            case "Insert at Position" :
+                showInsertAtPosDialog();
+
+                break;
+            case "Delete Value":
                 actionListView.getItems().add("Delete operation (not animated yet)");
+                showDeleteValueDialog();
+                break;
+            case "Delete Position":
+                actionListView.getItems().add("Delete operation (not animated yet)");
+                showDeletePosDialog();
                 break;
 
             case "Search":

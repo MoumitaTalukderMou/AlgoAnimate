@@ -31,20 +31,20 @@ public class SortingController {
 
     @FXML
     public void initialize() {
-        // অ্যালগরিদম লিস্ট সেটআপ
+
         algoComboBox.getItems().addAll("Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort");
         algoComboBox.getSelectionModel().selectFirst();
 
-        // ড্রপডাউন চেঞ্জ হলে সি++ কোড আপডেট হবে
+
         algoComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             loadPseudocode(newVal);
         });
 
         loadPseudocode("Bubble Sort");
-        handleRandomize(); // শুরুতে কিছু রেন্ডম বার দেখানো
+        handleRandomize();
     }
 
-    // --- সি++ কোড এবং ব্র্যাকেট সেটআপ ---
+
     private void loadPseudocode(String algo) {
         codeListView.getItems().clear();
         if (algo.equals("Bubble Sort")) {
@@ -94,10 +94,10 @@ public class SortingController {
         }
     }
 
-    // --- বার জেনারেশন লজিক ---
+
     @FXML
     private void handleRandomize() {
-        int[] randomArray = new int[12]; // ১২টি বার স্পেস ভরাট রাখবে
+        int[] randomArray = new int[12];
         Random rand = new Random();
         for (int i = 0; i < randomArray.length; i++) {
             randomArray[i] = rand.nextInt(50) + 10;
@@ -158,7 +158,7 @@ public class SortingController {
         }).start();
     }
 
-    // --- সর্টিং অ্যালগরিদমসমূহ ---
+
 
     private void bubbleSort() throws InterruptedException {
         for (int i = 0; i < array.length - 1; i++) {
@@ -244,7 +244,7 @@ public class SortingController {
         markSorted();
     }
 
-    // --- এনিমেশন এবং হেল্পার মেথড ---
+
 
     private void animateJump(Rectangle bar) {
         Platform.runLater(() -> {

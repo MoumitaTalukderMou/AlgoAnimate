@@ -441,14 +441,14 @@
 }
 
 .code-list .list-cell {
-    -fx-text-fill: #94a3b8; /* স্লেট কালার টেক্সট */
+    -fx-text-fill: #94a3b8;
     -fx-font-family: 'Consolas', monospace;
     -fx-font-size: 14px;
 }
 
-/* সর্টিং চলাকালীন যে লাইনটি হাইলাইট হবে */
+
 .code-list .list-cell:filled:selected {
-    -fx-background-color: #facc15; /* উজ্জ্বল হলুদ */
+    -fx-background-color: #facc15;
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
 }

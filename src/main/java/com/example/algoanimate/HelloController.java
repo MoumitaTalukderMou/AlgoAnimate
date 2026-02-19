@@ -31,14 +31,14 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // কার্ডগুলো যোগ করা হচ্ছে
+
         addCard("Arrays", "Insertion, Deletion, Search", "[]");
         addCard("Linked List", "Singly, Doubly, Circular", "->");
         addCard("Stack", "LIFO Operations", "||");
         addCard("Queue", "FIFO Operations", "==");
-        addCard("Sorting", "Merge, Quick, Bubble Sort", "AZ"); // এই কার্ডে ক্লিক করলে নতুন পেজ আসবে
+        addCard("Sorting", "Merge, selection,insertion, Bubble Sort", "AZ");
         addCard("Trees", "BST, AVL, Traversals", "/\\");
-        addCard("Graphs", "BFS, DFS, Dijkstra", "o-o");
+        addCard("Graphs", "BFS, DFS", "o-o");
     }
 
     // --- Theme Toggle (Dark/Light Mode) ---
@@ -74,7 +74,7 @@ public class HelloController implements Initializable {
 
         card.getChildren().addAll(icon, titleLabel, descLabel);
 
-        // কার্ডে ক্লিক করলে কি হবে
+
         card.setOnMouseClicked(event -> handleCardClick(title));
 
         cardContainer.getChildren().add(card);
@@ -84,38 +84,38 @@ public class HelloController implements Initializable {
     private void handleCardClick(String algoName) {
         if (algoName.equals("Sorting")) {
             try {
-                // ১. Sorting FXML ফাইল লোড করা
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sorting-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
 
-                // ২. বর্তমান স্টেজ (উইন্ডো) খুঁজে বের করা
+
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
 
-                // ৩. নতুন সিন সেট করা
+
                 stage.setScene(scene);
 
             } catch (IOException e) {
-                e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
+                e.printStackTrace();
             }
         }
         else if (algoName.equals("Linked List")) {
             try {
-                // ১. Sorting FXML ফাইল লোড করা
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LinkedList-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
 
-                // ২. বর্তমান স্টেজ (উইন্ডো) খুঁজে বের করা
+
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
 
-                // ৩. নতুন সিন সেট করা
+
                 stage.setScene(scene);
 
             } catch (IOException e) {
-                e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
+                e.printStackTrace();
             }
         }
         else {
-            // বাকি কার্ডগুলোর জন্য আপাতত অ্যালার্ট
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Coming Soon");
             alert.setHeaderText(null);
