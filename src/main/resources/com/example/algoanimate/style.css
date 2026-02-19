@@ -452,3 +452,24 @@
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
 }
+
+/* Merge Sort Partitions */
+
+/* বাম পাশের সব বার - লাল */
+/* বারগুলোর স্মুথ মুভমেন্টের জন্য */
+.vis-bar-node {
+    -fx-transition: -fx-translate-y 0.4s ease-in-out;
+}
+
+/* সর্ট হওয়ার পর যখন বারগুলো ওপরের দিকে ফিরে যাবে */
+.bar-moving-up {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
+}
+
+/* মার্জ সর্টের ৩টি ভিন্ন কালার */
+.partition-left { -fx-fill: #ef4444; }    /* লাল */
+.partition-right { -fx-fill: #eab308; }   /* হলুদ */
+.partition-merged { -fx-fill: #22c55e; }  /* সবুজ */
+
+
+

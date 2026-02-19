@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.algoanimate.StackController"
+            stylesheets="@style.css" prefWidth="1100" prefHeight="750" styleClass="root">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
+            <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+            <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
+            <Label text="Stack Visualizer" styleClass="logo-text-primary"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="LIFO (Last In, First Out)" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 16px;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="0">
+            <VBox HBox.hgrow="ALWAYS" spacing="25" alignment="TOP_CENTER">
+                <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+                <HBox spacing="15" alignment="CENTER" styleClass="control-panel-mini">
+                    <TextField fx:id="inputField" promptText="Enter value..." styleClass="input-field" prefWidth="150"/>
+                    <Button text="Push" onAction="#handlePush" styleClass="btn-premium-blue"/>
+                    <Button text="Pop" onAction="#handlePop" styleClass="btn-premium-red"/>
+                    <Button text="Peek" onAction="#handlePeek" styleClass="btn-premium-green"/>
+                    <Button text="Is Empty" onAction="#handleIsEmpty" styleClass="btn-premium-blue"/>
+                    <Button text="Is Full" onAction="#handleIsFull" styleClass="btn-premium-blue"/>
+                    <Button text="Clear" onAction="#handleClear" style="-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-border-color: #ef4444; -fx-border-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+
+                <VBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0; -fx-padding: 10 0 0 0;">
+
+                    <VBox style="-fx-border-color: #38bdf8; -fx-border-width: 0 3 3 3; -fx-padding: 5;"
+                          prefWidth="130" maxWidth="130" prefHeight="450" maxHeight="450">
+
+                        <ScrollPane styleClass="main-scroll-pane" fitToWidth="true" fitToHeight="true"
+                                    vbarPolicy="NEVER" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox fx:id="stackContainer" spacing="5" alignment="BOTTOM_CENTER" />
+                            </content>
+                        </ScrollPane>
+
+                    </VBox>
+                </VBox>
+            </VBox>
+
+            <VBox styleClass="code-panel" prefWidth="400" spacing="15">
+                <padding><Insets top="30" right="20" bottom="20" left="20"/></padding>
+                <Label text="OPERATION STEP-TRACE" styleClass="sub-header" style="-fx-text-fill: #38bdf8;"/>
+                <ListView fx:id="codeListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
+
+                <VBox spacing="10" styleClass="var-box">
+                    <Label fx:id="lblStatus" text="Status: Waiting for input" styleClass="var-text"/>
+                    <Label fx:id="lblTop" text="Top Element: None" styleClass="var-text"/>
+                    <Label fx:id="lblSize" text="Stack Size: 0 / 8" styleClass="var-text"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
