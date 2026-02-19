@@ -101,10 +101,6 @@ public class LinkedListController {
     }
 }
 
-//    @Override
-//    public void start(Stage primaryStage) {
-//
-//    }
 
 
 

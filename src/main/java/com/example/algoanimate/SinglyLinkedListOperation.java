@@ -9,8 +9,6 @@ import javafx.stage.Stage;
 
 public class SinglyLinkedListOperation  {
 
-
-
     static class Node {
         int data;
         Node next;

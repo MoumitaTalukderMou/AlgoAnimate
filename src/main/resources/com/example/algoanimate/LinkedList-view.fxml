@@ -48,15 +48,10 @@
                <children>
                   <Button fx:id="btnSinglyLinkedList" layoutX="557.0" layoutY="88.0" mnemonicParsing="false" onAction="#onSinglyLinkedListClick" prefHeight="50.0" prefWidth="216.0" styleClass="bar-compare" text="Singly LinkedList">
                      <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnDoublyLinkedList" layoutX="557.0" layoutY="206.0" mnemonicParsing="false" onAction="#onDoublyLinkedListClick" prefHeight="43.0" prefWidth="215.0" styleClass="bar-compare" text="Doubly LinkedList">
-                     <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnCircularLinkedList" layoutX="557.0" layoutY="316.0" mnemonicParsing="false" onAction="#onCircularLinkedListClick" prefHeight="43.0" prefWidth="215.0" styleClass="bar-compare" text="Circular LinkedLIst">
+                  <Button fx:id="btnDoublyLinkedList" layoutX="557.0" layoutY="206.0" mnemonicParsing="false" onAction="#onDoublyLinkedListClick" prefHeight="43.0" prefWidth="215.0" styleClass="bar-compare" text="Doubly LinkedList">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>

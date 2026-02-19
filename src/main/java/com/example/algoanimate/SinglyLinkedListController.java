@@ -161,9 +161,9 @@ public class SinglyLinkedListController {
         // Text
         Text text;
 
-            text = new Text(String.valueOf(data));
-            text.setFont(Font.font(20));
-            text.setFill(Color.DARKBLUE);// text color
+        text = new Text(String.valueOf(data));
+        text.setFont(Font.font(20));
+        text.setFill(Color.DARKBLUE);// text color
 
 
         // StackPane to center text on rectangle
@@ -175,28 +175,28 @@ public class SinglyLinkedListController {
         hbox.setSpacing(0);
         hbox.setLayoutY(50);
 
-            // Arrow line
-            javafx.scene.shape.Line line = new javafx.scene.shape.Line(0, 0, 20, 0);
-            line.setStroke(Color.WHITESMOKE);
-            line.setStrokeWidth(2);
+        // Arrow line
+        javafx.scene.shape.Line line = new javafx.scene.shape.Line(0, 0, 20, 0);
+        line.setStroke(Color.WHITESMOKE);
+        line.setStrokeWidth(2);
 
-            // Arrow head (triangle)
-            javafx.scene.shape.Polygon arrowHead = new javafx.scene.shape.Polygon();
-            arrowHead.getPoints().addAll(
-                    50.0, 0.0,   // tip
-                    40.0, -5.0,   // top
-                    40.0, 5.0    // bottom
-            );
-            arrowHead.setFill(Color.WHITESMOKE);
+        // Arrow head (triangle)
+        javafx.scene.shape.Polygon arrowHead = new javafx.scene.shape.Polygon();
+        arrowHead.getPoints().addAll(
+                50.0, 0.0,   // tip
+                40.0, -5.0,   // top
+                40.0, 5.0    // bottom
+        );
+        arrowHead.setFill(Color.WHITESMOKE);
 
-            // Use HBox to left-align line + arrow
-            HBox arrowPane = new HBox(line, arrowHead);
-            arrowPane.setAlignment(Pos.CENTER_LEFT); // left theke start
-            arrowPane.setPrefHeight(rect.getHeight());
-            arrowPane.setSpacing(0); // line ar arrow head er spacing 0
+        // Use HBox to left-align line + arrow
+        HBox arrowPane = new HBox(line, arrowHead);
+        arrowPane.setAlignment(Pos.CENTER_LEFT); // left theke start
+        arrowPane.setPrefHeight(rect.getHeight());
+        arrowPane.setSpacing(0); // line ar arrow head er spacing 0
 
-            // Combine rectangle + arrow
-            hbox.getChildren().addAll(stack, arrowPane);
+        // Combine rectangle + arrow
+        hbox.getChildren().addAll(stack, arrowPane);
         if (isLast) {
 
             //Rectangle
@@ -278,7 +278,7 @@ public class SinglyLinkedListController {
         result.ifPresent(value -> {
             try {
                 int insertValue = Integer.parseInt(value);
-               SinglyLinkedListOperation.Node realNode = list.insertAtHead(insertValue); // LinkedList Logic
+                SinglyLinkedListOperation.Node realNode = list.insertAtHead(insertValue); // LinkedList Logic
                 HBox uiNode = insertAtHeadAnimation(insertValue);
                 nodeMap.put(realNode, uiNode);
 
@@ -287,22 +287,13 @@ public class SinglyLinkedListController {
             }
         });
     }
-    // Existing nodes right shift
-   // private void shiftNodesRight(HBox newNode) {//All From the head node
-//        for (Node node : animationPane.getChildren()) {
-//            if (node != newNode) {
-//                TranslateTransition shift = new TranslateTransition(Duration.seconds(0.5), node);
-//                shift.setByX(95); // spacing
-//                shift.play();
-//            }
-//        }
-//    }
+
 
     // Insert at tail animation
     private HBox insertAtTailAnimation(int data) {
 
         boolean isLast = true; // last node
-       HBox newNode = createNodeView(data, isLast);
+        HBox newNode = createNodeView(data, isLast);
 
 
         // If list not empty → remove NULL from previous last node
@@ -333,7 +324,7 @@ public class SinglyLinkedListController {
         tt.setToX(x);
         tt.play();
 
-       updateTail(newNode);
+        updateTail(newNode);
         return newNode;
     }
 
@@ -360,17 +351,17 @@ public class SinglyLinkedListController {
     }
 
     private void searchAnimation(int searchValue) {
-    if (animationPane.getChildren().isEmpty()) {
-        actionListView.getItems().add("List is empty! Nothing to search.");
-        return;
+        if (animationPane.getChildren().isEmpty()) {
+            actionListView.getItems().add("List is empty! Nothing to search.");
+            return;
+        }
+
+        actionListView.getItems().add("Searching for value: " + searchValue);
+
+        SinglyLinkedListOperation.Node headNode = list.getHead();
+        AtomicBoolean foundFlag = new AtomicBoolean(false); // mutable flag
+        searchNext(headNode, 0, searchValue , foundFlag);
     }
-
-    actionListView.getItems().add("Searching for value: " + searchValue);
-
-    SinglyLinkedListOperation.Node headNode = list.getHead();
-    AtomicBoolean foundFlag = new AtomicBoolean(false); // mutable flag
-    searchNext(headNode, 0, searchValue , foundFlag);
-}
 
     // Recursive helper method for sequential search animation
     private void searchNext(SinglyLinkedListOperation.Node current, int index, int searchValue, AtomicBoolean foundFlag) {
@@ -480,40 +471,40 @@ public class SinglyLinkedListController {
         }
 
 
-            HBox uiNode = nodeMap.get(current);
-            StackPane stackPane = (StackPane) uiNode.getChildren().get(0);
-            Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
-            int value = current.data;
-            final int idx = index;
-            final SinglyLinkedListOperation.Node curr = current;
+        HBox uiNode = nodeMap.get(current);
+        StackPane stackPane = (StackPane) uiNode.getChildren().get(0);
+        Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
+        int value = current.data;
+        final int idx = index;
+        final SinglyLinkedListOperation.Node curr = current;
 
 
-            PauseTransition pause = new PauseTransition(Duration.seconds( 1.0));
+        PauseTransition pause = new PauseTransition(Duration.seconds( 1.0));
 
-            pause.setOnFinished(e -> {
-                rect.setFill(Color.ORANGE);
-                actionListView.getItems().add("Position " + idx +" : " + value);
+        pause.setOnFinished(e -> {
+            rect.setFill(Color.ORANGE);
+            actionListView.getItems().add("Position " + idx +" : " + value);
 
 
-                PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
-                revert.setOnFinished(ev ->{
+            PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
+            revert.setOnFinished(ev ->{
                 if(uiNode == headHBox) {
                     rect.setFill(Color.DARKGRAY);
                 }
-                    else if(uiNode == tailHBox) {
+                else if(uiNode == tailHBox) {
 
-                     rect.setFill(Color.GHOSTWHITE);
+                    rect.setFill(Color.GHOSTWHITE);
                 }
-                    else {
+                else {
                     rect.setFill(Color.LIGHTYELLOW);
                 }
-                    traverseNext(curr.next, idx + 1); // next node
-
-                });
-                    revert.play();
+                traverseNext(curr.next, idx + 1); // next node
 
             });
-            pause.play();
+            revert.play();
+
+        });
+        pause.play();
 
 
     }
@@ -568,82 +559,6 @@ public class SinglyLinkedListController {
         return newNode;
     }
 
-    /*private HBox insertAtPosAnimation(int val, int pos) {
-    if (animationPane.getChildren().isEmpty() && pos != 0) {
-        actionListView.getItems().add("List is empty! position " + pos + " not found.\n");
-        return null;
-    }
-
-    actionListView.getItems().add("Inserting value " + val + " at position: " + pos);
-
-    // Find previous node
-    SinglyLinkedListOperation.Node prev = null;
-    HBox prevUI = null;
-    int insertIndex;
-
-    //if (pos == 0) {
-        // Insert at head
-        //SinglyLinkedListOperation.Node realNode = list.insertAtHead(val);
-        //HBox uiNode = insertAtHeadAnimation(val);
-        //nodeMap.put(realNode, uiNode);
-        //return uiNode;
-   // } else {
-        // Find previous node
-        SinglyLinkedListOperation.Node current = list.getHead();
-        for (int i = 0; i < pos - 1; i++) {
-            if (current == null) {
-                actionListView.getItems().add("Error: Position " + pos + " is out of bounds!");
-                return null;
-            }
-            current = current.next;
-        }
-        prev = current;
-        prevUI = nodeMap.get(prev);
-    //}
-
-    if (prevUI == null) {
-        actionListView.getItems().add("Error: Previous node not found in UI!");
-        return null;
-    }
-
-    // Get the index where new node will be inserted
-    insertIndex = animationPane.getChildren().indexOf(prevUI) + 1;
-
-    // Create new node (not last by default, will be updated if actually last)
-    //boolean isLast = (pos == list.getSize());
-        boolean isLast = false;
-    HBox newNode = createNodeView(val, isLast);
-    newNode.setLayoutY(50);
-
-    // Calculate the final position based on previous node
-    double prevActualX = prevUI.getLayoutX() + prevUI.getTranslateX();
-    double newX = prevActualX + 95;
-
-    // First, shift all nodes from insertIndex onwards to the right
-    shiftNodesRightFromIndexFixed(insertIndex, () -> {
-        // After shifting, add the new node at the correct index
-        animationPane.getChildren().add(insertIndex, newNode);
-
-        // Set its final position
-        newNode.setLayoutX(newX);
-        newNode.setTranslateX(0);
-
-        // Fade in animation
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.play();
-
-        // Update tail if inserting at the end
-//        if (pos == list.getSize() - 1) {
-//            updateTail(newNode);
-//        }
-
-        actionListView.getItems().add("✓ Inserted " + val + " at position " + pos);
-    });
-
-    return newNode;
-}*/
 
     // Fixed shift method - only one version
     private void shiftNodesRightFromIndexFixed(int startIndex, Runnable onComplete) {
@@ -663,7 +578,7 @@ public class SinglyLinkedListController {
             double currentActualX = node.getLayoutX() + node.getTranslateX();
 
             TranslateTransition shift = new TranslateTransition(Duration.seconds(0.5), node);
-            shift.setByX(95);
+            shift.setByX(100);
 
             final int index = i;
             final double finalCurrentX = currentActualX;
@@ -671,7 +586,7 @@ public class SinglyLinkedListController {
             shift.setOnFinished(e -> {
                 // IMPORTANT: Update layoutX to the new permanent position
                 // and reset translateX to 0
-                node.setLayoutX(finalCurrentX + 95);
+                node.setLayoutX(finalCurrentX + 100);
                 node.setTranslateX(0);
 
                 if (finishedCount.incrementAndGet() == nodesToShift) {
@@ -838,7 +753,7 @@ public class SinglyLinkedListController {
     private void showDeletePosDialog() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Delete Position");
-        dialog.setHeaderText("Enter position to Delete:");
+        dialog.setHeaderText("Enter position to Delete(0-Based):");
         dialog.setContentText("Position:");
 
         Optional<String> result = dialog.showAndWait();
@@ -886,8 +801,31 @@ public class SinglyLinkedListController {
             }
 
             if (pos == count - 1) { // deleted tail
-                if (!animationPane.getChildren().isEmpty()) {
-                    updateTail((HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1));
+                        if (!animationPane.getChildren().isEmpty()) {
+                            // Get the new tail (last node)
+                            HBox newTail = (HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1);
+
+                            // Remove any existing arrow/NULL at the end
+                            if (newTail.getChildren().size() > 2) {
+                                newTail.getChildren().remove(2);
+                            }
+
+                            // Create and add NULL box for the new tail
+                            Rectangle nullTextRect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+                            nullTextRect.setArcWidth(10);
+                            nullTextRect.setArcHeight(10);
+
+                            Text nullText = new Text("NULL");
+                            nullText.setFont(Font.font(15));
+                            nullText.setFill(Color.DARKBLUE);
+
+                            StackPane NullStack = new StackPane();
+                            NullStack.getChildren().addAll(nullTextRect, nullText);
+                            NullStack.setPrefSize(nullTextRect.getWidth(), nullTextRect.getHeight());
+
+                            newTail.getChildren().add(NullStack);
+
+                            updateTail(newTail);
                 } else {
                     tailHBox = null;
                 }
@@ -1018,24 +956,24 @@ public class SinglyLinkedListController {
                 actionListView.getItems().add("Insert at Head operation...");
                 actionListView.getItems().add(
                         "    private static class Node {\n" +
-                        "        int data;\n" +
-                        "        Node next;\n" +
-                        "\n" +
-                        "        Node(int data) {\n" +
-                        "            this.data = data;\n" +
-                        "            this.next = null;\n" +
-                        "        }\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    private Node head;" +
-                        "\n" +
-                        "    public void insertAtHead(int newData) {\n" +
-                        "        Node newNode = new Node(newData);\n" +
-                        "\n" +
-                        "        newNode.next = head;\n" +
-                        "\n" +
-                        "        head = newNode;\n" +
-                        "    }");
+                                "        int data;\n" +
+                                "        Node next;\n" +
+                                "\n" +
+                                "        Node(int data) {\n" +
+                                "            this.data = data;\n" +
+                                "            this.next = null;\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "\n" +
+                                "    private Node head;" +
+                                "\n" +
+                                "    public void insertAtHead(int newData) {\n" +
+                                "        Node newNode = new Node(newData);\n" +
+                                "\n" +
+                                "        newNode.next = head;\n" +
+                                "\n" +
+                                "        head = newNode;\n" +
+                                "    }");
                 showInsertAtHeadDialog();
                 break;
 
@@ -1088,3 +1026,6 @@ public class SinglyLinkedListController {
         }
     }
 }
+
+
+
