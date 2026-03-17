@@ -846,68 +846,147 @@ public class SinglyLinkedListController {
 
         fade.play();
     }
-//    private void updateTailAfterDeletion() {
-//
-//        int newCount = animationPane.getChildren().size();
-//
-//        if (newCount == 0) {
-//            tailHBox = null;
-//            return;
-//        }
-//
-//        // 🔹 new tail = last HBox in pane
-//        HBox newTail = (HBox) animationPane.getChildren().get(newCount - 1);
-//
-//        // 🔹 Remove any old NULL box first
-//        if (newTail.getChildren().size() > 1) {
-//            newTail.getChildren().remove(1);
-//        }
-//
-//        // 🔹 Create fresh NULL box
-//        Rectangle nullRect = new Rectangle(60, 40, Color.LIGHTYELLOW);
-//        nullRect.setArcWidth(10);
-//        nullRect.setArcHeight(10);
-//
-//        Text nullText = new Text("NULL");
-//        nullText.setFont(Font.font(15));
-//        nullText.setFill(Color.DARKBLUE);
-//
-//        StackPane nullStack = new StackPane(nullRect, nullText);
-//        nullStack.setPrefSize(60, 40);
-//
-//       // newTail.getChildren().add(nullStack);
-//
-//        // 🔹 Create arrow pointing to NULL node
-//        Line line = new Line(0, 0, 20, 0);
-//        line.setStroke(Color.WHITESMOKE);
-//        line.setStrokeWidth(2);
-//
-//        Polygon arrowHead = new Polygon();
-//        arrowHead.getPoints().addAll(
-//                50.0, 0.0,   // tip
-//                40.0, -5.0,  // top
-//                40.0, 5.0    // bottom
-//        );
-//        arrowHead.setFill(Color.WHITESMOKE);
-//
-//        HBox arrowPane = new HBox(line, arrowHead);
-//        arrowPane.setAlignment(Pos.CENTER_LEFT);
-//        arrowPane.setPrefHeight(nullRect.getHeight());
-//        arrowPane.setSpacing(0);
-//
-//        // 🔹 Combine stack + arrow inside a new HBox for NULL
-//        HBox nullNode = new HBox(nullStack, arrowPane);
-//        nullNode.setSpacing(0);
-//        nullNode.setLayoutY(50);
-//
-//        // 🔹 Add NULL node after new tail
-//        animationPane.getChildren().add(nullNode);
-//
-//        // 🔹 Update tail reference + visually mark it
-//
-//        // 🔹 update tail reference + color
-//        updateTail(newTail);
-//    }
+
+    private void updateAnimation(int position, int newValue) {
+        if (animationPane.getChildren().isEmpty()) {
+            actionListView.getItems().add("List is empty! Cannot update.");
+            return;
+        }
+
+        if (position < 0 || position >= animationPane.getChildren().size()) {
+            actionListView.getItems().add("Error: Invalid position! Please enter position between 0 and " + (animationPane.getChildren().size() - 1));
+            return;
+        }
+
+        actionListView.getItems().add("Updating value at position " + position + " to " + newValue);
+
+        // Get the node at the specified position
+        HBox nodeToUpdate = (HBox) animationPane.getChildren().get(position);
+        StackPane stackPane = (StackPane) nodeToUpdate.getChildren().get(0);
+        Text text = (Text) stackPane.getChildren().get(1); // The text showing the value
+
+        int oldValue = Integer.parseInt(text.getText());
+
+        // Highlight the node being updated
+        Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
+
+        // Animation sequence
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+        pause.setOnFinished(e -> {
+            // Change color to indicate update in progress
+            rect.setFill(Color.ORANGE);
+
+            PauseTransition pause2 = new PauseTransition(Duration.seconds(0.3));
+            pause2.setOnFinished(ev -> {
+                // Update the text with new value
+                text.setText(String.valueOf(newValue));
+
+                // Blink effect to show update completed
+                rect.setFill(Color.LIGHTGREEN);
+
+                Timeline blink = new Timeline(
+                        new KeyFrame(Duration.millis(200), evt ->
+                                rect.setFill(rect.getFill() == Color.LIGHTGREEN ? Color.YELLOW : Color.LIGHTGREEN)
+                        )
+                );
+                blink.setCycleCount(4);
+                blink.setOnFinished(b -> {
+                    // Restore original color based on head/tail status
+                    resetNodeColor(nodeToUpdate);
+                    actionListView.getItems().add("✓ Updated position " + position + " from " + oldValue + " to " + newValue);
+                });
+                blink.play();
+            });
+            pause2.play();
+        });
+        pause.play();
+
+        // Update the real linked list
+        boolean success = updateNodeInList(position, newValue);
+        if (!success) {
+            actionListView.getItems().add("Error: Failed to update in linked list!");
+        }
+    }
+    private boolean updateNodeInList(int position, int newValue) {
+        if (position < 0 || position >= list.getSize()) {
+            return false;
+        }
+
+        SinglyLinkedListOperation.Node current = list.getHead();
+        for (int i = 0; i < position; i++) {
+            current = current.next;
+        }
+
+        current.data = newValue;
+        return true;
+    }
+    private void showUpdateDialog() {
+        // Creating a custom dialog
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Update at Position");
+        dialog.setHeaderText("Enter New Value and Position to Update:");
+
+        // Fixing Button type (OK & Cancel)
+        ButtonType updateButtonType = new ButtonType("Update", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+        // Grid Plan
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField valueField = new TextField();
+        valueField.setPromptText("New Value");
+        TextField posField = new TextField();
+        posField.setPromptText("Position (0-based)");
+
+        grid.add(new Label("New Value:"), 0, 0);
+        grid.add(valueField, 1, 0);
+        grid.add(new Label("Position:"), 0, 1);
+        grid.add(posField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Result converter
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new Pair<>(valueField.getText(), posField.getText());
+            }
+            return null;
+        });
+
+        // Dialog show and Result handling
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(pair -> {
+            try {
+                int newValue = Integer.parseInt(pair.getKey());
+                int position = Integer.parseInt(pair.getValue());
+
+                // Validate position
+                int currentSize = list.getSize();
+
+                if (currentSize == 0) {
+                    actionListView.getItems().add("Error: List is empty! Nothing to update.");
+                    return;
+                }
+
+                if (position < 0 || position >= currentSize) {
+                    actionListView.getItems().add("Error: Invalid position! Please enter position between 0 and " + (currentSize - 1));
+                    return;
+                }
+
+                // Call update animation
+                updateAnimation(position, newValue);
+
+            } catch (NumberFormatException e) {
+                actionListView.getItems().add("Error: Please enter valid integers!");
+            }
+        });
+    }
+
+
 
 
     public void initialize() {
@@ -919,7 +998,9 @@ public class SinglyLinkedListController {
                 "Delete Value",
                 "Delete Position",
                 "Search",
-                "Traverse"
+                "Traverse",
+                "Update",
+                "Clear"
         );
 
         SLLChoiceBox.setOnAction(e -> handleChoiceSelection());
@@ -1006,22 +1087,30 @@ public class SinglyLinkedListController {
 
                 break;
             case "Delete Value":
-                actionListView.getItems().add("Delete operation (not animated yet)");
+                actionListView.getItems().add("Delete operation...");
                 showDeleteValueDialog();
                 break;
             case "Delete Position":
-                actionListView.getItems().add("Delete operation (not animated yet)");
+                actionListView.getItems().add("Delete operation...");
                 showDeletePosDialog();
                 break;
 
             case "Search":
-                actionListView.getItems().add("Search operation (pseudo code)");
+                actionListView.getItems().add("Search operation...");
                 showSearchDialog();
                 break;
 
             case "Traverse":
-                actionListView.getItems().add("Traverse operation (pseudo code)");
+                actionListView.getItems().add("Traverse operation...");
                 traverseAnimation();
+                break;
+            case "Update":
+                actionListView.getItems().add("Update operation...");
+                showUpdateDialog();
+                break;
+            case "Clear":
+                // Clear main animation pane
+                animationPane.getChildren().clear();  // ← Clears the pane
                 break;
         }
     }

@@ -136,6 +136,17 @@ public class HelloController implements Initializable {
                 e.printStackTrace();
             }
         }
+        // --- NEW: Graph ---
+        else if (algoName.equals("Graphs")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Graph-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         else {
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

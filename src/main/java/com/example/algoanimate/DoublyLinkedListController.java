@@ -820,6 +820,133 @@ public class DoublyLinkedListController {
         fade.play();
     }
 
+    private void updateAnimation(int position, int newValue) {
+        if (animationPane.getChildren().isEmpty()) {
+            actionListView.getItems().add("List is empty! Cannot update.");
+            return;
+        }
+
+        if (position < 0 || position >= animationPane.getChildren().size()) {
+            actionListView.getItems().add("Error: Invalid position! Please enter position between 0 and " + (animationPane.getChildren().size() - 1));
+            return;
+        }
+
+        actionListView.getItems().add("Updating value at position " + position + " to " + newValue);
+
+        // Get the node at the specified position
+        HBox nodeToUpdate = (HBox) animationPane.getChildren().get(position);
+        StackPane stackPane = (StackPane) nodeToUpdate.getChildren().get(1); // Index 1 is the data stack in DLL
+        Text text = (Text) stackPane.getChildren().get(1); // The text showing the value
+
+        int oldValue = Integer.parseInt(text.getText());
+
+        // Highlight the node being updated
+        Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
+
+        // Animation sequence
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+        pause.setOnFinished(e -> {
+            // Change color to indicate update in progress
+            rect.setFill(Color.ORANGE);
+
+            PauseTransition pause2 = new PauseTransition(Duration.seconds(0.3));
+            pause2.setOnFinished(ev -> {
+                // Update the text with new value
+                text.setText(String.valueOf(newValue));
+
+                // Blink effect to show update completed
+                rect.setFill(Color.LIGHTGREEN);
+
+                Timeline blink = new Timeline(
+                        new KeyFrame(Duration.millis(200), evt ->
+                                rect.setFill(rect.getFill() == Color.LIGHTGREEN ? Color.YELLOW : Color.LIGHTGREEN)
+                        )
+                );
+                blink.setCycleCount(4);
+                blink.setOnFinished(b -> {
+                    // Restore original color based on head/tail status
+                    resetNodeColor(nodeToUpdate);
+                    actionListView.getItems().add("✓ Updated position " + position + " from " + oldValue + " to " + newValue);
+                });
+                blink.play();
+            });
+            pause2.play();
+        });
+        pause.play();
+
+        // Update the real linked list
+        boolean success = list.updateNodeAtPosition(position, newValue);
+        if (!success) {
+            actionListView.getItems().add("Error: Failed to update in linked list!");
+        }
+    }
+
+    private void showUpdateDialog() {
+        // Creating a custom dialog
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Update at Position");
+        dialog.setHeaderText("Enter New Value and Position to Update:");
+
+        // Fixing Button type (OK & Cancel)
+        ButtonType updateButtonType = new ButtonType("Update", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+        // Grid Plan
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField valueField = new TextField();
+        valueField.setPromptText("New Value");
+        TextField posField = new TextField();
+        posField.setPromptText("Position (0-based)");
+
+        grid.add(new Label("New Value:"), 0, 0);
+        grid.add(valueField, 1, 0);
+        grid.add(new Label("Position:"), 0, 1);
+        grid.add(posField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Result converter
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new Pair<>(valueField.getText(), posField.getText());
+            }
+            return null;
+        });
+
+        // Dialog show and Result handling
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(pair -> {
+            try {
+                int newValue = Integer.parseInt(pair.getKey());
+                int position = Integer.parseInt(pair.getValue());
+
+                // Validate position
+                int currentSize = list.getSize();
+
+                if (currentSize == 0) {
+                    actionListView.getItems().add("Error: List is empty! Nothing to update.");
+                    return;
+                }
+
+                if (position < 0 || position >= currentSize) {
+                    actionListView.getItems().add("Error: Invalid position! Please enter position between 0 and " + (currentSize - 1));
+                    return;
+                }
+
+                // Call update animation
+                updateAnimation(position, newValue);
+
+            } catch (NumberFormatException e) {
+                actionListView.getItems().add("Error: Please enter valid integers!");
+            }
+        });
+    }
+
     // Initialize method
     public void initialize() {
         DLLChoiceBox.getItems().addAll(
@@ -830,7 +957,9 @@ public class DoublyLinkedListController {
                 "Delete Value",
                 "Delete Position",
                 "Search",
-                "Traverse"
+                "Traverse",
+                "Update",
+                "Clear"
         );
 
         DLLChoiceBox.setOnAction(e -> handleChoiceSelection());
@@ -930,6 +1059,14 @@ public class DoublyLinkedListController {
             case "Traverse":
                 actionListView.getItems().add("Traverse operation");
                 traverseAnimation();
+                break;
+            case "Update":
+                actionListView.getItems().add("Update operation");
+                showUpdateDialog();
+                break;
+            case "Clear":
+                // Clear main animation pane
+                animationPane.getChildren().clear();  // ← Clears the pane
                 break;
         }
     }
