@@ -37,7 +37,7 @@ public class HelloController implements Initializable {
         addCard("Stack", "LIFO Operations", "||");
         addCard("Queue", "FIFO Operations", "==");
         addCard("Sorting", "Merge, selection,insertion, Bubble Sort", "AZ");
-        addCard("Trees", "BST, AVL, Traversals", "/\\");
+        addCard("Trees", "BST,Traversals", "/\\");
         addCard("Graphs", "BFS, DFS", "o-o");
     }
 
@@ -135,6 +135,15 @@ public class HelloController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        else if (algoName.equals("Trees")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("bst-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) { e.printStackTrace(); }
         }
         else {
 

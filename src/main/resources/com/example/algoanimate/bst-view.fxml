@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.algoanimate.BSTController"
+            stylesheets="@style.css" prefWidth="1200" prefHeight="800" styleClass="root">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
+            <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+            <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
+            <Label text="Binary Search Tree (BST) Visualizer" styleClass="logo-text-primary"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Algorithm Visualizer" styleClass="logo-text-secondary" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="0">
+            <VBox HBox.hgrow="ALWAYS" spacing="0" alignment="TOP_CENTER">
+
+                <VBox spacing="10" alignment="CENTER" styleClass="control-panel-mini">
+                    <padding><Insets top="15" bottom="15"/></padding>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button text="Gen Random" onAction="#handleRandomize" styleClass="btn-premium-blue"/>
+                        <Button text="Reset Tree" onAction="#handleReset" styleClass="btn-premium-red"/>
+                        <Region HBox.hgrow="ALWAYS" maxWidth="30"/>
+                        <TextField fx:id="inputField" promptText="Enter Integer..." styleClass="input-field" prefWidth="130"/>
+                        <Button text="Insert" onAction="#handleInsert" styleClass="btn-premium-blue"/>
+                        <Button text="Delete" onAction="#handleDelete" styleClass="btn-premium-blue"/>
+                        <Button text="Search" onAction="#handleSearch" styleClass="btn-premium-green"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button text="Predecessor" onAction="#handlePredecessor" styleClass="btn-premium-blue"/>
+                        <Button text="Successor" onAction="#handleSuccessor" styleClass="btn-premium-blue"/>
+                        <Region HBox.hgrow="ALWAYS" maxWidth="30"/>
+
+                        <MenuButton text="Traverse" styleClass="btn-premium-green">
+                            <items>
+                                <MenuItem text="Pre-Order" onAction="#handlePreOrder"/>
+                                <MenuItem text="In-Order" onAction="#handleInOrder"/>
+                                <MenuItem text="Post-Order" onAction="#handlePostOrder"/>
+                            </items>
+                        </MenuButton>
+                    </HBox>
+                </VBox>
+
+                <VBox VBox.vgrow="ALWAYS" alignment="CENTER" style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;">
+                    <Pane fx:id="visualizationPane" styleClass="tree-pane" VBox.vgrow="ALWAYS" />
+                </VBox>
+            </VBox>
+
+            <VBox styleClass="code-panel" prefWidth="400" spacing="15">
+                <padding><Insets top="30" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="BST PSEUDOCODE" styleClass="sub-header" style="-fx-text-fill: #38bdf8;"/>
+                <ListView fx:id="codeListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
+
+                <VBox spacing="10" styleClass="var-box">
+                    <Label fx:id="lblStatus" text="Status: Ready" styleClass="var-text"/>
+                    <Label fx:id="lblCurrentNode" text="Current Node: N/A" styleClass="var-text"/>
+                    <Label fx:id="lblComparison" text="Comparison: N/A" styleClass="var-text"/>
+                    <Label fx:id="lblTraversal" text="Printed: " styleClass="var-text" wrapText="true"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

@@ -23,18 +23,22 @@ public class SortingController {
     @FXML private Label lblStatus, lblComparisons, lblSwaps;
     @FXML private Slider speedSlider;
     @FXML private TextField inputField;
+    @FXML private Button pauseBtn; // <-- Pause Button Added
 
     private int[] array;
     private VBox[] barNodes;
     private Rectangle[] rects;
     private int comparisons = 0, swaps = 0;
 
+    // --- Thread and Pause/Stop Flags ---
+    private Thread sortingThread;
+    private volatile boolean isPaused = false;
+    private volatile boolean isStopped = false;
+
     @FXML
     public void initialize() {
-
         algoComboBox.getItems().addAll("Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort");
         algoComboBox.getSelectionModel().selectFirst();
-
 
         algoComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             loadPseudocode(newVal);
@@ -43,7 +47,6 @@ public class SortingController {
         loadPseudocode("Bubble Sort");
         handleRandomize();
     }
-
 
     private void loadPseudocode(String algo) {
         codeListView.getItems().clear();
@@ -91,28 +94,27 @@ public class SortingController {
             );
         } else if (algo.equals("Merge Sort")){
             codeListView.getItems().addAll(
-                    "void mergeSort(arr, left, right) {",    // Line 0
-                    "  if (left >= right) return;",          // Line 1
-                    "  int mid = left + (right - left)/2;",  // Line 2
-                    "  mergeSort(arr, left, mid);",          // Line 3
-                    "  mergeSort(arr, mid + 1, right);",     // Line 4
-                    "  merge(arr, left, mid, right);",       // Line 5
-                    "}",                                     // Line 6
-                    "",                                      // Line 7 (Empty)
-                    "void merge(arr, left, mid, right) {",   // Line 8
-                    "  create temp arrays L[] and R[]",      // Line 9
-                    "  while (i < n1 && j < n2) {",          // Line 10
-                    "    if (L[i] <= R[j])",                 // Line 11
-                    "      arr[k] = L[i];",                  // Line 12
-                    "    else",                              // Line 13
-                    "      arr[k] = R[j];",                  // Line 14
-                    "  }",                                   // Line 15
-                    "  copy remaining elements",             // Line 16
-                    "}"                                      // Line 17
+                    "void mergeSort(arr, left, right) {",
+                    "  if (left >= right) return;",
+                    "  int mid = left + (right - left)/2;",
+                    "  mergeSort(arr, left, mid);",
+                    "  mergeSort(arr, mid + 1, right);",
+                    "  merge(arr, left, mid, right);",
+                    "}",
+                    "",
+                    "void merge(arr, left, mid, right) {",
+                    "  create temp arrays L[] and R[]",
+                    "  while (i < n1 && j < n2) {",
+                    "    if (L[i] <= R[j])",
+                    "      arr[k] = L[i];",
+                    "    else",
+                    "      arr[k] = R[j];",
+                    "  }",
+                    "  copy remaining elements",
+                    "}"
             );
         }
     }
-
 
     @FXML
     private void handleRandomize() {
@@ -139,6 +141,7 @@ public class SortingController {
     }
 
     private void loadArray(int[] newArray) {
+        stopSorting(); // <-- Stop any running sort
         this.array = newArray;
         this.barNodes = new VBox[array.length];
         this.rects = new Rectangle[array.length];
@@ -164,24 +167,69 @@ public class SortingController {
         }
     }
 
+    // --- PAUSE AND STOP LOGIC ---
+    @FXML
+    private void handlePause() {
+        if (sortingThread == null || !sortingThread.isAlive()) return;
+
+        isPaused = !isPaused;
+        if (isPaused) {
+            pauseBtn.setText("Resume");
+            updateStats("Paused");
+        } else {
+            pauseBtn.setText("Pause");
+            updateStats("Resumed");
+        }
+    }
+
+    private void stopSorting() {
+        isStopped = true;
+        isPaused = false;
+        if (sortingThread != null && sortingThread.isAlive()) {
+            sortingThread.interrupt();
+        }
+        Platform.runLater(() -> {
+            if (pauseBtn != null) pauseBtn.setText("Pause");
+        });
+    }
+
     @FXML
     private void handleSort() {
+        stopSorting();
+        isStopped = false;
+        isPaused = false;
+        if (pauseBtn != null) pauseBtn.setText("Pause");
+
         String algo = algoComboBox.getValue();
-        new Thread(() -> {
+
+        sortingThread = new Thread(() -> {
             try {
                 if (algo.equals("Bubble Sort")) bubbleSort();
                 else if (algo.equals("Selection Sort")) selectionSort();
                 else if (algo.equals("Insertion Sort")) insertionSort();
-
-                    else if (algo.equals("Merge Sort")) {
+                else if (algo.equals("Merge Sort")) {
                     mergeSortRecursive(0, array.length - 1, 1);
                     markSorted();
-                    }
-                }             catch (InterruptedException e) { e.printStackTrace(); }
-        }).start();
+                }
+            } catch (InterruptedException e) {
+                Platform.runLater(() -> updateStats("Sorting Stopped!"));
+            }
+        });
+        sortingThread.start();
     }
 
+    private void sleep() throws InterruptedException {
+        if (isStopped) throw new InterruptedException();
 
+        while (isPaused) {
+            Thread.sleep(50);
+            if (isStopped) throw new InterruptedException();
+        }
+
+        Thread.sleep((long) (1100 - speedSlider.getValue()));
+    }
+
+    // --- ALGORITHMS ---
 
     private void bubbleSort() throws InterruptedException {
         for (int i = 0; i < array.length - 1; i++) {
@@ -267,7 +315,93 @@ public class SortingController {
         markSorted();
     }
 
+    private void mergeSortRecursive(int left, int right, int depth) throws InterruptedException {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
 
+            animateSplit(left, mid, right, depth);
+            sleep();
+
+            mergeSortRecursive(left, mid, depth + 1);
+            mergeSortRecursive(mid + 1, right, depth + 1);
+
+            merge(left, mid, right);
+
+            animateMergeBack(left, right, depth);
+            sleep();
+        }
+    }
+
+    private void merge(int left, int mid, int right) throws InterruptedException {
+        for (int i = left; i <= mid; i++) setBarColor(i, "partition-left");
+        for (int i = mid + 1; i <= right; i++) setBarColor(i, "partition-right");
+        sleep();
+
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        for (int i = 0; i < n1; ++i) L[i] = array[left + i];
+        for (int j = 0; j < n2; ++j) R[j] = array[mid + 1 + j];
+
+        int i = 0, j = 0, k = left;
+
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                array[k] = L[i];
+                updateBar(k, array[k], "partition-merged");
+                i++;
+            } else {
+                array[k] = R[j];
+                updateBar(k, array[k], "partition-merged");
+                j++;
+            }
+            k++;
+            sleep();
+        }
+
+        while (i < n1) {
+            array[k] = L[i];
+            updateBar(k, array[k], "partition-merged");
+            i++; k++; sleep();
+        }
+        while (j < n2) {
+            array[k] = R[j];
+            updateBar(k, array[k], "partition-merged");
+            j++; k++; sleep();
+        }
+    }
+
+    // --- ANIMATIONS & VISUAL UPDATES ---
+
+    private void animateSplit(int left, int mid, int right, int depth) {
+        Platform.runLater(() -> {
+            for (int i = left; i <= mid; i++) {
+                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
+                tt.setToX(-20 * depth);
+                tt.setToY(depth * 60);
+                tt.play();
+            }
+            for (int i = mid + 1; i <= right; i++) {
+                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
+                tt.setToX(20 * depth);
+                tt.setToY(depth * 60);
+                tt.play();
+            }
+        });
+    }
+
+    private void animateMergeBack(int left, int right, int depth) {
+        Platform.runLater(() -> {
+            for (int i = left; i <= right; i++) {
+                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
+                tt.setToX(0);
+                tt.setToY((depth - 1) * 60);
+                tt.play();
+            }
+        });
+    }
 
     private void animateJump(Rectangle bar) {
         Platform.runLater(() -> {
@@ -317,6 +451,23 @@ public class SortingController {
         });
     }
 
+    private void setBarColor(int index, String styleClass) {
+        Platform.runLater(() -> {
+            rects[index].getStyleClass().removeAll("vis-bar", "bar-compare", "bar-swap", "bar-left-part", "bar-right-part", "bar-merged");
+            rects[index].getStyleClass().add(styleClass);
+        });
+    }
+
+    private void updateBar(int index, int value, String styleClass) {
+        Platform.runLater(() -> {
+            rects[index].setHeight(value * 6);
+            Label valLabel = (Label) barNodes[index].getChildren().get(0);
+            valLabel.setText(String.valueOf(value));
+            rects[index].getStyleClass().removeAll("vis-bar", "bar-compare", "bar-swap", "bar-left-part", "bar-right-part", "bar-merged");
+            rects[index].getStyleClass().add(styleClass);
+        });
+    }
+
     private void markSorted() {
         Platform.runLater(() -> {
             for(Rectangle r : rects) r.getStyleClass().add("bar-sorted");
@@ -332,170 +483,12 @@ public class SortingController {
         });
     }
 
-    private void sleep() throws InterruptedException {
-        Thread.sleep((long) (1100 - speedSlider.getValue()));
-    }
-
     @FXML
     private void handleBack() throws IOException {
+        stopSorting(); // Stop animation before going back
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         Stage stage = (Stage) displayPane.getScene().getWindow();
         stage.setScene(scene);
     }
-
-    // --- MERGE SORT ALGORITHM ---
-
-    // --- MERGE SORT ALGORITHM (VIDEO STYLE) ---
-// --- ADVANCED MERGE SORT (VIDEO STYLE) ---
-
-    // --- VIDEO STYLE MERGE SORT (SPLIT & MERGE) ---
-
-    private void mergeSortRecursive(int left, int right, int depth) throws InterruptedException {
-        if (left < right) {
-            int mid = left + (right - left) / 2;
-
-            // ১. [DIVIDE] বাম ও ডান পাশকে দুই দিকে সরিয়ে নিচে নামানো
-            animateSplit(left, mid, right, depth);
-            sleep();
-
-            // রিকার্সিভ কল
-            mergeSortRecursive(left, mid, depth + 1);
-            mergeSortRecursive(mid + 1, right, depth + 1);
-
-            // ২. মার্জ লজিক
-            merge(left, mid, right);
-
-            // ৩. [CONQUER] সর্ট হওয়ার পর আবার আগের উচ্চতায় এবং মাঝখানে ফিরিয়ে আনা
-            animateMergeBack(left, right, depth);
-            sleep();
-        }
-    }
-
-    // --- এনিমেশন: দুই পাশে সরিয়ে নিচে নামানো ---
-    private void animateSplit(int left, int mid, int right, int depth) {
-        Platform.runLater(() -> {
-            // বাম পাশের বারগুলো বামে সরবে (-X) এবং নিচে নামবে (+Y)
-            for (int i = left; i <= mid; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
-                tt.setToX(-20 * depth); // বামে শিফট
-                tt.setToY(depth * 60);  // নিচে শিফট
-                tt.play();
-            }
-            // ডান পাশের বারগুলো ডানে সরবে (+X) এবং নিচে নামবে (+Y)
-            for (int i = mid + 1; i <= right; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
-                tt.setToX(20 * depth); // ডানে শিফট
-                tt.setToY(depth * 60); // নিচে শিফট
-                tt.play();
-            }
-        });
-    }
-
-    // --- এনিমেশন: মাঝখানে ফিরিয়ে ওপরে তোলা ---
-    private void animateMergeBack(int left, int right, int depth) {
-        Platform.runLater(() -> {
-            for (int i = left; i <= right; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
-                tt.setToX(0); // মাঝখানে ফিরে আসবে
-                tt.setToY((depth - 1) * 60); // এক লেভেল ওপরে উঠবে
-                tt.play();
-            }
-        });
-    }
-
-    // --- MERGE লজিক (রঙ বদলানোসহ) ---
-    private void merge(int left, int mid, int right) throws InterruptedException {
-        // বাম পাশে লাল, ডান পাশে হলুদ রঙ করা (ভিডিওর মতো)
-        for (int i = left; i <= mid; i++) setBarColor(i, "partition-left");
-        for (int i = mid + 1; i <= right; i++) setBarColor(i, "partition-right");
-        sleep();
-
-        int n1 = mid - left + 1;
-        int n2 = right - mid;
-        int[] L = new int[n1];
-        int[] R = new int[n2];
-
-        for (int i = 0; i < n1; ++i) L[i] = array[left + i];
-        for (int j = 0; j < n2; ++j) R[j] = array[mid + 1 + j];
-
-        int i = 0, j = 0, k = left;
-
-        while (i < n1 && j < n2) {
-            if (L[i] <= R[j]) {
-                array[k] = L[i];
-                updateBar(k, array[k], "partition-merged"); // সর্ট হলে সবুজ
-                i++;
-            } else {
-                array[k] = R[j];
-                updateBar(k, array[k], "partition-merged"); // সর্ট হলে সবুজ
-                j++;
-            }
-            k++;
-            sleep();
-        }
-
-        while (i < n1) {
-            array[k] = L[i];
-            updateBar(k, array[k], "partition-merged");
-            i++; k++; sleep();
-        }
-        while (j < n2) {
-            array[k] = R[j];
-            updateBar(k, array[k], "partition-merged");
-            j++; k++; sleep();
-        }
-    }
-    // --- এনিমেশন হেল্পার মেথড ---
-    private void translateRange(int start, int end, double yOffset) {
-        Platform.runLater(() -> {
-            for (int i = start; i <= end; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(400), barNodes[i]);
-                tt.setToY(yOffset);
-                tt.play();
-            }
-        });
-    }
-
-    // --- NEW HELPER METHODS (Add/Replace these) ---
-
-    // শুধু রঙ পরিবর্তন করার জন্য
-    private void setBarColor(int index, String styleClass) {
-        Platform.runLater(() -> {
-            rects[index].getStyleClass().removeAll("vis-bar", "bar-compare", "bar-swap", "bar-left-part", "bar-right-part", "bar-merged");
-            rects[index].getStyleClass().add(styleClass);
-        });
-    }
-
-    // হাইট এবং রঙ একসাথে পরিবর্তন করার জন্য (Merge Sort-এর জন্য স্পেশাল)
-    private void updateBar(int index, int value, String styleClass) {
-        Platform.runLater(() -> {
-            // ১. হাইট পরিবর্তন
-            rects[index].setHeight(value * 6);
-
-            // ২. টেক্সট আপডেট
-            Label valLabel = (Label) barNodes[index].getChildren().get(0);
-            valLabel.setText(String.valueOf(value));
-
-            // ৩. রঙ পরিবর্তন
-            rects[index].getStyleClass().removeAll("vis-bar", "bar-compare", "bar-swap", "bar-left-part", "bar-right-part", "bar-merged");
-            rects[index].getStyleClass().add(styleClass);
-        });
-    }
-
-    // মার্জ শেষে কালার আগের অবস্থায় ফেরানো
-    private void resetRangeColor(int start, int end) {
-        Platform.runLater(() -> {
-            for (int i = start; i <= end; i++) {
-                rects[i].getStyleClass().removeAll("bar-compare", "bar-swap");
-                rects[i].getStyleClass().add("vis-bar");
-            }
-        });
-    }
-
-    // বারগুলোকে ওপরে বা নিচে মুভ করার জন্য এনিমেশন মেথড
-
-
-
-
 }

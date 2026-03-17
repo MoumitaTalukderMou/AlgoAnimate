@@ -27,6 +27,7 @@
                     <TextField fx:id="inputField" promptText="50, 10, 30..." styleClass="input-field" prefWidth="150"/>
                     <Button text="Set" onAction="#handleCustomInput" styleClass="btn-premium-blue"/>
                     <Button text="Start" onAction="#handleSort" styleClass="btn-premium-green"/>
+                    <Button fx:id="pauseBtn" text="Pause" onAction="#handlePause" styleClass="btn-premium-red"/>
                     <Slider fx:id="speedSlider" min="100" max="1000" value="500" prefWidth="120"/>
                 </HBox>
 
