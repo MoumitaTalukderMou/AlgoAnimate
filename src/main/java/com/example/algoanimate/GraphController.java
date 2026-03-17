@@ -77,6 +77,7 @@ public class GraphController {
                 "Edit",
                 "BFS",
                 "DFS",
+                "Detect Cycle",
                 "Clear"
         );
 
@@ -103,6 +104,9 @@ public class GraphController {
                 break;
             case "Edit":
                 enterEditMode();
+                break;
+            case "Detect Cycle":
+                detectCycle();
                 break;
             case "Clear":
                 // Clear main animation pane
@@ -198,7 +202,7 @@ public class GraphController {
         delVertexButton.setLayoutX(630);
         delVertexButton.setLayoutY(530);
         delVertexButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
-        delVertexButton.setOnAction(e ->  enableDeleteVertexInEditMode(editPane));
+        delVertexButton.setOnAction(e -> enableDeleteVertexInEditMode(editPane));
         editPane.getChildren().add(delVertexButton);
 
         // Add Delete Edge button
@@ -1066,8 +1070,264 @@ public class GraphController {
             }
         }).start();
 
-       // updateStatus("DFS completed");
+        // updateStatus("DFS completed");
     }
+
+    //function to detect Cycle
+
+    /**
+     * Detect cycle in the graph using DFS
+     */
+    /**
+     * Detect cycle in the graph using DFS and highlight the cycle nodes in RED
+     */
+    private void detectCycle() {
+        if (graph.getSize() == 0) {
+            updateStatus("Graph is empty");
+            return;
+        }
+
+        actionListView.getItems().add("=== CYCLE DETECTION ===");
+
+        // Set to keep track of visited nodes
+        Set<Integer> visited = new HashSet<>();
+        // Set to keep track of nodes in current recursion stack
+        Set<Integer> recStack = new HashSet<>();
+        // Map to store parent of each node for cycle reconstruction
+        Map<Integer, Integer> parent = new HashMap<>();
+
+        // Variables to store cycle information
+        List<Integer> cycleNodes = new ArrayList<>();
+        boolean[] cycleFound = new boolean[1];
+
+        // Check each unvisited vertex (for disconnected graphs)
+        for (Integer vertex : graph.getAllVertices()) {
+            if (!visited.contains(vertex)) {
+                // Clear recStack and parent for each new DFS start
+                recStack.clear();
+                parent.clear();
+
+                if (dfsCycleDetection(vertex, visited, recStack, parent, cycleNodes, -1)) {
+                    cycleFound[0] = true;
+                    break;
+                }
+            }
+        }
+
+        if (cycleFound[0]) {
+            // Cycle detected - highlight the cycle nodes in RED
+            actionListView.getItems().add("✓ Cycle detected!");
+            actionListView.getItems().add("Cycle nodes: " + cycleNodes);
+
+            // Visualize the cycle (highlight nodes in RED)
+            new Thread(() -> {
+                try {
+                    // First, reset all nodes to default color
+                    javafx.application.Platform.runLater(() -> {
+                        for (Circle node : nodeCircles.values()) {
+                            node.setFill(Color.LIGHTYELLOW);
+                        }
+                    });
+
+                    Thread.sleep(500);
+
+                    // Highlight cycle nodes in RED
+                    for (int nodeData : cycleNodes) {
+                        Circle node = nodeCircles.get(nodeData);
+                        if (node != null) {
+                            javafx.application.Platform.runLater(() -> {
+                                node.setFill(Color.RED);
+                            });
+                            Thread.sleep(500);
+                        }
+                    }
+
+                    // Keep them red for 3 seconds
+                    Thread.sleep(3000);
+
+                    // Reset all nodes back to default color
+                    javafx.application.Platform.runLater(() -> {
+                        for (Circle node : nodeCircles.values()) {
+                            node.setFill(Color.LIGHTYELLOW);
+                        }
+                        updateStatus("Cycle detection completed - Cycle found");
+                    });
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+        } else {
+            // No cycle detected
+            actionListView.getItems().add("✗ No cycle detected in the graph");
+            updateStatus("No cycle detected");
+
+            // Visual feedback - flash all nodes green quickly
+            new Thread(() -> {
+                try {
+                    for (Circle node : nodeCircles.values()) {
+                        javafx.application.Platform.runLater(() -> {
+                            node.setFill(Color.LIGHTGREEN);
+                        });
+                    }
+
+                    Thread.sleep(1000);
+
+                    javafx.application.Platform.runLater(() -> {
+                        for (Circle node : nodeCircles.values()) {
+                            node.setFill(Color.LIGHTYELLOW);
+                        }
+                    });
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
+        // Display adjacency list for reference
+        actionListView.getItems().add("");
+        actionListView.getItems().add("=== ADJACENCY LIST ===");
+        displayAdjacencyList();
+        actionListView.getItems().add("");
+    }
+
+    /**
+     * DFS helper for cycle detection with cycle reconstruction
+     */
+    private boolean dfsCycleDetection(int current, Set<Integer> visited, Set<Integer> recStack,
+                                      Map<Integer, Integer> parent, List<Integer> cycleNodes, int previous) {
+        // Mark current node as visited and add to recursion stack
+        visited.add(current);
+        recStack.add(current);
+
+        // Get all adjacent vertices
+        GraphOperation.Node currentNode = graph.getNode(current);
+
+        if (currentNode != null) {
+            for (GraphOperation.Node neighbor : currentNode.neighbors) {
+                int neighborData = neighbor.data;
+
+                // Skip the parent edge (for undirected graph)
+                if (neighborData == previous) {
+                    continue;
+                }
+
+                // If not visited, then recurse
+                if (!visited.contains(neighborData)) {
+                    parent.put(neighborData, current);
+                    if (dfsCycleDetection(neighborData, visited, recStack, parent, cycleNodes, current)) {
+                        return true;
+                    }
+                }
+                // If neighbor is in recursion stack, then we found a cycle
+                else if (recStack.contains(neighborData)) {
+                    // Reconstruct the cycle
+                    reconstructCycle(current, neighborData, parent, cycleNodes);
+                    return true;
+                }
+            }
+        }
+
+        // Remove current from recursion stack
+        recStack.remove(current);
+        return false;
+    }
+
+    /**
+     * Reconstruct the cycle path from parent map
+     */
+    private void reconstructCycle(int current, int neighborData, Map<Integer, Integer> parent,
+                                  List<Integer> cycleNodes) {
+        cycleNodes.clear();
+
+        // Add the edge nodes
+        cycleNodes.add(neighborData);
+        cycleNodes.add(current);
+
+        // Backtrack from current node to neighborData using parent map
+        int node = current;
+        while (parent.containsKey(node) && parent.get(node) != neighborData) {
+            node = parent.get(node);
+            cycleNodes.add(node);
+        }
+
+        // Add the starting node to complete the cycle
+        if (parent.containsKey(node)) {
+            cycleNodes.add(parent.get(node));
+        }
+
+        // Remove duplicates at the end if necessary
+        // For undirected graphs, a cycle must have at least 3 nodes
+        Set<Integer> uniqueNodes = new LinkedHashSet<>(cycleNodes);
+        cycleNodes.clear();
+        cycleNodes.addAll(uniqueNodes);
+
+        // Ensure we have at least 3 nodes for a valid cycle
+        if (cycleNodes.size() < 3) {
+            // This might be a 2-node "cycle" (which is actually just an edge in undirected graph)
+            // For undirected graphs, we need at least 3 nodes for a proper cycle
+            cycleNodes.clear();
+
+            // Try to find a longer cycle by looking at the neighbor's neighbors
+            findAlternateCycle(current, neighborData, cycleNodes);
+        }
+    }
+
+    /**
+     * Alternative method to find a proper cycle (with at least 3 nodes)
+     */
+    private void findAlternateCycle(int node1, int node2, List<Integer> cycleNodes) {
+        cycleNodes.clear();
+
+        // For an undirected graph, a proper cycle needs at least 3 nodes
+        // Let's find a path from node2 back to node1 through another node
+
+        GraphOperation.Node node2Obj = graph.getNode(node2);
+        if (node2Obj != null) {
+            for (GraphOperation.Node neighbor : node2Obj.neighbors) {
+                int neighborData = neighbor.data;
+
+                // Skip node1 as it's directly connected
+                if (neighborData != node1) {
+                    // Check if this neighbor is connected to node1
+                    GraphOperation.Node neighborObj = graph.getNode(neighborData);
+                    if (neighborObj != null) {
+                        for (GraphOperation.Node n : neighborObj.neighbors) {
+                            if (n.data == node1) {
+                                // Found a 3-node cycle: node1 - node2 - neighborData - node1
+                                cycleNodes.add(node1);
+                                cycleNodes.add(node2);
+                                cycleNodes.add(neighborData);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // If no 3-node cycle found, try a simple approach
+        // For debugging: if we can't find a proper cycle, just return the two nodes
+        // (this should rarely happen with proper graph input)
+        if (cycleNodes.isEmpty()) {
+            cycleNodes.add(node1);
+            cycleNodes.add(node2);
+        }
+    }
+
+    /**
+     * DFS helper for cycle detection
+     */
+    /**
+     * DFS helper for cycle detection - FIXED VERSION
+     */
+    /**
+     * DFS helper for cycle detection - ALTERNATIVE FIX with debugging
+     */
+
+
 
     /**
      * Display adjacency list in the action list view

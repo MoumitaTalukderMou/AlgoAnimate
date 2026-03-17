@@ -196,6 +196,18 @@ public class GraphOperation {
         }
     }
 
+    // Get neighbors of a vertex
+    public List<Integer> getNeighbors(int vertex) {
+        List<Integer> neighbors = new ArrayList<>();
+        Node node = nodes.get(vertex);
+        if (node != null) {
+            for (Node neighbor : node.neighbors) {
+                neighbors.add(neighbor.data);
+            }
+        }
+        return neighbors;
+    }
+
     // Get all connected components
     public List<List<Integer>> getConnectedComponents() {
         List<List<Integer>> components = new ArrayList<>();
