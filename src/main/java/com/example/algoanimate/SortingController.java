@@ -23,14 +23,14 @@ public class SortingController {
     @FXML private Label lblStatus, lblComparisons, lblSwaps;
     @FXML private Slider speedSlider;
     @FXML private TextField inputField;
-    @FXML private Button pauseBtn; // <-- Pause Button Added
+    @FXML private Button pauseBtn; // <-- Missing button added
 
     private int[] array;
     private VBox[] barNodes;
     private Rectangle[] rects;
     private int comparisons = 0, swaps = 0;
 
-    // --- Thread and Pause/Stop Flags ---
+    // --- Threading & Pause Variables ---
     private Thread sortingThread;
     private volatile boolean isPaused = false;
     private volatile boolean isStopped = false;
@@ -141,7 +141,7 @@ public class SortingController {
     }
 
     private void loadArray(int[] newArray) {
-        stopSorting(); // <-- Stop any running sort
+        stopSorting(); // Stop any previous animation
         this.array = newArray;
         this.barNodes = new VBox[array.length];
         this.rects = new Rectangle[array.length];
@@ -167,7 +167,7 @@ public class SortingController {
         }
     }
 
-    // --- PAUSE AND STOP LOGIC ---
+    // --- NEW: PAUSE & STOP LOGIC ---
     @FXML
     private void handlePause() {
         if (sortingThread == null || !sortingThread.isAlive()) return;
@@ -229,7 +229,7 @@ public class SortingController {
         Thread.sleep((long) (1100 - speedSlider.getValue()));
     }
 
-    // --- ALGORITHMS ---
+    // --- SORTING ALGORITHMS ---
 
     private void bubbleSort() throws InterruptedException {
         for (int i = 0; i < array.length - 1; i++) {

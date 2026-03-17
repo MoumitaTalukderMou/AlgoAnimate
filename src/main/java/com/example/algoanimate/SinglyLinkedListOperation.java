@@ -146,4 +146,23 @@ public class SinglyLinkedListOperation  {
         return count;
     }
 
+    // NEW METHOD: Update node at specific position
+    public boolean updateNodeAtPosition(int position, int newValue) {
+        if (position < 0 || position >= size) {
+            return false;
+        }
+
+        Node current = head;
+        for (int i = 0; i < position; i++) {
+            current = current.next;
+        }
+
+        current.data = newValue;
+
+        // No need to update head/tail as they remain the same
+        // Only the value changes
+
+        return true;
+    }
+
 }

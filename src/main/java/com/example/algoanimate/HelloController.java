@@ -74,7 +74,6 @@ public class HelloController implements Initializable {
 
         card.getChildren().addAll(icon, titleLabel, descLabel);
 
-
         card.setOnMouseClicked(event -> handleCardClick(title));
 
         cardContainer.getChildren().add(card);
@@ -84,38 +83,23 @@ public class HelloController implements Initializable {
     private void handleCardClick(String algoName) {
         if (algoName.equals("Sorting")) {
             try {
-
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sorting-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
-
-
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
-
-
                 stage.setScene(scene);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else if (algoName.equals("Linked List")) {
+        } else if (algoName.equals("Linked List")) {
             try {
-
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LinkedList-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
-
-
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
-
-
                 stage.setScene(scene);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        else if (algoName.equals("Stack")) {
+        } else if (algoName.equals("Stack")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("stack-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
@@ -128,25 +112,35 @@ public class HelloController implements Initializable {
         // --- NEW: Queue Routing ---
         else if (algoName.equals("Queue")) {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("queue-viw.fxml"));
+                // FIXED THE TYPO HERE: queue-view.fxml
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("queue-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        else if (algoName.equals("Trees")) {
+        } else if (algoName.equals("Trees")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("bst-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        else {
-
+        // --- NEW: Graph ---
+        else if (algoName.equals("Graphs")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Graph-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Coming Soon");
             alert.setHeaderText(null);

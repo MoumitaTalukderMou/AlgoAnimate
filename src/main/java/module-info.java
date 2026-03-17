@@ -2,6 +2,7 @@ module com.example.algoanimate {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires javafx.base;
 //    requires com.example.algoanimate;
 
 

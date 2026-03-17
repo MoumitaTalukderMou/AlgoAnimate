@@ -30,20 +30,18 @@ public class LinkedListController {
     @FXML
     private void onSinglyLinkedListClick() {
         System.out.println("Singly LinkedList clicked!");
-        // এখানে তুমি Singly LinkedList visualizer open করতে পারো
         try {
-            // ১. Sorting FXML ফাইল লোড করা
+            // ১. Sorting FXML file load
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SinglyLinkedList-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
 
-            // ২. বর্তমান স্টেজ (উইন্ডো) খুঁজে বের করা
+
             Stage stage = (Stage) btnSinglyLinkedList.getScene().getWindow();
 
-            // ৩. নতুন সিন সেট করা
             stage.setScene(scene);
 
         } catch (IOException e) {
-            e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
+            e.printStackTrace();
         }
     }
 
@@ -52,38 +50,33 @@ public class LinkedListController {
         System.out.println("Doubly LinkedList clicked!");
         // এখানে তুমি Doubly LinkedList visualizer open করতে পারো
         try {
-            // ১. Sorting FXML ফাইল লোড করা
+            // ১. Sorting FXML file load
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DoublyLinkedList-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
-
-            // ২. বর্তমান স্টেজ (উইন্ডো) খুঁজে বের করা
             Stage stage = (Stage) btnDoublyLinkedList.getScene().getWindow();
 
-            // ৩. নতুন সিন সেট করা
             stage.setScene(scene);
 
         } catch (IOException e) {
-            e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
+            e.printStackTrace();
         }
     }
 
     @FXML
     private void onCircularLinkedListClick() {
         System.out.println("Circular LinkedList clicked!");
-        // এখানে তুমি Circular LinkedList visualizer open করতে পারো
+        //  Circular LinkedList visualizer open
         try {
-            // ১. Sorting FXML ফাইল লোড করা
+            // ১. Sorting FXML file load
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CircularLinkedList-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
 
-            // ২. বর্তমান স্টেজ (উইন্ডো) খুঁজে বের করা
             Stage stage = (Stage) btnCircularLinkedList.getScene().getWindow();
 
-            // ৩. নতুন সিন সেট করা
             stage.setScene(scene);
 
         } catch (IOException e) {
-            e.printStackTrace(); // এরর হলে কনসোলে দেখাবে
+            e.printStackTrace();
         }
     }
 

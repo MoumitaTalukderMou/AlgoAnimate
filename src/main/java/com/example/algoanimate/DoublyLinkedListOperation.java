@@ -116,6 +116,20 @@ public class DoublyLinkedListOperation {
         size--;
     }
 
+    public boolean updateNodeAtPosition(int position, int newValue) {
+        if (position < 0 || position >= size) {
+            return false;
+        }
+
+        Node current = head;
+        for (int i = 0; i < position; i++) {
+            current = current.next;
+        }
+
+        current.data = newValue;
+        return true;
+    }
+
     public Node getHead() {
         return head;
     }
