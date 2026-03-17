@@ -924,50 +924,8 @@ public class GraphController {
         firstNodeForEdge = null;
     }
 
-    /**
-     * Enable Add Vertex mode
-     */
-    private void enableAddVertexMode() {
-        isCreatingGraph = false;
-        isEditMode = false;
-        updateStatus("Add Vertex mode: Click anywhere to add a new vertex");
 
-        animationPane.setOnMouseClicked(e -> {
-            if (e.getTarget() == animationPane) {
-                int newData = generateNodeData();
-                createNodeOnMainPane(newData, e.getX(), e.getY());
-            }
-        });
-    }
 
-    /**
-     * Create a node directly on the main pane
-     */
-    private void createNodeOnMainPane(int data, double x, double y) {
-        Circle nodeCircle = new Circle(25);
-        nodeCircle.setCenterX(x);
-        nodeCircle.setCenterY(y);
-        nodeCircle.setFill(Color.LIGHTYELLOW);
-        nodeCircle.setStroke(Color.WHITESMOKE);
-        nodeCircle.setStrokeWidth(2);
-
-        Text label = new Text(String.valueOf(data));
-        label.setX(x - 8);
-        label.setY(y + 5);
-        label.setFill(Color.BLACK);
-        label.setFont(javafx.scene.text.Font.font("Arial", 14));
-
-        nodeCircles.put(data, nodeCircle);
-        circleToData.put(nodeCircle, data);
-        nodeLabels.put(data, label);
-
-        graph.addVertex(data);
-
-        animationPane.getChildren().addAll(nodeCircle, label);
-        nodeListView.getItems().add("Node " + data);
-        actionListView.getItems().add("Added vertex " + data);
-        updateSize(graph.getSize());
-    }
 
     /**
      * Perform BFS traversal
@@ -1018,7 +976,7 @@ public class GraphController {
             }
         }).start();
 
-        //updateStatus("BFS completed");
+
     }
 
     /**
@@ -1070,7 +1028,7 @@ public class GraphController {
             }
         }).start();
 
-        // updateStatus("DFS completed");
+
     }
 
     //function to detect Cycle
@@ -1316,16 +1274,6 @@ public class GraphController {
             cycleNodes.add(node2);
         }
     }
-
-    /**
-     * DFS helper for cycle detection
-     */
-    /**
-     * DFS helper for cycle detection - FIXED VERSION
-     */
-    /**
-     * DFS helper for cycle detection - ALTERNATIVE FIX with debugging
-     */
 
 
 

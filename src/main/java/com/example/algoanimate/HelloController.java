@@ -140,7 +140,20 @@ public class HelloController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
+        }
+        // --- NEW: Array ---
+        else if (algoName.equals("Arrays")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Array-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Stage stage = (Stage) cardContainer.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Coming Soon");
             alert.setHeaderText(null);
