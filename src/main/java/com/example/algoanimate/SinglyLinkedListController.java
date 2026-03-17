@@ -70,6 +70,11 @@ public class SinglyLinkedListController {
     @FXML
     private ListView<String> actionListView; // right panel
 
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private Label lblSize;
+
 
     private SinglyLinkedListOperation list = new SinglyLinkedListOperation();
     private Map<SinglyLinkedListOperation.Node, HBox> nodeMap = new HashMap<>();
@@ -245,6 +250,7 @@ public class SinglyLinkedListController {
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1);
                 fadeIn.play();
+                updateSize(list.getSize());
             });
         } else {
             // List is empty, just add directly
@@ -322,6 +328,7 @@ public class SinglyLinkedListController {
 
         TranslateTransition tt = new TranslateTransition(Duration.seconds(1), newNode);
         tt.setToX(x);
+        updateSize(list.getSize());
         tt.play();
 
         updateTail(newNode);
@@ -554,6 +561,7 @@ public class SinglyLinkedListController {
             fadeIn.play();
 
             actionListView.getItems().add("✓ Inserted " + val + " at position " + pos);
+            updateSize(list.getSize());
         });
 
         return newNode;
@@ -841,6 +849,7 @@ public class SinglyLinkedListController {
                     //updateTailAfterDeletion();
                 }
                 actionListView.getItems().add("Deleted node at position " + pos);
+                updateSize(list.getSize());
             });
         });
 
@@ -986,7 +995,19 @@ public class SinglyLinkedListController {
         });
     }
 
+    /**
+     * Update status label
+     */
+    private void updateStatus(String status) {
+        lblStatus.setText("Status: " + status);
+    }
 
+    /**
+     * Update size label
+     */
+    private void updateSize(int size) {
+        lblSize.setText("Size: " + size);
+    }
 
 
     public void initialize() {
@@ -1020,6 +1041,7 @@ public class SinglyLinkedListController {
         switch (selected) {
             case "Create":
                 actionListView.getItems().add("Creating new Linked List...");
+                updateStatus("Creating new Linked List...");
                 list = new SinglyLinkedListOperation();  // reset real list
                 nodeMap.clear();                         // reset mapping
                 animationPane.getChildren().clear();     // reset UI
@@ -1031,10 +1053,12 @@ public class SinglyLinkedListController {
                     HBox uiNode = insertAtTailAnimation(value);
                     nodeMap.put(realNode, uiNode);
                 }
+                updateSize(4);
                 break;
 
             case "Insert at Head":
                 actionListView.getItems().add("Insert at Head operation...");
+                updateStatus("Insert at Head operation");
                 actionListView.getItems().add(
                         "    private static class Node {\n" +
                                 "        int data;\n" +
@@ -1060,6 +1084,7 @@ public class SinglyLinkedListController {
 
             case "Insert at Tail":
                 actionListView.getItems().add("Insert at Tail operation...");
+                updateStatus("Insert at Tail operation");
                 actionListView.getItems().add("private static class Node {\n" +
                         "        int data;\n" +
                         "        Node next;\n" +
@@ -1083,34 +1108,43 @@ public class SinglyLinkedListController {
                 break;
 
             case "Insert at Position" :
+                updateStatus("Insert at Tail operation");
                 showInsertAtPosDialog();
 
                 break;
             case "Delete Value":
                 actionListView.getItems().add("Delete operation...");
+                updateStatus("Delete Value");
                 showDeleteValueDialog();
                 break;
             case "Delete Position":
                 actionListView.getItems().add("Delete operation...");
+                updateStatus("Delete Value at Position");
                 showDeletePosDialog();
                 break;
 
             case "Search":
                 actionListView.getItems().add("Search operation...");
+                updateStatus("Searching...");
                 showSearchDialog();
                 break;
 
             case "Traverse":
                 actionListView.getItems().add("Traverse operation...");
+                updateStatus("Traversing...");
                 traverseAnimation();
                 break;
             case "Update":
                 actionListView.getItems().add("Update operation...");
+                updateStatus("Updating...");
                 showUpdateDialog();
                 break;
             case "Clear":
                 // Clear main animation pane
+                actionListView.getItems().add("Cleared");
+                updateStatus("Clearing...");
                 animationPane.getChildren().clear();  // ← Clears the pane
+                updateSize(0);
                 break;
         }
     }

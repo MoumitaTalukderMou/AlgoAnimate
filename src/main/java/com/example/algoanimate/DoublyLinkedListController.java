@@ -48,6 +48,11 @@ public class DoublyLinkedListController {
     @FXML
     private ListView<String> actionListView; // right panel
 
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private Label lblSize;
+
     private DoublyLinkedListOperation list = new DoublyLinkedListOperation();
     private Map<DoublyLinkedListOperation.Node, HBox> nodeMap = new HashMap<>();
     private HBox headHBox;
@@ -249,11 +254,14 @@ public class DoublyLinkedListController {
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1);
                 fadeIn.play();
+
+                updateSize(list.getSize());
             });
         } else {
             animationPane.getChildren().add(newNode);
             updateHead(newNode);
             updateTail(newNode);
+            updateSize(list.getSize());
         }
 
         return newNode;
@@ -291,6 +299,8 @@ public class DoublyLinkedListController {
             if (animationPane.getChildren().size() > 1) {
                 updateAdjacentArrows(animationPane.getChildren().size() - 2);
             }
+
+            updateSize(list.getSize());
         });
         tt.play();
 
@@ -395,6 +405,8 @@ public class DoublyLinkedListController {
                 if (pos + 1 < animationPane.getChildren().size()) updateAdjacentArrows(pos + 1);
 
                 actionListView.getItems().add("✓ Inserted " + val + " at position " + pos);
+
+                updateSize(list.getSize());
             });
 
             return newNode;
@@ -815,6 +827,7 @@ public class DoublyLinkedListController {
                     }
                 }
                 actionListView.getItems().add("Deleted node at position " + pos);
+                updateSize(list.getSize());
             });
         });
         fade.play();
@@ -947,6 +960,20 @@ public class DoublyLinkedListController {
         });
     }
 
+    /**
+     * Update status label
+     */
+    private void updateStatus(String status) {
+        lblStatus.setText("Status: " + status);
+    }
+
+    /**
+     * Update size label
+     */
+    private void updateSize(int size) {
+        lblSize.setText("Size: " + size);
+    }
+
     // Initialize method
     public void initialize() {
         DLLChoiceBox.getItems().addAll(
@@ -968,6 +995,7 @@ public class DoublyLinkedListController {
         actionListView.getItems().clear();
         headHBox = null;
         tailHBox = null;
+        updateSize(0);
     }
 
     private void handleChoiceSelection() {
@@ -977,6 +1005,7 @@ public class DoublyLinkedListController {
         switch (selected) {
             case "Create":
                 actionListView.getItems().add("Creating new Doubly Linked List...");
+                updateStatus("Creating new Linked List...");
                 list = new DoublyLinkedListOperation();
                 nodeMap.clear();
                 animationPane.getChildren().clear();
@@ -988,10 +1017,12 @@ public class DoublyLinkedListController {
                     HBox uiNode = insertAtTailAnimation(value);
                     nodeMap.put(realNode, uiNode);
                 }
+                updateSize(4);
                 break;
 
             case "Insert at Head":
                 actionListView.getItems().add("Insert at Head operation...");
+                updateStatus("Insert at Head operation");
                 actionListView.getItems().add(
                         "private static class Node {\n" +
                                 "    int data;\n" +
@@ -1023,6 +1054,7 @@ public class DoublyLinkedListController {
 
             case "Insert at Tail":
                 actionListView.getItems().add("Insert at Tail operation...");
+                updateStatus("Insert at Tail operation");
                 actionListView.getItems().add(
                         "public void insertAtTail(int data) {\n" +
                                 "    Node newNode = new Node(data);\n" +
@@ -1038,35 +1070,45 @@ public class DoublyLinkedListController {
                 break;
 
             case "Insert at Position":
+                actionListView.getItems().add("Insert at Position operation...");
+                updateStatus("Insert at Position operation");
                 showInsertAtPosDialog();
                 break;
 
             case "Delete Value":
                 actionListView.getItems().add("Delete operation by value");
+                updateStatus("Delete value");
                 showDeleteValueDialog();
                 break;
 
             case "Delete Position":
                 actionListView.getItems().add("Delete operation by position");
+                updateStatus("Delete position");
                 showDeletePosDialog();
                 break;
 
             case "Search":
                 actionListView.getItems().add("Search operation");
+                updateStatus("Search operation");
                 showSearchDialog();
                 break;
 
             case "Traverse":
                 actionListView.getItems().add("Traverse operation");
+                updateStatus("Traverse operation");
                 traverseAnimation();
                 break;
             case "Update":
                 actionListView.getItems().add("Update operation");
+                updateStatus("Update operation");
                 showUpdateDialog();
                 break;
             case "Clear":
                 // Clear main animation pane
+                actionListView.getItems().add("Cleared");
+                updateStatus("Cleared");
                 animationPane.getChildren().clear();  // ← Clears the pane
+                updateSize(0);
                 break;
         }
     }
