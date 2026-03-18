@@ -141,15 +141,22 @@ public class SortingController {
     }
 
     private void loadArray(int[] newArray) {
-        stopSorting(); // Stop any previous animation
+        stopSorting();
         this.array = newArray;
         this.barNodes = new VBox[array.length];
         this.rects = new Rectangle[array.length];
         displayPane.getChildren().clear();
+
+        // --- THE REAL FIX ---
+        // বারগুলো নিচে সমান থাকবে, কিন্তু নিচে ২৫০ পিক্সেল ফাঁকা জায়গা (Padding) দেওয়া হলো
+        // যাতে অ্যানিমেশনের সময় বারগুলো আরামে নিচে নামতে পারে!
+        displayPane.setAlignment(javafx.geometry.Pos.BOTTOM_CENTER);
+        displayPane.setPadding(new javafx.geometry.Insets(0, 0, 250, 0));
+
         comparisons = 0; swaps = 0; updateStats("Ready");
 
         for (int i = 0; i < array.length; i++) {
-            Rectangle bar = new Rectangle(40, array[i] * 6);
+            Rectangle bar = new Rectangle(40, array[i] * 3); // হাইট ছোট রাখা হয়েছে
             bar.getStyleClass().add("vis-bar");
 
             Label valLabel = new Label(String.valueOf(array[i]));
@@ -233,28 +240,39 @@ public class SortingController {
 
     private void bubbleSort() throws InterruptedException {
         for (int i = 0; i < array.length - 1; i++) {
-            trace(2);
+            trace(2); // bool swapped = false;
             boolean swapped = false;
+            sleep(); // সিউডোকোড দেখার জন্য একটু বিরতি
+
             for (int j = 0; j < array.length - i - 1; j++) {
-                trace(4);
+
+                trace(4); // if (arr[j] > arr[j+1])
                 highlight(j, j+1, "compare");
                 updateStats("Comparing " + array[j] + " & " + array[j+1]);
                 sleep();
                 comparisons++;
 
                 if (array[j] > array[j+1]) {
+
+                    trace(5); // swap(arr[j], arr[j+1]);  <-- এই লাইনটি যোগ করা হয়েছে
                     highlight(j, j+1, "swap");
-                    trace(6);
                     animateJump(rects[j]); animateJump(rects[j+1]);
 
                     int temp = array[j]; array[j] = array[j+1]; array[j+1] = temp;
-                    swapped = true;
                     swapBars(j, j+1);
                     swaps++;
+                    sleep();
+
+                    trace(6); // swapped = true;
+                    swapped = true;
                     sleep();
                 }
                 resetColor(j, j+1);
             }
+
+            trace(9); // if (!swapped) break; <-- এই লাইনটি যোগ করা হয়েছে
+            sleep();
+
             if(!swapped) break;
         }
         markSorted();
@@ -262,81 +280,168 @@ public class SortingController {
 
     private void selectionSort() throws InterruptedException {
         for (int i = 0; i < array.length - 1; i++) {
-            trace(1);
+            trace(1); // for (int i = 0; i < n-1; i++) {
+            sleep();
+
+            trace(2); // int min_idx = i;
             int minIdx = i;
+            highlight(minIdx, "swap");
+            updateStats("Assuming minimum is at index " + minIdx + " (Value: " + array[minIdx] + ")");
+            sleep();
+
             for (int j = i + 1; j < array.length; j++) {
-                trace(3);
-                highlight(minIdx, j, "compare");
-                comparisons++;
+                trace(3); // for (int j = i+1; j < n; j++) {
                 sleep();
+
+                trace(4); // if (arr[j] < arr[min_idx]) {
+                highlight(j, "compare");
+                updateStats("Comparing " + array[j] + " with current min " + array[minIdx]);
+                sleep();
+                comparisons++;
+
                 if (array[j] < array[minIdx]) {
-                    resetColor(minIdx);
+                    trace(5);
+
+
+                    if (minIdx != i) resetColor(minIdx);
+
                     minIdx = j;
                     highlight(minIdx, "swap");
-                } else resetColor(j);
+                    updateStats("Found new minimum: " + array[minIdx]);
+                    sleep();
+                } else {
+                    resetColor(j);
+                }
             }
+
+            trace(8);
+
+
             if (minIdx != i) {
-                trace(8);
-                int temp = array[minIdx]; array[minIdx] = array[i]; array[i] = temp;
-                animateJump(rects[minIdx]); animateJump(rects[i]);
+                highlight(i, "compare");
+                sleep();
+
+                int temp = array[minIdx];
+                array[minIdx] = array[i];
+                array[i] = temp;
+
+                animateJump(rects[minIdx]);
+                animateJump(rects[i]);
                 swapBars(minIdx, i);
                 swaps++;
                 sleep();
+
+                resetColor(minIdx);
             }
-            rects[i].getStyleClass().add("bar-sorted");
+
+
+            resetColor(i);
+            setBarColor(i, "partition-merged");
         }
+
+
+        setBarColor(array.length - 1, "partition-merged");
         markSorted();
     }
 
     private void insertionSort() throws InterruptedException {
         for (int i = 1; i < array.length; i++) {
-            trace(1);
+            trace(1); // for (int i = 1; i < n; i++)
+            sleep();
+
+            trace(2); // int key = arr[i]; int j = i - 1;
             int key = array[i];
             int j = i - 1;
             highlight(i, "swap");
             sleep();
 
-            while (j >= 0 && array[j] > key) {
-                trace(3);
-                highlight(j, j + 1, "compare");
-                comparisons++;
-                sleep();
 
+            trace(3); // while (j >= 0 && arr[j] > key)
+            if (j >= 0) {
+                highlight(j, "compare");
+                updateStats("Comparing " + array[j] + " with key " + key);
+            }
+            comparisons++;
+            sleep();
+
+            while (j >= 0 && array[j] > key) {
+
+                trace(4); // arr[j + 1] = arr[j];
                 array[j + 1] = array[j];
                 swapBars(j, j + 1);
                 swaps++;
+                sleep();
+
+                trace(5); // j = j - 1;
+                resetColor(j + 1);
                 j--;
                 sleep();
+
+
+                trace(3); // while (j >= 0 && arr[j] > key)
+                if (j >= 0) {
+                    highlight(j, "compare");
+                    updateStats("Comparing " + array[j] + " with key " + key);
+                    comparisons++;
+                }
+                sleep();
             }
+
+
+            if (j >= 0) {
+                resetColor(j);
+            }
+
+            trace(7); // arr[j + 1] = key;
             array[j + 1] = key;
-            trace(7);
             resetColor(j + 1);
+            sleep();
         }
         markSorted();
     }
 
     private void mergeSortRecursive(int left, int right, int depth) throws InterruptedException {
-        if (left < right) {
-            int mid = left + (right - left) / 2;
+        trace(0); // void mergeSort(arr, left, right)
+        updateStats("Calling mergeSort on indices " + left + " to " + right);
+        sleep();
 
-            animateSplit(left, mid, right, depth);
-            sleep();
-
-            mergeSortRecursive(left, mid, depth + 1);
-            mergeSortRecursive(mid + 1, right, depth + 1);
-
-            merge(left, mid, right);
-
-            animateMergeBack(left, right, depth);
-            sleep();
+        trace(1);
+        sleep();
+        if (left >= right) {
+            return;
         }
+
+        trace(2);
+        int mid = left + (right - left) / 2;
+        updateStats("Splitting array at mid index " + mid);
+        animateSplit(left, mid, right, depth);
+        sleep();
+
+        trace(3);
+        updateStats("Recursively sorting left half (" + left + " to " + mid + ")");
+        sleep();
+        mergeSortRecursive(left, mid, depth + 1);
+
+        trace(4);
+        updateStats("Recursively sorting right half (" + (mid + 1) + " to " + right + ")");
+        sleep();
+        mergeSortRecursive(mid + 1, right, depth + 1);
+
+        trace(5);
+        updateStats("Merging left and right halves");
+        sleep();
+        merge(left, mid, right);
+
+        animateMergeBack(left, right, depth);
+        sleep();
     }
 
     private void merge(int left, int mid, int right) throws InterruptedException {
-        for (int i = left; i <= mid; i++) setBarColor(i, "partition-left");
-        for (int i = mid + 1; i <= right; i++) setBarColor(i, "partition-right");
+        trace(8);
         sleep();
 
+        trace(9);
+        updateStats("Creating temporary L[] and R[] arrays");
         int n1 = mid - left + 1;
         int n2 = right - mid;
         int[] L = new int[n1];
@@ -345,48 +450,82 @@ public class SortingController {
         for (int i = 0; i < n1; ++i) L[i] = array[left + i];
         for (int j = 0; j < n2; ++j) R[j] = array[mid + 1 + j];
 
+        Platform.runLater(() -> {
+            for (int x = left; x <= right; x++) {
+                rects[x].setOpacity(0.3);
+            }
+        });
+        sleep();
+
         int i = 0, j = 0, k = left;
 
         while (i < n1 && j < n2) {
+            trace(10); // while (i < n1 && j < n2)
+            sleep();
+
+            trace(11); // if (L[i] <= R[j])
+            updateStats("Comparing " + L[i] + " and " + R[j]);
+            comparisons++;
+            sleep();
+
             if (L[i] <= R[j]) {
+                trace(12); // arr[k] = L[i];
                 array[k] = L[i];
                 updateBar(k, array[k], "partition-merged");
+                updateStats("Placed " + L[i] + " from left half");
                 i++;
             } else {
+                trace(14); // arr[k] = R[j];
                 array[k] = R[j];
                 updateBar(k, array[k], "partition-merged");
+                updateStats("Placed " + R[j] + " from right half");
                 j++;
             }
             k++;
             sleep();
         }
 
+        trace(16); // copy remaining elements
+        updateStats("Copying remaining elements...");
+        sleep();
+
         while (i < n1) {
             array[k] = L[i];
             updateBar(k, array[k], "partition-merged");
-            i++; k++; sleep();
+            i++;
+            k++;
+            sleep();
         }
+
         while (j < n2) {
             array[k] = R[j];
             updateBar(k, array[k], "partition-merged");
-            j++; k++; sleep();
+            j++;
+            k++;
+            sleep();
         }
+
+        updateStats("Merge complete for this level");
     }
 
-    // --- ANIMATIONS & VISUAL UPDATES ---
+
 
     private void animateSplit(int left, int mid, int right, int depth) {
         Platform.runLater(() -> {
+
             for (int i = left; i <= mid; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
-                tt.setToX(-20 * depth);
-                tt.setToY(depth * 60);
+                rects[i].setStyle("-fx-fill: #00FF7F;");
+                TranslateTransition tt = new TranslateTransition(Duration.millis(400), barNodes[i]);
+                tt.setToX(0);
+                tt.setToY(depth * 50);
                 tt.play();
             }
+
             for (int i = mid + 1; i <= right; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
-                tt.setToX(20 * depth);
-                tt.setToY(depth * 60);
+                rects[i].setStyle("-fx-fill: #FF1493;");
+                TranslateTransition tt = new TranslateTransition(Duration.millis(400), barNodes[i]);
+                tt.setToX(0);
+                tt.setToY(depth * 50);
                 tt.play();
             }
         });
@@ -395,14 +534,13 @@ public class SortingController {
     private void animateMergeBack(int left, int right, int depth) {
         Platform.runLater(() -> {
             for (int i = left; i <= right; i++) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), barNodes[i]);
+                TranslateTransition tt = new TranslateTransition(Duration.millis(400), barNodes[i]);
                 tt.setToX(0);
-                tt.setToY((depth - 1) * 60);
+                tt.setToY((depth - 1) * 50);
                 tt.play();
             }
         });
     }
-
     private void animateJump(Rectangle bar) {
         Platform.runLater(() -> {
             TranslateTransition tt = new TranslateTransition(Duration.millis(150), bar);
@@ -453,6 +591,7 @@ public class SortingController {
 
     private void setBarColor(int index, String styleClass) {
         Platform.runLater(() -> {
+            rects[index].setStyle("");
             rects[index].getStyleClass().removeAll("vis-bar", "bar-compare", "bar-swap", "bar-left-part", "bar-right-part", "bar-merged");
             rects[index].getStyleClass().add(styleClass);
         });
@@ -460,14 +599,14 @@ public class SortingController {
 
     private void updateBar(int index, int value, String styleClass) {
         Platform.runLater(() -> {
-            rects[index].setHeight(value * 6);
+            rects[index].setOpacity(1.0);
+            rects[index].setHeight(value * 3);
             Label valLabel = (Label) barNodes[index].getChildren().get(0);
             valLabel.setText(String.valueOf(value));
-            rects[index].getStyleClass().removeAll("vis-bar", "bar-compare", "bar-swap", "bar-left-part", "bar-right-part", "bar-merged");
-            rects[index].getStyleClass().add(styleClass);
+
+            rects[index].setStyle("-fx-fill: #0ea5e9;");
         });
     }
-
     private void markSorted() {
         Platform.runLater(() -> {
             for(Rectangle r : rects) r.getStyleClass().add("bar-sorted");

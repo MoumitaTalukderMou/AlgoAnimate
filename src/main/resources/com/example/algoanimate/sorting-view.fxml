@@ -31,7 +31,7 @@
                     <Slider fx:id="speedSlider" min="100" max="1000" value="500" prefWidth="120"/>
                 </HBox>
 
-                <HBox fx:id="displayPane" spacing="10" alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS"
+                <HBox fx:id="displayPane" spacing="10" alignment="CENTER" VBox.vgrow="ALWAYS"
                       style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0;"/>
             </VBox>
 
