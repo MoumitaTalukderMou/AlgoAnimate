@@ -230,6 +230,7 @@ public class StackController {
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         Stage stage = (Stage) stackContainer.getScene().getWindow();
         stage.setScene(scene);
+        stage.setResizable(false);
     }
 
     @FXML

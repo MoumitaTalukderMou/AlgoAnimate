@@ -649,6 +649,7 @@ public class BSTController {
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         Stage stage = (Stage) visualizationPane.getScene().getWindow();
         stage.setScene(scene);
+        stage.setResizable(false);
     }
 
     // --- Internal Helpers ---

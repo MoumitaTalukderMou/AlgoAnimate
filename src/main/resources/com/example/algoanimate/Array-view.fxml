@@ -1,94 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Polygon?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="800" prefWidth="1200"  styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.algoanimate.ArrayController">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.algoanimate.ArrayController"
+            stylesheets="@style.css" prefWidth="1200" prefHeight="800" styleClass="root">
 
-    <!-- Top Navbar -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="navbar">
-            <padding><Insets bottom="15" left="30" right="30" top="15" /></padding>
-            <Button fx:id="btnBack" onAction="#onBackClick" prefHeight="31.0" prefWidth="88.0" styleClass="bar-compare" text="Back">
-                <font>
-                    <Font name="System Bold" size="15.0" />
-                </font></Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="                                         Array Visualizer" wrappingWidth="798.9368710517883">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-                <fill>
-                    <LinearGradient endX="1.0" endY="1.0" startX="0.037878792394291275" startY="0.6666666449922504">
-                        <stops>
-                            <Stop>
-                                <color>
-                                    <Color red="0.8709655404090881" green="0.9263157844543457" blue="0.5111891031265259" />
-                                </color>
-                            </Stop>
-                            <Stop offset="1.0">
-                                <color>
-                                    <Color red="1.0" green="1.0" blue="1.0" />
-                                </color>
-                            </Stop>
-                        </stops>
-                    </LinearGradient>
-                </fill>
-            </Text>
-            <ChoiceBox fx:id="ArrayChoiceBox" prefHeight="28.0" prefWidth="258.0" styleClass="combo-box-custom" />
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
+            <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+            <Button fx:id="btnBack" text="← Back" onAction="#onBackClick" styleClass="nav-link"/>
+            <Label text="Array Visualizer" styleClass="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label text="Select Operation:" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold;"/>
+            <ChoiceBox fx:id="ArrayChoiceBox" prefWidth="200" styleClass="combo-box-custom"/>
         </HBox>
     </top>
 
-    <!-- Center -->
     <center>
         <HBox spacing="0">
+            <VBox HBox.hgrow="ALWAYS" spacing="25" alignment="TOP_CENTER">
+                <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
-            <!-- Left: Node List (like displayPane) -->
-            <VBox alignment="TOP_CENTER" spacing="25" HBox.hgrow="ALWAYS">
-                <padding><Insets bottom="30" left="30" right="30" top="30" /></padding>
-
-                <AnchorPane prefHeight="82.0" prefWidth="740.0">
-                    <children>
-                        <!-- Empty AnchorPane - static boxes removed -->
-                    </children>
-                </AnchorPane>
-
-                <AnchorPane fx:id="animationPane" prefHeight="578.0" prefWidth="740.0" />
-                <AnchorPane prefHeight="53.0" prefWidth="110.0" />
-
-                <!-- Hidden ListView to satisfy controller reference -->
-                <ListView fx:id="nodeListView" managed="false" visible="false" />
-
+                <VBox alignment="CENTER" VBox.vgrow="ALWAYS"
+                      style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0; -fx-padding: 20;">
+                    <ScrollPane fitToWidth="true" fitToHeight="true" vbarPolicy="NEVER" hbarPolicy="AS_NEEDED"
+                                style="-fx-background-color: transparent;" styleClass="main-scroll-pane">
+                        <AnchorPane fx:id="animationPane" prefHeight="550.0" prefWidth="740.0" />
+                    </ScrollPane>
+                </VBox>
             </VBox>
 
-            <!-- Right: Action Panel / Code or Steps -->
-            <VBox prefWidth="400" spacing="15" styleClass="code-panel">
-                <padding><Insets bottom="20" left="20" right="20" top="30" /></padding>
-                <Text fill="#fffda1" strokeType="OUTSIDE" strokeWidth="0.0" text="                 Action and Step Trace                   " underline="true" wrappingWidth="356.53668785095215">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Text>
-                <ListView fx:id="actionListView" opacity="0.5" styleClass="code-list" VBox.vgrow="ALWAYS" />
+            <VBox styleClass="code-panel" prefWidth="400" spacing="15">
+                <padding><Insets top="30" right="20" bottom="20" left="20"/></padding>
+                <Label text="ACTION &amp; STEP-TRACE" styleClass="sub-header" style="-fx-text-fill: #38bdf8;"/>
+                <ListView fx:id="actionListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
 
                 <VBox spacing="10" styleClass="var-box">
-                    <Label fx:id="lblStatus" styleClass="var-text" text="Status: Waiting" />
-                    <Label fx:id="lblSize" styleClass="var-text" text="Size: 0" />
+                    <Label fx:id="lblStatus" text="Status: Waiting for input" styleClass="var-text"/>
+                    <Label fx:id="lblSize" text="Current Size: 0" styleClass="var-text"/>
                 </VBox>
             </VBox>
         </HBox>

@@ -40,6 +40,8 @@ public class LinkedListController {
 
             stage.setScene(scene);
 
+            stage.setResizable(false);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

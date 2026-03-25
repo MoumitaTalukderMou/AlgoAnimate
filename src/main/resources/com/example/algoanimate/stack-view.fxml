@@ -5,13 +5,13 @@
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.algoanimate.StackController"
-            stylesheets="@style.css" prefWidth="1100" prefHeight="750" styleClass="root">
+            stylesheets="@style.css" prefWidth="1200" prefHeight="800" styleClass="root">
 
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
             <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
             <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
-            <Label text="Stack Visualizer" styleClass="logo-text-primary"/>
+            <Label text="Stack Visualizer" styleClass="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label text="LIFO (Last In, First Out)" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 16px;"/>
         </HBox>

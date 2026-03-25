@@ -14,9 +14,13 @@ public class HelloApplication extends Application {
         // we can load it using HelloApplication.class.getResource
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         stage.setTitle("AlgoAnimate - DSA Visualizer");
         stage.setScene(scene);
+        stage.setWidth(1200);
+        stage.setHeight(800);
+        stage.setResizable(false);
+        stage.centerOnScreen();
         stage.show();
     }
 

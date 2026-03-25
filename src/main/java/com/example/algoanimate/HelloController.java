@@ -84,9 +84,11 @@ public class HelloController implements Initializable {
         if (algoName.equals("Sorting")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sorting-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
+
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -102,9 +104,10 @@ public class HelloController implements Initializable {
         } else if (algoName.equals("Stack")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("stack-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -114,9 +117,10 @@ public class HelloController implements Initializable {
             try {
                 // FIXED THE TYPO HERE: queue-view.fxml
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("queue-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,6 +130,7 @@ public class HelloController implements Initializable {
                 Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -134,9 +139,10 @@ public class HelloController implements Initializable {
         else if (algoName.equals("Graphs")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Graph-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -145,9 +151,10 @@ public class HelloController implements Initializable {
         else if (algoName.equals("Arrays")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Array-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 1100, 750);
+                Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
                 Stage stage = (Stage) cardContainer.getScene().getWindow();
                 stage.setScene(scene);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }

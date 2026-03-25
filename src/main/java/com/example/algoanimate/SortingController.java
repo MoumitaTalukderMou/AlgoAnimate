@@ -629,5 +629,6 @@ public class SortingController {
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         Stage stage = (Stage) displayPane.getScene().getWindow();
         stage.setScene(scene);
+        stage.setResizable(false);
     }
 }

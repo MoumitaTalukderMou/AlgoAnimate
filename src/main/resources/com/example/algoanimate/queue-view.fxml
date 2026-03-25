@@ -5,13 +5,13 @@
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.algoanimate.QueueController"
-            stylesheets="@style.css" prefWidth="1100" prefHeight="750" styleClass="root">
+            stylesheets="@style.css" prefWidth="1200" prefHeight="800" styleClass="root">
 
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
             <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
             <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
-            <Label text="Queue Visualizer" styleClass="logo-text-primary"/>
+            <Label text="Queue Visualizer" styleClass="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label text="FIFO (First In, First Out)" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 16px;"/>
         </HBox>

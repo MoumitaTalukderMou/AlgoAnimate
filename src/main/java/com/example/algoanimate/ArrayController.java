@@ -47,6 +47,8 @@ public class ArrayController {
             Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
             Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.setScene(scene);
+
+            stage.setResizable(false);
         } catch (IOException e) {
             e.printStackTrace();
         }

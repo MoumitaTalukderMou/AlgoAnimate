@@ -266,5 +266,6 @@ public class QueueController {
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         Stage stage = (Stage) queueContainer.getScene().getWindow();
         stage.setScene(scene);
+        stage.setResizable(false);
     }
 }

@@ -1,148 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Polygon?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="800" prefWidth="1200" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.algoanimate.DoublyLinkedListController">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.algoanimate.DoublyLinkedListController"
+            stylesheets="@style.css" prefWidth="1200" prefHeight="800" styleClass="root">
 
-    <!-- Top Navbar -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="navbar">
-            <padding><Insets bottom="15" left="30" right="30" top="15" /></padding>
-            <Button fx:id="btnBack" onAction="#onBackClick" prefHeight="31.0" prefWidth="88.0" styleClass="bar-compare" text="Back">
-                <font>
-                    <Font name="System Bold" size="15.0" />
-                </font></Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="                                         Doubly LinkedList Visualizer" wrappingWidth="798.9368710517883">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-                <fill>
-                    <LinearGradient endX="1.0" endY="1.0" startX="0.037878792394291275" startY="0.6666666449922504">
-                        <stops>
-                            <Stop>
-                                <color>
-                                    <Color red="0.8709655404090881" green="0.9263157844543457" blue="0.5111891031265259" />
-                                </color>
-                            </Stop>
-                            <Stop offset="1.0">
-                                <color>
-                                    <Color red="1.0" green="1.0" blue="1.0" />
-                                </color>
-                            </Stop>
-                        </stops>
-                    </LinearGradient>
-                </fill>
-            </Text>
-            <ChoiceBox fx:id="DLLChoiceBox" prefHeight="28.0" prefWidth="258.0" styleClass="combo-box-custom" />
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
+            <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+            <Button fx:id="btnBack" text="← Back" onAction="#onBackClick" styleClass="nav-link"/>
+            <Label text="Doubly Linked List Visualizer" styleClass="logo-text-primary"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label text="Select Operation:" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold;"/>
+            <ChoiceBox fx:id="DLLChoiceBox" prefWidth="200" styleClass="combo-box-custom"/>
         </HBox>
     </top>
 
-    <!-- Center -->
     <center>
         <HBox spacing="0">
+            <VBox HBox.hgrow="ALWAYS" spacing="25" alignment="TOP_CENTER">
+                <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
-            <!-- Left: Node List (like displayPane) -->
-            <VBox alignment="TOP_CENTER" spacing="25" HBox.hgrow="ALWAYS">
-                <padding><Insets bottom="30" left="30" right="30" top="30" /></padding>
-                <children>
-                    <!-- Static reference nodes (kept exactly as you had them) -->
-                    <AnchorPane prefHeight="87.0" prefWidth="739.0">
-                        <children>
-                            <!-- NULL box -->
-                            <AnchorPane layoutX="50.0" layoutY="56.0" prefHeight="42.0" prefWidth="126.0">
-                                <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c8dc63" height="32.0" layoutX="-1.0" layoutY="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" width="72.0" />
-                                    <Polygon fill="WHITE" layoutX="214.0" layoutY="-2.0" points="-142.99998474121094, 24.00000762939453, -127.99998474121094, 33.79999542236328, -127.99998474121094, 16.199989318847656" stroke="WHITE" strokeType="INSIDE" />
-                                    <Line endX="-14.800003051757812" endY="0.9999923706054688" layoutX="132.0" layoutY="22.0" startX="-45.999969482421875" startY="0.9999923706054688" stroke="WHITE" strokeWidth="2.0" />
-                                    <TextField layoutX="6.0" layoutY="12.0" prefHeight="22.0" prefWidth="58.0" text="NULL" />
-                                </children>
-                            </AnchorPane>
-
-                            <!-- Empty box 1 -->
-                            <AnchorPane layoutX="288.0" layoutY="56.0" prefHeight="42.0" prefWidth="126.0">
-                                <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c8dc63" height="32.0" layoutX="-1.0" layoutY="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" width="72.0" />
-                                    <Polygon fill="WHITE" layoutX="214.0" layoutY="-2.0" points="-142.99998474121094, 24.00000762939453, -127.99998474121094, 33.79999542236328, -127.99998474121094, 16.199989318847656" stroke="WHITE" strokeType="INSIDE" />
-                                    <Line endX="-21.399993896484375" endY="0.9999923706054688" layoutX="132.0" layoutY="22.0" startX="-45.999969482421875" startY="0.9999923706054688" stroke="WHITE" strokeWidth="2.0" />
-                                    <Polygon fill="WHITE" layoutX="266.0" layoutY="18.0" points="-162.7999725341797, 13.400001525878906, -146.7999725341797, 4.599983215332031, -162.7999725341797, -2.5999984741210938" stroke="#fffdfd" strokeType="INSIDE" />
-                                    <TextField layoutX="6.0" layoutY="12.0" prefHeight="22.0" prefWidth="58.0" />
-                                </children>
-                            </AnchorPane>
-
-                            <!-- HEAD box -->
-                            <AnchorPane layoutX="168.0" layoutY="56.0" prefHeight="42.0" prefWidth="126.0">
-                                <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c8dc63" height="32.0" layoutX="-1.0" layoutY="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" width="72.0" />
-                                    <Polygon fill="WHITE" layoutX="214.0" layoutY="-2.0" points="-142.99998474121094, 24.00000762939453, -127.99998474121094, 33.79999542236328, -127.99998474121094, 16.199989318847656" stroke="WHITE" strokeType="INSIDE" />
-                                    <Line endX="-21.399993896484375" endY="0.9999923706054688" layoutX="132.0" layoutY="22.0" startX="-45.999969482421875" startY="0.9999923706054688" stroke="WHITE" strokeWidth="2.0" />
-                                    <Polygon fill="WHITE" layoutX="266.0" layoutY="18.0" points="-162.7999725341797, 13.400001525878906, -146.7999725341797, 4.599983215332031, -162.7999725341797, -2.5999984741210938" stroke="#fffdfd" strokeType="INSIDE" />
-                                    <TextField layoutX="6.0" layoutY="11.0" prefHeight="22.0" prefWidth="58.0" text="HEAD" />
-                                </children>
-                            </AnchorPane>
-
-                            <!-- Empty box 2 -->
-                            <AnchorPane layoutX="408.0" layoutY="56.0" prefHeight="42.0" prefWidth="126.0">
-                                <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c8dc63" height="32.0" layoutX="-1.0" layoutY="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" width="72.0" />
-                                    <Polygon fill="WHITE" layoutX="214.0" layoutY="-2.0" points="-142.99998474121094, 24.00000762939453, -127.99998474121094, 33.79999542236328, -127.99998474121094, 16.199989318847656" stroke="WHITE" strokeType="INSIDE" />
-                                    <Line endX="-21.399993896484375" endY="0.9999923706054688" layoutX="132.0" layoutY="22.0" startX="-45.999969482421875" startY="0.9999923706054688" stroke="WHITE" strokeWidth="2.0" />
-                                    <Polygon fill="WHITE" layoutX="266.0" layoutY="18.0" points="-162.7999725341797, 13.400001525878906, -146.7999725341797, 4.599983215332031, -162.7999725341797, -2.5999984741210938" stroke="#fffdfd" strokeType="INSIDE" />
-                                    <TextField layoutX="6.0" layoutY="11.0" prefHeight="22.0" prefWidth="58.0" />
-                                </children>
-                            </AnchorPane>
-
-                            <!-- TAIL box -->
-                            <AnchorPane layoutX="528.0" layoutY="56.0" prefHeight="42.0" prefWidth="126.0">
-                                <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c8dc63" height="32.0" layoutX="-1.0" layoutY="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" width="72.0" />
-                                    <Line endX="-21.399993896484375" endY="0.9999923706054688" layoutX="132.0" layoutY="22.0" startX="-61.0" startY="0.9999923706054688" stroke="WHITE" strokeWidth="2.0" />
-                                    <Polygon fill="WHITE" layoutX="266.0" layoutY="18.0" points="-162.7999725341797, 13.400001525878906, -146.7999725341797, 4.599983215332031, -162.7999725341797, -2.5999984741210938" stroke="#fffdfd" strokeType="INSIDE" />
-                                    <TextField layoutX="6.0" layoutY="11.0" prefHeight="22.0" prefWidth="58.0" text="TAIL" />
-                                </children>
-                            </AnchorPane>
-
-                            <!-- NULL box at the end -->
-                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c8dc63" height="32.0" layoutX="645.0" layoutY="61.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" width="72.0" />
-                            <TextField layoutX="651.0" layoutY="65.0" prefHeight="22.0" prefWidth="58.0" text="NULL" />
-                        </children>
-                    </AnchorPane>
-
-                    <!-- THIS IS THE DYNAMIC ANIMATION PANE - ADD THIS -->
-                    <AnchorPane fx:id="animationPane" prefHeight="460.0" prefWidth="739.0" />
-
-                </children>
+                <VBox alignment="CENTER" VBox.vgrow="ALWAYS"
+                      style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0; -fx-padding: 20;">
+                    <ScrollPane fitToWidth="true" fitToHeight="true" vbarPolicy="NEVER" hbarPolicy="AS_NEEDED"
+                                style="-fx-background-color: transparent;" styleClass="main-scroll-pane">
+                        <AnchorPane fx:id="animationPane" prefHeight="550.0" prefWidth="740.0" />
+                    </ScrollPane>
+                </VBox>
             </VBox>
 
-            <!-- Right: Action Panel / Code or Steps -->
-            <VBox prefWidth="400" spacing="15" styleClass="code-panel">
-                <padding><Insets bottom="20" left="20" right="20" top="30" /></padding>
-                <Text fill="#fffda1" strokeType="OUTSIDE" strokeWidth="0.0" text="                 Action and Step Trace                   " underline="true" wrappingWidth="356.53668785095215">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Text>
-                <ListView fx:id="actionListView" opacity="0.5" styleClass="code-list" VBox.vgrow="ALWAYS" />
+            <VBox styleClass="code-panel" prefWidth="400" spacing="15">
+                <padding><Insets top="30" right="20" bottom="20" left="20"/></padding>
+                <Label text="ACTION &amp; STEP-TRACE" styleClass="sub-header" style="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                <ListView fx:id="actionListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
 
                 <VBox spacing="10" styleClass="var-box">
-                    <Label fx:id="lblStatus" styleClass="var-text" text="Status: Waiting" />
-                    <Label fx:id="lblSize" styleClass="var-text" text="Size: 0" />
+                    <Label fx:id="lblStatus" text="Status: Waiting for input" styleClass="var-text"/>
+                    <Label fx:id="lblSize" text="Current Size: 0" styleClass="var-text"/>
                 </VBox>
             </VBox>
         </HBox>
