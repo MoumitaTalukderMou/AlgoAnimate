@@ -64,23 +64,6 @@ public class LinkedListController {
         }
     }
 
-    @FXML
-    private void onCircularLinkedListClick() {
-        System.out.println("Circular LinkedList clicked!");
-        //  Circular LinkedList visualizer open
-        try {
-            // ১. Sorting FXML file load
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CircularLinkedList-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
-
-            Stage stage = (Stage) btnCircularLinkedList.getScene().getWindow();
-
-            stage.setScene(scene);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     private void onBackClick() {

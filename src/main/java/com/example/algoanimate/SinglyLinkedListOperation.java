@@ -165,4 +165,40 @@ public class SinglyLinkedListOperation  {
         return true;
     }
 
+    // Add this method to SinglyLinkedListOperation class
+    public int deleteAllOccurrences(int value) {
+        if (head == null) return 0;
+
+        int deletedCount = 0;
+
+        // Delete all matching nodes from head
+        while (head != null && head.data == value) {
+            head = head.next;
+            deletedCount++;
+            size--;
+        }
+
+        if (head == null) {
+            tail = null;
+            return deletedCount;
+        }
+
+        // Delete matching nodes from the rest of the list
+        Node current = head;
+        while (current.next != null) {
+            if (current.next.data == value) {
+                current.next = current.next.next;
+                deletedCount++;
+                size--;
+            } else {
+                current = current.next;
+            }
+        }
+
+        // Update tail to the last node
+        tail = current;
+
+        return deletedCount;
+    }
+
 }

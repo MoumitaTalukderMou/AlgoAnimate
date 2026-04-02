@@ -15,6 +15,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.scene.Parent;
+import javafx.application.Platform;
 
 public class HelloController implements Initializable {
 
@@ -26,6 +29,9 @@ public class HelloController implements Initializable {
 
     @FXML
     private Button themeToggleBtn;
+
+    @FXML private Label loggedInUser;
+    @FXML private Button logoutBtn;
 
     private boolean isDarkMode = true;
 
@@ -166,6 +172,30 @@ public class HelloController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText(algoName + " visualizer is coming soon!");
             alert.show();
+        }
+    }
+
+    public void setUsername(String username) {
+        loggedInUser.setText("Welcome, " + username);
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) logoutBtn.getScene().getWindow();
+            stage.setTitle("AlgoAnimate - Login");
+            stage.setScene(new Scene(root, 1200, 800));
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

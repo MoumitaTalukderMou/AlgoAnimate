@@ -8,17 +8,25 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+//    @Override
+//    public void start(Stage stage) throws IOException {
+//        // Load LOGIN screen first
+//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load(), 400, 500);
+//        stage.setTitle("AlgoAnimate - Login");
+//        stage.setScene(scene);
+//        stage.setResizable(false);
+//        stage.centerOnScreen();
+//        stage.show();
+//    }
     @Override
     public void start(Stage stage) throws IOException {
-        // Since hello-view.fxml is in resources/com/example/algoanimate/,
-        // we can load it using HelloApplication.class.getResource
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
-        stage.setTitle("AlgoAnimate - DSA Visualizer");
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);  // ← changed 400,500 to 1200,800
+        stage.setTitle("AlgoAnimate - Login");
         stage.setScene(scene);
-        stage.setWidth(1200);
-        stage.setHeight(800);
+        stage.setWidth(1200);   // ← add this
+        stage.setHeight(800);   // ← add this
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.show();

@@ -30,7 +30,7 @@
                       style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0; -fx-padding: 20;">
                     <ScrollPane fitToWidth="true" fitToHeight="true" vbarPolicy="NEVER" hbarPolicy="AS_NEEDED"
                                 style="-fx-background-color: transparent;" styleClass="main-scroll-pane">
-                        <AnchorPane fx:id="animationPane" prefHeight="550.0" prefWidth="740.0" />
+                        <AnchorPane fx:id="animationPane" prefHeight="600.0" prefWidth="800.0" />
                     </ScrollPane>
                 </VBox>
 

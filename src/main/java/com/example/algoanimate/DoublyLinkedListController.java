@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.util.Pair;
+import java.util.ArrayList;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -252,6 +253,11 @@ public class DoublyLinkedListController {
                     updateAdjacentArrows(1);
                 }
 
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                if (requiredWidth > animationPane.getPrefWidth()) {
+                    animationPane.setPrefWidth(requiredWidth);
+                }
+
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1);
@@ -302,6 +308,12 @@ public class DoublyLinkedListController {
                 updateAdjacentArrows(animationPane.getChildren().size() - 2);
             }
 
+            double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+            if (requiredWidth > animationPane.getPrefWidth()) {
+                animationPane.setPrefWidth(requiredWidth);
+            }
+
+
             updateSize(list.getSize());
         });
         tt.play();
@@ -324,27 +336,66 @@ public class DoublyLinkedListController {
         }
     }
 
-    private void updateAdjacentArrows(int nodeIndex) {
-        if (nodeIndex < 0 || nodeIndex >= animationPane.getChildren().size()) return;
+//    private void updateAdjacentArrows(int nodeIndex) {
+//        if (nodeIndex < 0 || nodeIndex >= animationPane.getChildren().size()) return;
+//
+//        HBox currentNode = (HBox) animationPane.getChildren().get(nodeIndex);
+//
+//        // Update prev arrow (index 0)
+//        if (nodeIndex > 0) {
+//            if (!(currentNode.getChildren().get(0) instanceof HBox) ||
+//                    !(((HBox) currentNode.getChildren().get(0)).getChildren().get(0) instanceof Line)) {
+//                currentNode.getChildren().set(0, createPrevArrow());
+//            }
+//        }
+//
+//        // Update next arrow (index 2)
+//        if (nodeIndex < animationPane.getChildren().size() - 1) {
+//            if (!(currentNode.getChildren().get(2) instanceof HBox) ||
+//                    !(((HBox) currentNode.getChildren().get(2)).getChildren().get(0) instanceof Line)) {
+//                currentNode.getChildren().set(2, createNextArrow());
+//            }
+//        }
+//    }
+private void updateAdjacentArrows(int nodeIndex) {
+    if (nodeIndex < 0 || nodeIndex >= animationPane.getChildren().size()) return;
 
-        HBox currentNode = (HBox) animationPane.getChildren().get(nodeIndex);
+    HBox currentNode = (HBox) animationPane.getChildren().get(nodeIndex);
 
-        // Update prev arrow (index 0)
-        if (nodeIndex > 0) {
-            if (!(currentNode.getChildren().get(0) instanceof HBox) ||
-                    !(((HBox) currentNode.getChildren().get(0)).getChildren().get(0) instanceof Line)) {
-                currentNode.getChildren().set(0, createPrevArrow());
+    // Update prev arrow (index 0) - should be NULL for head, arrow for others
+    if (nodeIndex == 0) {
+        // Head node should have NULL on prev side
+        if (!(currentNode.getChildren().get(0) instanceof HBox) ||
+                !(((HBox) currentNode.getChildren().get(0)).getChildren().get(0) instanceof StackPane)) {
+            currentNode.getChildren().set(0, createNullBox());
+        }
+    } else {
+        // Non-head nodes should have prev arrow
+        if (!(currentNode.getChildren().get(0) instanceof HBox) ||
+                !(((HBox) currentNode.getChildren().get(0)).getChildren().get(0) instanceof Line)) {
+            currentNode.getChildren().set(0, createPrevArrow());
+        }
+    }
+
+    // Update next arrow (index 2) - should be NULL for tail, arrow for others
+    if (nodeIndex == animationPane.getChildren().size() - 1) {
+        // Tail node should have NULL on next side
+        if (currentNode.getChildren().size() > 2) {
+            if (!(currentNode.getChildren().get(2) instanceof HBox) ||
+                    !(((HBox) currentNode.getChildren().get(2)).getChildren().get(0) instanceof StackPane)) {
+                currentNode.getChildren().set(2, createNullBox());
             }
         }
-
-        // Update next arrow (index 2)
-        if (nodeIndex < animationPane.getChildren().size() - 1) {
+    } else {
+        // Non-tail nodes should have next arrow
+        if (currentNode.getChildren().size() > 2) {
             if (!(currentNode.getChildren().get(2) instanceof HBox) ||
                     !(((HBox) currentNode.getChildren().get(2)).getChildren().get(0) instanceof Line)) {
                 currentNode.getChildren().set(2, createNextArrow());
             }
         }
     }
+}
 
     // Insert at Position Animation
 
@@ -394,6 +445,11 @@ public class DoublyLinkedListController {
                 // Update its position to be exactly after previous node
                 newNode.setLayoutX(prevActualX + spacing);
                 newNode.setTranslateX(0);
+
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                if (requiredWidth > animationPane.getPrefWidth()) {
+                    animationPane.setPrefWidth(requiredWidth);
+                }
 
                 // Fade in animation
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
@@ -615,7 +671,7 @@ public class DoublyLinkedListController {
         Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
         int value = current.data;
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1.0));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished(e -> {
             rect.setFill(Color.ORANGE);
             actionListView.getItems().add("Checking node with value: " + value);
@@ -704,12 +760,12 @@ public class DoublyLinkedListController {
         final int idx = index;
         final DoublyLinkedListOperation.Node curr = current;
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1.0));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished(e -> {
             rect.setFill(Color.ORANGE);
             actionListView.getItems().add("Position " + idx + " : " + value);
 
-            PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
+            PauseTransition revert = new PauseTransition(Duration.seconds(0.3));
             revert.setOnFinished(ev -> {
                 resetNodeColor(uiNode);
                 traverseNext(curr.next, idx + 1);
@@ -720,6 +776,28 @@ public class DoublyLinkedListController {
     }
 
     // Delete methods
+//    private void showDeleteValueDialog() {
+//        TextInputDialog dialog = new TextInputDialog();
+//        dialog.setTitle("Delete Value");
+//        dialog.setHeaderText("Enter value to Delete:");
+//        dialog.setContentText("Value:");
+//
+//        Optional<String> result = dialog.showAndWait();
+//        result.ifPresent(value -> {
+//            try {
+//                int delValue = Integer.parseInt(value);
+//                int pos = findFirstOccurrence(delValue);
+//                if (pos != -1) {
+//                    deleteAnimation(pos);
+//                } else {
+//                    actionListView.getItems().add("Value " + delValue + " not found in the list!");
+//                }
+//            } catch (NumberFormatException e) {
+//                actionListView.getItems().add("Please enter a valid number!");
+//            }
+//        });
+//    }
+
     private void showDeleteValueDialog() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Delete Value");
@@ -730,16 +808,106 @@ public class DoublyLinkedListController {
         result.ifPresent(value -> {
             try {
                 int delValue = Integer.parseInt(value);
-                int pos = findFirstOccurrence(delValue);
-                if (pos != -1) {
-                    deleteAnimation(pos);
-                } else {
-                    actionListView.getItems().add("Value " + delValue + " not found in the list!");
+
+                // First, delete from the real linked list and get count
+                int deletedCount = list.deleteAllOccurrences(delValue);
+
+                if (deletedCount == 0) {
+                    actionListView.getItems().add("Value " + delValue + " not found!");
+                    return;
                 }
+
+                actionListView.getItems().add("Deleting " + deletedCount + " occurrence(s) of " + delValue);
+
+                // Now delete all occurrences from UI
+                deleteAllOccurrencesFromUI(delValue);
+
+                updateSize(list.getSize());
+
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
         });
+    }
+
+    private void deleteAllOccurrencesFromUI(int delValue) {
+        // Collect all positions with the matching value (from end to start to avoid index issues)
+        ArrayList<Integer> positionsToDelete = new ArrayList<>();
+        for (int i = 0; i < animationPane.getChildren().size(); i++) {
+            Node node = animationPane.getChildren().get(i);
+            if (node instanceof HBox) {
+                HBox hbox = (HBox) node;
+                StackPane stack = (StackPane) hbox.getChildren().get(1); // Index 1 is the data stack in DLL
+                Text text = (Text) stack.getChildren().get(1); // Index 1 is the text value
+                if (Integer.parseInt(text.getText()) == delValue) {
+                    positionsToDelete.add(i);
+                }
+            }
+        }
+
+        // Delete from the end to avoid index shifting issues
+        deleteUINodesSequentially(positionsToDelete, positionsToDelete.size() - 1);
+    }
+
+    private void deleteUINodesSequentially(ArrayList<Integer> positions, int index) {
+        if (index < 0) {
+            actionListView.getItems().add("All occurrences deleted from display!");
+            return;
+        }
+
+        int pos = positions.get(index);
+
+        // Delete this node from UI
+        Node nodeToDelete = animationPane.getChildren().get(pos);
+
+        // Fade out animation
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), nodeToDelete);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+
+        final int currentPos = pos;
+        fade.setOnFinished(e -> {
+            // Remove node from pane
+            animationPane.getChildren().remove(currentPos);
+
+            // Update arrows for adjacent nodes
+            if (currentPos > 0) updateAdjacentArrows(currentPos - 1);
+            if (currentPos < animationPane.getChildren().size()) updateAdjacentArrows(currentPos);
+
+            // Update head if we deleted the first node
+            if (currentPos == 0 && !animationPane.getChildren().isEmpty()) {
+                HBox newHead = (HBox) animationPane.getChildren().get(0);
+                if (newHead.getChildren().size() > 0) {
+                    newHead.getChildren().set(0, createNullBox()); // Set prev to NULL
+                }
+                updateHead(newHead);
+            }
+
+            // Update tail if we deleted the last node
+            if (currentPos == animationPane.getChildren().size()) {
+                if (!animationPane.getChildren().isEmpty()) {
+                    HBox newTail = (HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1);
+                    if (newTail.getChildren().size() > 2) {
+                        newTail.getChildren().set(2, createNullBox()); // Set next to NULL
+                    }
+                    updateTail(newTail);
+                } else {
+                    tailHBox = null;
+                    headHBox = null;
+                }
+            }
+
+            // Shift remaining nodes left
+            shiftNodesLeftFromIndexFixed(currentPos, () -> {
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                animationPane.setPrefWidth(Math.max(740, requiredWidth));
+
+                // Delete next node
+                deleteUINodesSequentially(positions, index - 1);
+            });
+        });
+
+        fade.play();
     }
 
     private void showDeletePosDialog() {
@@ -828,6 +996,10 @@ public class DoublyLinkedListController {
                         newTail.getChildren().set(2, createNullBox());
                     }
                 }
+
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                animationPane.setPrefWidth(Math.max(740, requiredWidth));
+
                 actionListView.getItems().add("Deleted node at position " + pos);
                 updateSize(list.getSize());
             });
@@ -1002,6 +1174,7 @@ public class DoublyLinkedListController {
 
     private void handleChoiceSelection() {
         String selected = DLLChoiceBox.getValue();
+        if (selected == null) return;
         actionListView.getItems().clear();
 
         switch (selected) {
@@ -1113,5 +1286,6 @@ public class DoublyLinkedListController {
                 updateSize(0);
                 break;
         }
+        DLLChoiceBox.setValue(null);
     }
 }

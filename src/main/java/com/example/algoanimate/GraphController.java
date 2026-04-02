@@ -91,6 +91,7 @@ public class GraphController {
 
     private void handleChoiceSelection() {
         String selected = GraphChoiceBox.getValue();
+        if (selected == null) return;
         actionListView.getItems().clear();
 
         switch (selected) {
@@ -114,6 +115,7 @@ public class GraphController {
                 animationPane.getChildren().clear();  // ← Clears the pane
                 break;
         }
+        GraphChoiceBox.setValue(null);
     }
 
     /**

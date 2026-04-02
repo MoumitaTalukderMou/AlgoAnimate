@@ -130,6 +130,58 @@ public class DoublyLinkedListOperation {
         return true;
     }
 
+    // Add this method to DoublyLinkedListOperation class
+    public int deleteAllOccurrences(int value) {
+        if (head == null) return 0;
+
+        int deletedCount = 0;
+
+        // Delete all matching nodes from head
+        while (head != null && head.data == value) {
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
+            } else {
+                tail = null;
+            }
+            deletedCount++;
+            size--;
+        }
+
+        if (head == null) {
+            return deletedCount;
+        }
+
+        // Delete matching nodes from the rest of the list
+        Node current = head;
+        while (current != null) {
+            if (current.data == value) {
+                // Remove current node
+                if (current.prev != null) {
+                    current.prev.next = current.next;
+                }
+                if (current.next != null) {
+                    current.next.prev = current.prev;
+                }
+
+                // Update tail if we're deleting the last node
+                if (current == tail) {
+                    tail = current.prev;
+                }
+
+                deletedCount++;
+                size--;
+
+                // Move to next node (which is now current.next)
+                current = current.next;
+            } else {
+                current = current.next;
+            }
+        }
+
+        return deletedCount;
+    }
+
     public Node getHead() {
         return head;
     }

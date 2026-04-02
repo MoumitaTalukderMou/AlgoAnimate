@@ -81,6 +81,7 @@ public class ArrayController {
 
     private void handleChoiceSelection() {
         String selected = ArrayChoiceBox.getValue();
+        if (selected == null) return;
         actionListView.getItems().clear();
 
         switch (selected) {
@@ -140,6 +141,7 @@ public class ArrayController {
                 animationPane.getChildren().clear();
                 break;
         }
+        ArrayChoiceBox.setValue(null);
     }
 
     private void showCreateArrayDialog() {
@@ -157,7 +159,7 @@ public class ArrayController {
                     actionListView.getItems().add("Please enter a positive number!");
                     return;
                 }
-                if (capacity > 20) {
+                if (capacity > 500) {
                     actionListView.getItems().add("Maximum capacity is 20!");
                     return;
                 }
@@ -180,6 +182,10 @@ public class ArrayController {
         for (int i = 0; i < arrayCapacity; i++) {
             VBox cell = createArrayCell(i);
             arrayContainer.getChildren().add(cell);
+        }
+        double requiredWidth = 50 + (arrayCapacity * 50) + 200;
+        if (requiredWidth > animationPane.getPrefWidth()) {
+            animationPane.setPrefWidth(requiredWidth);
         }
     }
 
@@ -204,7 +210,7 @@ public class ArrayController {
                     actionListView.getItems().add("New capacity must be greater than current capacity!");
                     return;
                 }
-                if (newCapacity > 20) {
+                if (newCapacity > 500) {
                     actionListView.getItems().add("Maximum capacity is 20!");
                     return;
                 }
@@ -240,6 +246,11 @@ public class ArrayController {
 
                 // Update the capacity
                 arrayCapacity = newCapacity;
+                double requiredWidth = 50 + (arrayCapacity * 50) + 200;
+                if (requiredWidth > animationPane.getPrefWidth()) {
+                    animationPane.setPrefWidth(requiredWidth);
+                }
+
 
                 actionListView.getItems().add("Array capacity increased from " + oldCapacity + " to: " + arrayCapacity);
                 actionListView.getItems().add("Added " + (newCapacity - oldCapacity) + " new empty positions");
@@ -942,6 +953,9 @@ public class ArrayController {
 
             arrayContainer.getChildren().add(cell);
         }
+
+        double requiredWidth = 50 + (arrayCapacity * 50) + 200;
+        animationPane.setPrefWidth(Math.max(740, requiredWidth));
     }
 
     private void updateStatus(String status) {

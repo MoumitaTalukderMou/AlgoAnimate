@@ -25,6 +25,7 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import java.util.Optional;
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Map;
 import java.util.HashMap;
@@ -246,6 +247,10 @@ public class SinglyLinkedListController {
 
                 // Now update head so marking works
                 updateHead(newNode);
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                if (requiredWidth > animationPane.getPrefWidth()) {
+                    animationPane.setPrefWidth(requiredWidth);
+                }
 
                 // Fade in animation if you want
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
@@ -318,11 +323,13 @@ public class SinglyLinkedListController {
             }
         }
 
-
-
         double x = 140; // start head position
         for (Node node : animationPane.getChildren()) {
             x += 95; // spacing
+        }
+        // After calculating x position
+        if (x + 200 > animationPane.getPrefWidth()) {
+            animationPane.setPrefWidth(x + 200);  // expand pane as nodes grow
         }
 
         newNode.setLayoutX(-100); // start outside pane
@@ -388,7 +395,7 @@ public class SinglyLinkedListController {
         Rectangle rect = (Rectangle) stackPane.getChildren().get(0);
         int value = current.data;
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1.0));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished(e -> {
             rect.setFill(Color.ORANGE);
             actionListView.getItems().add("Checking node with value: " + value);
@@ -488,14 +495,14 @@ public class SinglyLinkedListController {
         final SinglyLinkedListOperation.Node curr = current;
 
 
-        PauseTransition pause = new PauseTransition(Duration.seconds( 1.0));
+        PauseTransition pause = new PauseTransition(Duration.seconds( 0.5));
 
         pause.setOnFinished(e -> {
             rect.setFill(Color.ORANGE);
             actionListView.getItems().add("Position " + idx +" : " + value);
 
 
-            PauseTransition revert = new PauseTransition(Duration.seconds(0.5));
+            PauseTransition revert = new PauseTransition(Duration.seconds(0.3));
             revert.setOnFinished(ev ->{
                 if(uiNode == headHBox) {
                     rect.setFill(Color.DARKGRAY);
@@ -556,6 +563,11 @@ public class SinglyLinkedListController {
 
             newNode.setLayoutX(newX);
             newNode.setTranslateX(0);
+
+            double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+            if (requiredWidth > animationPane.getPrefWidth()) {
+                animationPane.setPrefWidth(requiredWidth);
+            }
 
             FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), newNode);
             fadeIn.setFromValue(0);
@@ -721,7 +733,8 @@ public class SinglyLinkedListController {
         }
     }
 
-    //Dialog for Deleting
+ //Dialog for Deleting
+
     private void showDeleteValueDialog() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Delete Value");
@@ -733,32 +746,116 @@ public class SinglyLinkedListController {
         result.ifPresent(value -> {
             try {
                 int delValue = Integer.parseInt(value);
-                //int countOfValue = list.countValue(delValue);
-                int pos = findFirstOccurrence(delValue);
-                deleteAnimation(pos);
 
+                // First, delete from the real linked list and get count
+                int deletedCount = list.deleteAllOccurrences(delValue);
+
+                if (deletedCount == 0) {
+                    actionListView.getItems().add("Value " + delValue + " not found!");
+                    return;
+                }
+
+                actionListView.getItems().add("Deleting " + deletedCount + " occurrence(s) of " + delValue);
+
+                // Now delete all occurrences from UI
+                deleteAllOccurrencesFromUI(delValue);
+
+                updateSize(list.getSize());
 
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
         });
     }
-    private int findFirstOccurrence(int value) {
+    private void deleteAllOccurrencesFromUI(int delValue) {
+        // Collect all positions with the matching value (from end to start to avoid index issues)
+        ArrayList<Integer> positionsToDelete = new ArrayList<>();
         for (int i = 0; i < animationPane.getChildren().size(); i++) {
             Node node = animationPane.getChildren().get(i);
-
             if (node instanceof HBox) {
                 HBox hbox = (HBox) node;
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
-                Text text = (Text) stack.getChildren().get(1); // assuming index 1 is the value text
-
-                if (Integer.parseInt(text.getText()) == value) {
-                    return i; // first occurrence found
+                Text text = (Text) stack.getChildren().get(1);
+                if (Integer.parseInt(text.getText()) == delValue) {
+                    positionsToDelete.add(i);
                 }
             }
         }
-        return -1; // value not found
+
+        // Delete from the end to avoid index shifting issues
+        deleteUINodesSequentially(positionsToDelete, positionsToDelete.size() - 1);
     }
+
+    private void deleteUINodesSequentially(ArrayList<Integer> positions, int index) {
+        if (index < 0) {
+            actionListView.getItems().add("All occurrences deleted from display!");
+            return;
+        }
+
+        int pos = positions.get(index);
+
+        // Delete this node from UI
+        Node nodeToDelete = animationPane.getChildren().get(pos);
+
+        // Fade out animation
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), nodeToDelete);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+
+        final int currentPos = pos;
+        fade.setOnFinished(e -> {
+            // Remove node from pane
+            animationPane.getChildren().remove(currentPos);
+
+            // Update head if we deleted the first node
+            if (currentPos == 0 && !animationPane.getChildren().isEmpty()) {
+                updateHead((HBox) animationPane.getChildren().get(0));
+            }
+
+            // Update tail if we deleted the last node
+            if (currentPos == animationPane.getChildren().size()) {
+                if (!animationPane.getChildren().isEmpty()) {
+                    HBox newTail = (HBox) animationPane.getChildren().get(animationPane.getChildren().size() - 1);
+
+                    // Remove any existing arrow/NULL at the end
+                    if (newTail.getChildren().size() > 2) {
+                        newTail.getChildren().remove(2);
+                    }
+
+                    // Create and add NULL box for the new tail
+                    Rectangle nullTextRect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+                    nullTextRect.setArcWidth(10);
+                    nullTextRect.setArcHeight(10);
+
+                    Text nullText = new Text("NULL");
+                    nullText.setFont(Font.font(15));
+                    nullText.setFill(Color.DARKBLUE);
+
+                    StackPane NullStack = new StackPane();
+                    NullStack.getChildren().addAll(nullTextRect, nullText);
+                    NullStack.setPrefSize(nullTextRect.getWidth(), nullTextRect.getHeight());
+
+                    newTail.getChildren().add(NullStack);
+                    updateTail(newTail);
+                } else {
+                    tailHBox = null;
+                    headHBox = null;
+                }
+            }
+
+            // Shift remaining nodes left
+            shiftNodesLeftFromIndexFixed(currentPos, () -> {
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                animationPane.setPrefWidth(Math.max(740, requiredWidth));
+
+                // Delete next node
+                deleteUINodesSequentially(positions, index - 1);
+            });
+        });
+
+        fade.play();
+    }
+
 
     private void showDeletePosDialog() {
         TextInputDialog dialog = new TextInputDialog();
@@ -846,10 +943,8 @@ public class SinglyLinkedListController {
 
             // 3️⃣ Shift remaining nodes LEFT starting from same position
             shiftNodesLeftFromIndexFixed(pos, () -> {
-
-                if (deletedTail) {
-                    //updateTailAfterDeletion();
-                }
+                double requiredWidth = 50 + (animationPane.getChildren().size() * 100) + 200;
+                animationPane.setPrefWidth(Math.max(740, requiredWidth));
                 actionListView.getItems().add("Deleted node at position " + pos);
                 updateSize(list.getSize());
             });
@@ -1038,6 +1133,8 @@ public class SinglyLinkedListController {
 
     private void handleChoiceSelection() {
         String selected = SLLChoiceBox.getValue();
+
+        if (selected == null) return;
         actionListView.getItems().clear();
 
         switch (selected) {
@@ -1149,6 +1246,7 @@ public class SinglyLinkedListController {
                 updateSize(0);
                 break;
         }
+        SLLChoiceBox.setValue(null);
     }
 }
 
