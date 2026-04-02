@@ -11,11 +11,11 @@
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
             <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
-            <Button fx:id="btnBack" text="← Back" onAction="#onBackClick" styleClass="nav-link"/>
-            <Label text="Graph Visualizer (BFS/DFS)" styleClass="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+            <Label text="Graph Visualizer (BFS/DFS)" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
 
             <Region HBox.hgrow="ALWAYS"/>
-
+            <Button fx:id="btnBack" onAction="#onBackClick" text="← Back" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 25; -fx-cursor: hand;" />
             <Label text="Select Operation:" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold;"/>
             <ChoiceBox fx:id="GraphChoiceBox" prefWidth="200" styleClass="combo-box-custom"/>
         </HBox>

@@ -10,8 +10,8 @@
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
             <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
-            <Button text="← Back" onAction="#handleBack" styleClass="nav-link"/>
-            <Label text="Sorting Visualizer" styleClass="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+            <Button onAction="#handleBack" text="← Back" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 25; -fx-cursor: hand;" />
+            <Label text="Sorting Visualizer" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <ComboBox fx:id="algoComboBox" prefWidth="180" styleClass="combo-box-custom"/>
         </HBox>
