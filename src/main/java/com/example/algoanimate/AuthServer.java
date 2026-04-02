@@ -2,6 +2,7 @@ package com.example.algoanimate;
 
 import java.io.*;
 import java.net.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +12,8 @@ public class AuthServer {
     private static final String USERS_FILE = "users.txt";
 
     // In-memory user store
-    private static final Map<String, String> users = new HashMap<>();
-
+//    private static final Map<String, String> users = new HashMap<>();
+    private static final Map<String, String> users = Collections.synchronizedMap(new HashMap<>());
     static {
         loadUsers();  // Load users from file on startup
         // Add default users if file is empty

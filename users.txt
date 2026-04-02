@@ -1,5 +1,6 @@
 adiba:1234
 adibb:0101
+shua:baal
 Adiba:0101
 admin:1234
 sadia:0101

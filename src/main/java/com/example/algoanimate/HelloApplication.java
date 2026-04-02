@@ -8,17 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
-//    @Override
-//    public void start(Stage stage) throws IOException {
-//        // Load LOGIN screen first
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load(), 400, 500);
-//        stage.setTitle("AlgoAnimate - Login");
-//        stage.setScene(scene);
-//        stage.setResizable(false);
-//        stage.centerOnScreen();
-//        stage.show();
-//    }
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
