@@ -11,8 +11,8 @@
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
             <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
-            <Button fx:id="btnBack" text="← Back" onAction="#onBackClick" styleClass="nav-link"/>
-            <Label text="Array Visualizer" styleClass="-fx-text-fill: #e0f2fe; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+            <Button fx:id="btnBack" onAction="#onBackClick" text="← Back" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 25; -fx-cursor: hand;" />
+            <Label text="Array Visualizer" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
 
             <Region HBox.hgrow="ALWAYS"/>
 

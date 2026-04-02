@@ -68,6 +68,9 @@ public class ArrayController {
                 "Reset Array",
                 "Clear"
         );
+
+
+
         ArrayChoiceBox.setOnAction(e -> handleChoiceSelection());
 
         // Initialize array container

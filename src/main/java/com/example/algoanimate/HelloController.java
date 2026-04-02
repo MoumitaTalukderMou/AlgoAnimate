@@ -178,6 +178,18 @@ public class HelloController implements Initializable {
     public void setUsername(String username) {
         loggedInUser.setText("Welcome, " + username);
     }
+    @FXML
+    private void handleFeaturesClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("features-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+        Stage stage = (Stage) mainLayout.getScene().getWindow(); // অথবা cardContainer
+        stage.setScene(scene);
+
+        stage.setWidth(1200);
+        stage.setHeight(800);
+        stage.setResizable(false);
+        stage.centerOnScreen();
+    }
 
     @FXML
     private void handleLogout(ActionEvent event) {
