@@ -240,7 +240,6 @@ public class ArrayController {
             cell.setStyle(CELL_DEFAULT);
             valueText.setStyle(hasValue ? TEXT_VALUE : TEXT_NULL);
         });
-
         return cell;
     }
 
@@ -326,7 +325,6 @@ public class ArrayController {
                     actionListView.getItems().add("Added " + (newCapacity - oldCapacity) + " new empty positions.");
                 });
                 flashDelay.play();
-
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }

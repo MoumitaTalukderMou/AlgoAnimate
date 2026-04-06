@@ -66,7 +66,7 @@ public class SinglyLinkedListController {
     private ChoiceBox<String> SLLChoiceBox;
 
     @FXML
-    private AnchorPane animationPane;  // left panel, visual nodes দেখাবে
+    private AnchorPane animationPane;  // left panel, visual nodes
 
     @FXML
     private ListView<String> actionListView; // right panel
@@ -105,28 +105,24 @@ public class SinglyLinkedListController {
         for(Node node : animationPane.getChildren()) {
             if (node instanceof HBox) {
                 HBox hbox = (HBox) node;
-
                 // node color reset
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
-//                if(rect.getFill() == Color.DARKGRAY) {
-//                    rect.setFill(Color.LIGHTYELLOW);
-//                }
                 if (rect.getFill().equals(Color.web("#0f4c75"))) {
                     rect.setFill(Color.web("#1e293b"));
                 }
-
             }
         }
 
         // Add head Marker at new Head
         if (headHBox != null && animationPane.getChildren().contains(headHBox)) {
-            // Head node কে slightly different color দিন
+            // Head node slightly different color
             StackPane stack = (StackPane) headHBox.getChildren().get(0);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
-            rect.setFill(Color.web("#0f4c75"));  // head আলাদা color
+            rect.setFill(Color.web("#0f4c75"));  // head diff color
         }
     }
+
     // Head update method
     private void updateHead(HBox newHead) {
         this.headHBox = newHead;
@@ -141,17 +137,13 @@ public class SinglyLinkedListController {
                 // node color reset
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
-//                if(rect.getFill() == Color.GHOSTWHITE) {
-//                    rect.setFill(Color.LIGHTYELLOW);
-//                }
                 if (rect.getFill().equals(Color.web("#164e63"))) {
                     rect.setFill(Color.web("#1e293b"));
                 }
-
             }
         }
 
-        // Add head Marker at new Head
+        // Add tail Marker at new tail
         if (tailHBox != null  && animationPane.getChildren().contains(tailHBox)) {
             // Head node কে slightly different color দিন
             StackPane stack = (StackPane) tailHBox.getChildren().get(0);
@@ -168,7 +160,6 @@ public class SinglyLinkedListController {
     // Node create function
     private HBox createNodeView(int data , boolean isLast) {
         //Rectangle
-        //Rectangle rect = new Rectangle(60, 40,Color.LIGHTYELLOW);
         Rectangle rect = new Rectangle(60, 40);
         rect.setFill(Color.web("#1e293b"));          // dark background
         rect.setStroke(Color.web("#38bdf8"));         // cyan border
@@ -530,16 +521,6 @@ public class SinglyLinkedListController {
 
             PauseTransition revert = new PauseTransition(Duration.seconds(0.3));
             revert.setOnFinished(ev ->{
-//                if(uiNode == headHBox) {
-//                    rect.setFill(Color.DARKGRAY);
-//                }
-//                else if(uiNode == tailHBox) {
-//
-//                    rect.setFill(Color.GHOSTWHITE);
-//                }
-//                else {
-//                    rect.setFill(Color.LIGHTYELLOW);
-//                }
                 resetNodeColor(uiNode);
                 traverseNext(curr.next, idx + 1); // next node
 
@@ -1153,10 +1134,7 @@ public class SinglyLinkedListController {
         animationPane.getChildren().clear();
         actionListView.getItems().clear();
         headHBox = null;  // head reset
-
     }
-
-
 
     private void handleChoiceSelection() {
         String selected = SLLChoiceBox.getValue();

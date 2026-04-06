@@ -71,8 +71,8 @@ public class GraphController {
     }
 
 
-
-    @FXML private Button btnPause;
+    @FXML
+    private Button btnPause;
 
     @FXML
     private void onPauseClick() {
@@ -86,8 +86,6 @@ public class GraphController {
             btnPause.setText("⏸ Pause");
         }
     }
-
-
 
 
     public void initialize() {
@@ -318,6 +316,7 @@ public class GraphController {
     /**
      * Create a node in the edit pane
      */
+
     private void createNodeInEditMode(Pane editPane, int data, double x, double y) {
         // Create circle
         Circle nodeCircle = new Circle(20);
@@ -853,14 +852,6 @@ public class GraphController {
             int data = entry.getKey();
             Circle oldCircle = entry.getValue();
 
-//            // Create new circle for main pane
-//            Circle newCircle = new Circle(25);
-//            newCircle.setCenterX(oldCircle.getCenterX());
-//            newCircle.setCenterY(oldCircle.getCenterY());
-//            newCircle.setFill(Color.LIGHTYELLOW);
-//            newCircle.setStroke(Color.BLACK);
-//            newCircle.setStrokeWidth(5);
-
 
             // Change to:
             Circle newCircle = new Circle(25);
@@ -934,14 +925,6 @@ public class GraphController {
         for (Map.Entry<Integer, Circle> entry : nodeCircles.entrySet()) {
             int data = entry.getKey();
             Circle oldCircle = entry.getValue();
-
-//            // Create new circle for main pane
-//            Circle newCircle = new Circle(25);
-//            newCircle.setCenterX(oldCircle.getCenterX());
-//            newCircle.setCenterY(oldCircle.getCenterY());
-//            newCircle.setFill(Color.LIGHTYELLOW);
-//            newCircle.setStroke(Color.BLACK);
-//            newCircle.setStrokeWidth(5);
 
             // Change to:
             Circle newCircle = new Circle(25);
@@ -1445,7 +1428,6 @@ public class GraphController {
             cycleNodes.add(node2);
         }
     }
-
 
 
     /**
