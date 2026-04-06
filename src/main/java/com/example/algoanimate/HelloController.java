@@ -38,6 +38,8 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        loggedInUser.setText("Welcome, " + Session.username); //For Welcoming every time
+
         addCard("Arrays", "Insertion, Deletion, Search", "[]");
         addCard("Linked List", "Singly, Doubly, Circular", "->");
         addCard("Stack", "LIFO Operations", "||");
@@ -185,6 +187,7 @@ public class HelloController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
             Parent root = loader.load();
+            Session.username = null;
 
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setTitle("AlgoAnimate - Login");

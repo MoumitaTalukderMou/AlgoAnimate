@@ -66,9 +66,9 @@ public class LoginController implements Initializable {
         new Thread(() -> {
             boolean success = authenticate(username, password);
 
-
             Platform.runLater(() -> {
                 if (success) {
+                    Session.username = username; // saved who is the current user
                     loadMainScene(username);
                 } else {
                     showError("Invalid username or password.");
@@ -84,7 +84,6 @@ public class LoginController implements Initializable {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-//            out.println(username + ":" + password);
             String message = "LOGIN:" + username + ":" + password;  // ← LOGIN: prefix must be here
             System.out.println("Sending: " + message);
             out.println(message);
@@ -117,7 +116,6 @@ public class LoginController implements Initializable {
 
             HelloController controller = loader.getController();
             controller.setUsername(username);
-
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
 
