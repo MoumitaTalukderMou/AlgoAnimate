@@ -25,6 +25,7 @@ public class BSTController {
 
     private Node root;
     private String traversalOutput = "";
+    private boolean isDeleted = false;
 
     private final double NODE_RADIUS = 22;
     private final double VERTICAL_GAP = 80;
@@ -141,6 +142,7 @@ public class BSTController {
             root.right = logicalDeleteVisual(root.right, value);
         } else {
             // Node Found!
+            isDeleted = true;
             highlightCode(6);
             foundNodeUI(root);
             sleepAnimation();
@@ -452,16 +454,21 @@ public class BSTController {
         int value = Integer.parseInt(inputField.getText());
         inputField.clear();
 
-        loadPseudocode("delete"); // Load proper delete pseudocode
-        updateStatus("Deleting " + value + "...", false);
-        resetAllHighlights(root);
-        Platform.runLater(() -> lblTraversal.setText("Printed: "));
+        loadPseudocode("delete");
+        updateStatus("Searching " + value + " to delete...", false);
+
+        isDeleted = false;
 
         new Thread(() -> {
             try {
                 root = logicalDeleteVisual(root, value);
-                redrawTree();
-                updateStatus("Delete operation finished.", false);
+
+                if (isDeleted) {
+                    redrawTree();
+                    updateStatus("Successfully deleted " + value, false);
+                } else {
+                    updateStatus("Value " + value + " not found in tree!", true);
+                }
             } catch (InterruptedException e) {}
         }).start();
     }
