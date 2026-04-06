@@ -199,4 +199,16 @@ public class HelloController implements Initializable {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleFeaturesClick(javafx.scene.input.MouseEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("features-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+            Stage stage = (Stage) cardContainer.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setResizable(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

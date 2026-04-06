@@ -103,8 +103,15 @@ public class LoginController implements Initializable {
 
     private void loadMainScene(String username) {
         try {
+            URL fxmlUrl = HelloApplication.class.getResource("hello-view.fxml");
+            System.out.println("FXML URL: " + fxmlUrl); // null হলে path ভুল
 
-            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+            if (fxmlUrl == null) {
+                showError("FXML file not found!");
+                loginButton.setDisable(false);
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();
 
 
@@ -125,7 +132,9 @@ public class LoginController implements Initializable {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showError("Failed to load main screen.");
+            showError("Error: " + e.getMessage());
+            loginButton.setDisable(false);
+            //showError("Failed to load main screen.");
         }
     }
 
@@ -174,11 +183,13 @@ public class LoginController implements Initializable {
         errorLabel.setStyle("-fx-text-fill: #22c55e; -fx-font-size: 12px;");
         errorLabel.setText(message);
         errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
     }
 
     private void showError(String message) {
         errorLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 12px;");
         errorLabel.setText(message);
         errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
     }
 }
