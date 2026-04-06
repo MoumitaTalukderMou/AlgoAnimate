@@ -24,12 +24,14 @@
 
                 <HBox spacing="15" alignment="CENTER" styleClass="control-panel-mini">
                     <TextField fx:id="inputField" promptText="Enter value..." styleClass="input-field" prefWidth="150"/>
-                    <Button text="Push" onAction="#handlePush" styleClass="btn-premium-blue"/>
-                    <Button text="Pop" onAction="#handlePop" styleClass="btn-premium-red"/>
-                    <Button text="Peek" onAction="#handlePeek" styleClass="btn-premium-green"/>
-                    <Button text="Is Empty" onAction="#handleIsEmpty" styleClass="btn-premium-blue"/>
-                    <Button text="Is Full" onAction="#handleIsFull" styleClass="btn-premium-blue"/>
-                    <Button text="Clear" onAction="#handleClear" style="-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-border-color: #ef4444; -fx-border-radius: 5; -fx-cursor: hand;"/>
+                    <Button text="Push" styleClass="action-btn, btn-push" onAction="#handlePush" />
+                    <Button text="Pop" styleClass="action-btn, btn-pop" onAction="#handlePop" />
+                    <Button text="Peek" styleClass="action-btn, btn-peek" onAction="#handlePeek" />
+
+                    <Button text="Is Empty" styleClass="action-btn, btn-status" onAction="#handleIsEmpty" />
+                    <Button text="Is Full" styleClass="action-btn, btn-status" onAction="#handleIsFull" />
+
+                    <Button text="Clear" styleClass="action-btn, btn-clear" onAction="#handleClear" />
                 </HBox>
 
                 <VBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0; -fx-padding: 10 0 0 0;">

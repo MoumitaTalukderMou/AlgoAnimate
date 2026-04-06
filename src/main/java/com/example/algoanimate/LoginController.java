@@ -59,14 +59,14 @@ public class LoginController implements Initializable {
             return;
         }
 
-        // Disable button to prevent double-click
+
         loginButton.setDisable(true);
 
-        // Run network call on background thread
+
         new Thread(() -> {
             boolean success = authenticate(username, password);
 
-            // Update UI back on JavaFX thread
+
             Platform.runLater(() -> {
                 if (success) {
                     loadMainScene(username);
@@ -103,15 +103,15 @@ public class LoginController implements Initializable {
 
     private void loadMainScene(String username) {
         try {
-            // This loads YOUR existing main animation screen
+
             FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
             Parent root = loader.load();
 
-            // Pass username to HelloController
+
             HelloController controller = loader.getController();
             controller.setUsername(username);
 
-            // Get the current window (login window)
+
             Stage stage = (Stage) loginButton.getScene().getWindow();
 
             // Replace login scene with main animation scene

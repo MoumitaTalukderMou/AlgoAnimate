@@ -10,10 +10,10 @@
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="navbar">
             <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
-            <Button onAction="#handleBack" text="← Back" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 25; -fx-cursor: hand;" />
+            <Button onAction="#handleBack" text="← Back"
+                    style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 25; -fx-cursor: hand;" />
             <Label text="Binary Search Tree (BST) Visualizer" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-
         </HBox>
     </top>
 
@@ -21,31 +21,49 @@
         <HBox spacing="0">
             <VBox HBox.hgrow="ALWAYS" spacing="0" alignment="TOP_CENTER">
 
-                <VBox spacing="10" alignment="CENTER" styleClass="control-panel-mini">
-                    <padding><Insets top="15" bottom="15"/></padding>
+                <VBox spacing="15" alignment="CENTER" styleClass="control-panel-mini">
+                    <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
 
-                    <HBox spacing="10" alignment="CENTER">
-                        <Button text="Gen Random" onAction="#handleRandomize" styleClass="btn-premium-blue"/>
-                        <Button text="Reset Tree" onAction="#handleReset" styleClass="btn-premium-red"/>
-                        <Region HBox.hgrow="ALWAYS" maxWidth="30"/>
-                        <TextField fx:id="inputField" promptText="Enter Integer..." styleClass="input-field" prefWidth="130"/>
-                        <Button text="Insert" onAction="#handleInsert" styleClass="btn-premium-blue"/>
-                        <Button text="Delete" onAction="#handleDelete" styleClass="btn-premium-blue"/>
-                        <Button text="Search" onAction="#handleSearch" styleClass="btn-premium-green"/>
+                    <HBox spacing="12" alignment="CENTER">
+                        <Button text="Gen Random" onAction="#handleRandomize" styleClass="action-btn, btn-random"
+                                prefWidth="140" minWidth="140"/>
+                        <Button text="Reset Tree" onAction="#handleReset" styleClass="action-btn, btn-clear"
+                                prefWidth="110" minWidth="110"/>
+
+                        <Region maxWidth="20" HBox.hgrow="ALWAYS"/>
+
+                        <TextField fx:id="inputField" promptText="Enter value..." styleClass="input-field"
+                                   prefWidth="120" minWidth="120"/>
+
+                        <Button text="Insert" onAction="#handleInsert" styleClass="action-btn, btn-enqueue"
+                                prefWidth="90" minWidth="90"/>
+                        <Button text="Delete" onAction="#handleDelete" styleClass="action-btn, btn-dequeue"
+                                prefWidth="90" minWidth="90"/>
+                        <Button text="Search" onAction="#handleSearch" styleClass="action-btn, btn-peek"
+                                prefWidth="90" minWidth="90"/>
                     </HBox>
 
-                    <HBox spacing="10" alignment="CENTER">
-                        <Button text="Predecessor" onAction="#handlePredecessor" styleClass="btn-premium-blue"/>
-                        <Button text="Successor" onAction="#handleSuccessor" styleClass="btn-premium-blue"/>
-                        <Region HBox.hgrow="ALWAYS" maxWidth="30"/>
+                    <HBox spacing="12" alignment="CENTER">
+                        <Button text="Predecessor" onAction="#handlePredecessor" styleClass="action-btn, btn-pre"
+                                prefWidth="145" minWidth="145"/>
+                        <Button text="Successor" onAction="#handleSuccessor" styleClass="action-btn, btn-suc"
+                                prefWidth="120" minWidth="120"/>
 
-                        <MenuButton text="Traverse" styleClass="btn-premium-green">
+                        <MenuButton text="Traverse" styleClass="action-btn, btn-peek"
+                                    prefWidth="120" minWidth="120">
                             <items>
                                 <MenuItem text="Pre-Order" onAction="#handlePreOrder"/>
                                 <MenuItem text="In-Order" onAction="#handleInOrder"/>
                                 <MenuItem text="Post-Order" onAction="#handlePostOrder"/>
                             </items>
                         </MenuButton>
+
+                        <Region maxWidth="20" HBox.hgrow="ALWAYS"/>
+
+                        <Label text="Speed:" minWidth="65"
+                               style="-fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <Slider fx:id="speedSlider" styleClass="custom-slider"
+                                prefWidth="150" min="100" max="1000" value="500"/>
                     </HBox>
                 </VBox>
 
@@ -54,17 +72,16 @@
                 </VBox>
             </VBox>
 
-            <VBox styleClass="code-panel" prefWidth="400" spacing="15">
+            <VBox styleClass="code-panel" prefWidth="400" spacing="15" minWidth="400">
                 <padding><Insets top="30" right="20" bottom="20" left="20"/></padding>
-
-                <Label text="BST PSEUDOCODE" styleClass="sub-header" style="-fx-text-fill: #38bdf8;"/>
+                <Label text="BST PSEUDOCODE" styleClass="sub-header" style="-fx-text-fill: #38bdf8; -fx-font-weight: bold;"/>
                 <ListView fx:id="codeListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
 
-                <VBox spacing="10" styleClass="var-box">
-                    <Label fx:id="lblStatus" text="Status: Ready" styleClass="var-text"/>
-                    <Label fx:id="lblCurrentNode" text="Current Node: N/A" styleClass="var-text"/>
-                    <Label fx:id="lblComparison" text="Comparison: N/A" styleClass="var-text"/>
-                    <Label fx:id="lblTraversal" text="Printed: " styleClass="var-text" wrapText="true"/>
+                <VBox spacing="10" styleClass="var-box" style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 10;">
+                    <Label fx:id="lblStatus" text="Status: Ready" styleClass="var-text" style="-fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+                    <Label fx:id="lblCurrentNode" text="Current Node: N/A" styleClass="var-text" style="-fx-text-fill: white;"/>
+                    <Label fx:id="lblComparison" text="Comparison: N/A" styleClass="var-text" style="-fx-text-fill: white;"/>
+                    <Label fx:id="lblTraversal" text="Printed: " styleClass="var-text" style="-fx-text-fill: #38bdf8;" wrapText="true"/>
                 </VBox>
             </VBox>
         </HBox>

@@ -12,11 +12,11 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);  // ← changed 400,500 to 1200,800
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         stage.setTitle("AlgoAnimate - Login");
         stage.setScene(scene);
-        stage.setWidth(1200);   // ← add this
-        stage.setHeight(800);   // ← add this
+        stage.setWidth(1200);
+        stage.setHeight(800);
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.show();

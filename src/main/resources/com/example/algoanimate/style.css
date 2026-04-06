@@ -1,35 +1,33 @@
-/* --- 1. GLOBAL SETTINGS --- */
+
 .root {
-    -fx-background-color: #020617; /* Dark Background */
+    -fx-background-color: #000000;
     -fx-font-family: 'Segoe UI', sans-serif;
 }
 .main-scroll-pane, .main-scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
 
-/* --- 2. FLOATING NAVBAR (The Capsule) --- */
+
 .floating-navbar {
-    -fx-background-color: #1e293b; /* Dark Slate (Matches Card) */
-    -fx-background-radius: 50;      /* Makes it Round/Pill shaped */
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 50;
     -fx-border-radius: 50;
     -fx-border-color: rgba(255, 255, 255, 0.1);
-
-    /* The Shadow makes it float */
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 20, 0, 0, 5);
 }
 
-/* --- LOGO STYLES --- */
+
 .logo-flow {
     -fx-text-alignment: center;
 }
 .logo-text-primary {
-    -fx-fill: #FFFFFF; /* উজ্জ্বল সাদা */
+    -fx-fill: #FFFFFF;
         -fx-font-weight: 900;
         -fx-font-size: 28px;
 
 }
 .logo-text-accent {
-    -fx-fill: #3b82f6; /* Bright Blue */
+    -fx-fill: #3b82f6;
     -fx-font-weight: 900;
     -fx-font-size: 24px;
 }
@@ -86,32 +84,50 @@
      -fx-effect: dropshadow(gaussian, white, 5, 0, 0, 0);
 }
 
+
 /* --- CARDS --- */
 .algo-card {
-    -fx-background-color: #1e293b;
-    -fx-border-color: rgba(255, 255, 255, 0.05);
+
+    -fx-background-color: linear-gradient(to bottom right, #1e293b, #0f172a);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
     -fx-background-radius: 15;
     -fx-border-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 10);
+
     -fx-cursor: hand;
     -fx-padding: 20;
+    -fx-transition: all 0.3s ease-in-out;
 }
+
 .algo-card:hover {
-    -fx-translate-y: -5;
+    -fx-translate-y: -8;
     -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(three-pass-box, rgba(59, 130, 246, 0.5), 25, 0, 0, 0);
 }
-.card-title { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
-.card-desc { -fx-text-fill: #cbd5e1; -fx-font-size: 12px; }
-.sub-header { -fx-text-fill: #94a3b8; -fx-font-size: 18px; -fx-font-weight: bold;}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+
+.card-desc {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+
 .icon-badge {
-    -fx-background-color: rgba(37, 99, 235, 0.1);
+    -fx-background-color: rgba(59, 130, 246, 0.15); /* নীল রঙটা একটু গাঢ় */
     -fx-background-radius: 50;
-    -fx-min-width: 60px;
-    -fx-min-height: 60px;
+    -fx-min-width: 65px;
+    -fx-min-height: 65px;
     -fx-alignment: center;
-    -fx-text-fill: #60a5fa;
+    -fx-text-fill: #38bdf8;
     -fx-font-size: 26px;
     -fx-font-weight: bold;
+    -fx-border-color: rgba(56, 189, 248, 0.3);
+    -fx-border-radius: 50;
 }
 #cardContainer {
 
@@ -166,9 +182,9 @@
 }
 
 /* Block States */
-.block-compare { -fx-background-color: #eab308; } /* Yellow */
-.block-swap { -fx-background-color: #ef4444; }    /* Red */
-.block-sorted { -fx-background-color: #22c55e; }  /* Green */
+.block-compare { -fx-background-color: #eab308; }
+.block-swap { -fx-background-color: #ef4444; }
+.block-sorted { -fx-background-color: #22c55e; }
 
 /* --- ComboBox Styling --- */
 .combo-box-custom {
@@ -187,31 +203,26 @@
 }
 
 
-/* --- EXISTING STYLES KEEP SAME --- */
-/* Add these NEW styles below */
-
 /* --- 1. SQUARE BLOCKS (Visualizer) --- */
 .array-block {
-    -fx-background-color: #3b82f6; /* Beautiful Blue */
-    -fx-background-radius: 12;      /* Rounded Corners */
-    -fx-min-width: 65px;            /* SQUARE WIDTH */
-    -fx-min-height: 65px;           /* SQUARE HEIGHT */
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 12;
+    -fx-min-width: 65px;
+    -fx-min-height: 65px;
     -fx-max-width: 65px;
     -fx-max-height: 65px;
     -fx-alignment: center;
-
-    /* 3D Floating Effect */
     -fx-effect: dropshadow(three-pass-box, rgba(59, 130, 246, 0.4), 10, 0, 0, 5);
 }
 
 .block-text {
     -fx-fill: white;
-    -fx-font-weight: 900; /* Extra Bold */
+    -fx-font-weight: 900;
     -fx-font-size: 20px;
-    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 0); /* Text Shadow for pop */
+    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 0);
 }
 
-/* Colors for Animation */
+
 .block-compare {
     -fx-background-color: #eab308; /* Yellow */
     -fx-effect: dropshadow(gaussian, #eab308, 15, 0.5, 0, 0); /* Glow */
@@ -225,7 +236,7 @@
     -fx-effect: dropshadow(gaussian, #22c55e, 10, 0.3, 0, 0);
 }
 
-/* --- 2. DROPDOWN FIX (Visibility) --- */
+
 .combo-box-custom {
     -fx-background-color: #334155;
     -fx-mark-color: white;
@@ -233,7 +244,7 @@
     -fx-font-size: 14px;
 }
 
-/* This fixes the popup text color */
+
 .combo-box-popup .list-view .list-cell {
     -fx-text-fill: white;
     -fx-background-color: #1e293b;
@@ -262,16 +273,13 @@
 }
 
 
-
-/* --- EXISTING STYLES (Keep Header/Buttons) --- */
-
 /* --- VISUALIZATION BARS --- */
 .bar-container {
     -fx-alignment: bottom-center;
 }
 
 .vis-bar {
-    -fx-fill: #22d3ee; /* Cyan (Video Style) */
+    -fx-fill: #22d3ee;
     -fx-effect: dropshadow(three-pass-box, rgba(34, 211, 238, 0.3), 10, 0, 0, 0);
     -fx-arc-width: 5;
     -fx-arc-height: 5;
@@ -284,7 +292,7 @@
 }
 
 .bar-idx-label {
-    -fx-text-fill: #94a3b8; /* Grey Index */
+    -fx-text-fill: #94a3b8;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-padding: 5 0 0 0;
@@ -295,7 +303,7 @@
 .bar-swap { -fx-fill: #facc15; }    /* Yellow/Orange (Swap) */
 .bar-sorted { -fx-fill: #0ea5e9; }  /* Darker Blue (Sorted) */
 
-/* --- CODE PANEL --- */
+
 .code-panel {
     -fx-background-color: #0f172a;
     -fx-border-color: #334155;
@@ -314,7 +322,7 @@
     -fx-padding: 5;
 }
 
-/* Highlighted Code Line (Yellow Background like video) */
+
 .code-list .list-cell:filled:selected,
 .code-list .list-cell:filled:hover {
     -fx-background-color: #facc15; /* Yellow */
@@ -340,10 +348,10 @@
     -fx-fill: white; /* Make sure it's white in Dark Mode */
     -fx-font-weight: 900;
     -fx-font-size: 26px;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.6), 15, 0, 0, 0); /* Glow Effect */
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.6), 15, 0, 0, 0);
 }
 
-/* --- MODERN BUTTONS (Gradient Style) --- */
+
 .btn-gradient-blue {
     -fx-background-color: linear-gradient(to right, #2563eb, #3b82f6);
     -fx-text-fill: white;
@@ -369,38 +377,36 @@
 }
 .btn-gradient-green:hover { -fx-translate-y: -2; }
 
-/* --- VISUALIZATION BARS (Wider & Centered) --- */
+
 .vis-container {
-    -fx-alignment: center; /* Center everything */
+    -fx-alignment: center;
 }
 
 .vis-bar {
-    -fx-fill: linear-gradient(to top, #06b6d4, #22d3ee); /* সাইয়ান কালার */
+    -fx-fill: linear-gradient(to top, #06b6d4, #22d3ee);
         -fx-arc-width: 8;
         -fx-arc-height: 8;
 }
 
-/* Animation Highlights */
+
 .bar-compare { -fx-fill: #facc15; -fx-effect: dropshadow(gaussian, #facc15, 20, 0.5, 0, 0); } /* Yellow Glow */
 .bar-swap { -fx-fill: #ef4444; -fx-effect: dropshadow(gaussian, #ef4444, 20, 0.5, 0, 0); }    /* Red Glow */
 .bar-sorted { -fx-fill: #22c55e; }
-/* =========================================
-   LIGHT THEME OVERRIDES
-   ========================================= */
+
 .light-theme {
     -fx-background-color: #f1f5f9; /* Light Grey BG */
 }
 
-/* Floating Navbar in Light Mode */
+
 .light-theme .floating-navbar {
-    -fx-background-color: #ffffff; /* White Capsule */
+    -fx-background-color: #ffffff;
     -fx-border-color: rgba(0,0,0,0.05);
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 20, 0, 0, 5);
 }
 
-.light-theme .logo-text-primary { -fx-fill: #0f172a; } /* Black text */
+.light-theme .logo-text-primary { -fx-fill: #0f172a; }
 .light-theme .nav-link { -fx-text-fill: #475569; }
-.light-theme .nav-link:hover { -fx-text-fill: #2563eb; } /* Blue on hover */
+.light-theme .nav-link:hover { -fx-text-fill: #2563eb; }
 
 .light-theme .nav-menu-btn .label { -fx-text-fill: #475569; }
 .light-theme .nav-menu-btn:hover .label { -fx-text-fill: #2563eb; }
@@ -414,7 +420,7 @@
 .light-theme .card-title { -fx-text-fill: #0f172a; }
 .light-theme .card-desc { -fx-text-fill: #64748b; }
 
-/* --- PREMIUM BUTTONS --- */
+
 .btn-premium-blue {
     -fx-background-color: linear-gradient(to bottom, #3b82f6, #2563eb);
     -fx-text-fill: white;
@@ -433,7 +439,7 @@
     -fx-padding: 8 18;
 }
 
-/* --- CODE PANEL FIX --- */
+
 .code-panel {
     -fx-background-color: #0f172a;
     -fx-border-color: #1e293b;
@@ -453,37 +459,32 @@
     -fx-font-weight: bold;
 }
 
-/* Merge Sort Partitions */
 
-/* বাম পাশের সব বার - লাল */
-/* বারগুলোর স্মুথ মুভমেন্টের জন্য */
 .vis-bar-node {
     -fx-transition: -fx-translate-y 0.4s ease-in-out;
 }
 
-/* সর্ট হওয়ার পর যখন বারগুলো ওপরের দিকে ফিরে যাবে */
+
 .bar-moving-up {
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
 }
 
-/* মার্জ সর্টের ৩টি ভিন্ন কালার */
-.partition-left { -fx-fill: #ef4444; }    /* লাল */
-.partition-right { -fx-fill: #eab308; }   /* হলুদ */
-.partition-merged { -fx-fill: #22c55e; }  /* সবুজ */
 
-/* ==========================================================================
-   Binary Search Tree (BST) Styles
-   ========================================================================== */
+.partition-left { -fx-fill: #ef4444; }
+.partition-right { -fx-fill: #eab308; }
+.partition-merged { -fx-fill: #22c55e; }
 
-/* The main container for tree nodes (Pane needed for absolute positioning) */
+/* Binary Search Tree (BST) Styles*/
+
+
 .tree-pane {
     -fx-background-color: transparent;
 }
 
-/* Base style for circular BST nodes */
+
 .tree-node {
-    -fx-fill: rgba(2, 6, 23, 0.95); /* Deep black fill (matching array blocks) */
-    -fx-stroke: #38bdf8;          /* Sky Blue border */
+    -fx-fill: rgba(2, 6, 23, 0.95);
+    -fx-stroke: #38bdf8;
     -fx-stroke-width: 3;
 }
 
@@ -497,19 +498,380 @@
 
 /* Line connections between nodes */
 .tree-edge {
-    -fx-stroke: rgba(56, 189, 248, 0.4); /* Faded sky blue for connections */
+    -fx-stroke: rgba(56, 189, 248, 0.4);
     -fx-stroke-width: 2;
 }
 
-/* Highlight style for nodes during Searching/Insertion (Yellow glow) */
+
 .tree-node-highlight {
-    -fx-stroke: #eab308;          /* Yellow border from theme */
+    -fx-stroke: #eab308;
     -fx-effect: dropshadow(three-pass-box, rgba(234, 179, 8, 0.6), 15, 0.5, 0, 0);
 }
 
-/* Special style for currently searched 'target' node */
+
 .tree-node-found {
-    -fx-stroke: #22c55e;          /* Green border (matches btn-premium-green) */
+    -fx-stroke: #22c55e;
     -fx-effect: dropshadow(three-pass-box, rgba(34, 197, 94, 0.6), 15, 0.5, 0, 0);
 }
 
+
+/* Linked List Menu Buttons (Normal State) */
+.card-btn {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #38bdf8;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-border-color: #38bdf8;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+
+.card-btn:hover {
+    -fx-border-color: #7dd3fc;
+    -fx-border-width: 3px;
+    -fx-effect: dropshadow(three-pass-box, rgba(56,189,248,0.8), 20, 0, 0, 0);
+}
+
+
+.input-field {
+    -fx-background-color: #0f172a;
+    -fx-text-fill: white;
+    -fx-border-color: #334155;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+}
+.input-field:focused {
+    -fx-border-color: #06b6d4;
+    -fx-effect: dropshadow(three-pass-box, rgba(6, 182, 212, 0.5), 10, 0, 0, 0);
+}
+
+.action-btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 20 8 20;
+    -fx-text-fill: white;
+    -fx-transition: all 0.2s;
+}
+
+/* 1. Push Button (Neon Cyan) */
+.btn-push {
+    -fx-background-color: #06b6d4;
+    -fx-border-color: #06b6d4;
+}
+.btn-push:hover {
+    -fx-background-color: #0891b2;
+    -fx-effect: dropshadow(three-pass-box, rgba(6, 182, 212, 0.8), 15, 0, 0, 0);
+}
+
+/* 2. Pop Button (Neon Pink) */
+.btn-pop {
+    -fx-background-color: #f43f5e;
+    -fx-border-color: #f43f5e;
+}
+.btn-pop:hover {
+    -fx-background-color: #e11d48;
+    -fx-effect: dropshadow(three-pass-box, rgba(244, 63, 94, 0.8), 15, 0, 0, 0);
+}
+
+/* 3. Peek Button (Neon Green) */
+.btn-peek {
+    -fx-background-color: #10b981;
+    -fx-border-color: #10b981;
+}
+.btn-peek:hover {
+    -fx-background-color: #059669;
+    -fx-effect: dropshadow(three-pass-box, rgba(16, 185, 129, 0.8), 15, 0, 0, 0);
+}
+
+/* 4. Status Buttons: Is Empty / Is Full (Vibrant Purple) */
+.btn-status {
+    -fx-background-color: #8b5cf6;
+    -fx-border-color: #8b5cf6;
+}
+.btn-status:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.8), 15, 0, 0, 0);
+}
+
+/* 5. Clear Button (Outline Red) */
+.btn-clear {
+    -fx-background-color: transparent;
+    -fx-border-color: #ef4444;
+    -fx-border-width: 2px;
+    -fx-text-fill: #ef4444;
+}
+.btn-clear:hover {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(239, 68, 68, 0.8), 15, 0, 0, 0);
+}
+
+
+
+/* 1. Gen Random - Deep Lavender/Purple */
+.btn-random {
+    -fx-background-color: #6d28d9;
+    -fx-border-color: #7c3aed;
+}
+.btn-random:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(three-pass-box, rgba(124, 58, 237, 0.6), 15, 0, 0, 0);
+}
+
+/* 2. Set - Deep Sky Blue */
+.btn-set {
+    -fx-background-color: #06b6d4;
+        -fx-border-color: #06b6d4;
+}
+.btn-set:hover {
+   -fx-background-color: #0891b2;
+       -fx-effect: dropshadow(three-pass-box, rgba(6, 182, 212, 0.8), 15, 0, 0, 0);
+}
+
+/* 3. Start - Deep Emerald/Green */
+.btn-start {
+     -fx-background-color: #10b981;
+         -fx-border-color: #10b981;
+}
+.btn-start:hover {
+     -fx-background-color: #059669;
+         -fx-effect: dropshadow(three-pass-box, rgba(16, 185, 129, 0.8), 15, 0, 0, 0);
+}
+
+/* 4. Pause - Deep Amber/Orange */
+.btn-pause {
+   -fx-background-color: #be123c;
+       -fx-border-color: #fb7185;
+}
+.btn-pause:hover {
+    -fx-background-color: #9f1239;
+        -fx-effect: dropshadow(three-pass-box, rgba(251, 113, 133, 0.6), 15, 0, 0, 0);
+}
+
+
+.custom-slider .thumb {
+    -fx-background-color: #38bdf8;
+}
+.custom-slider .track {
+    -fx-background-color: #1e293b;
+}
+
+
+/* 1. Enqueue (Data Insert) - Deep Cyan Glow */
+.btn-enqueue {
+    -fx-background-color: #0891b2;
+    -fx-border-color: #22d3ee;
+}
+.btn-enqueue:hover {
+    -fx-background-color: #0e7490;
+    -fx-effect: dropshadow(three-pass-box, rgba(34, 211, 238, 0.6), 15, 0, 0, 0);
+}
+
+/* 2. Dequeue (Data Remove) - Deep Rose/Pink Glow */
+.btn-dequeue {
+    -fx-background-color: #be123c;
+    -fx-border-color: #fb7185;
+}
+.btn-dequeue:hover {
+    -fx-background-color: #9f1239;
+    -fx-effect: dropshadow(three-pass-box, rgba(251, 113, 133, 0.6), 15, 0, 0, 0);
+}
+
+/* 3. Peek Front - Soothing Emerald Green */
+.btn-peek {
+    -fx-background-color: #047857;
+    -fx-border-color: #10b981;
+}
+.btn-peek:hover {
+    -fx-background-color: #065f46;
+    -fx-effect: dropshadow(three-pass-box, rgba(16, 185, 129, 0.6), 15, 0, 0, 0);
+}
+
+/* 4. Status (Is Empty/Full) - Deep Violet */
+.btn-status {
+    -fx-background-color: #6d28d9;
+    -fx-border-color: #a78bfa;
+}
+.btn-status:hover {
+    -fx-background-color: #5b21b6;
+    -fx-effect: dropshadow(three-pass-box, rgba(167, 139, 250, 0.6), 15, 0, 0, 0);
+}
+
+/* 5. Clear Button - Red Outline */
+.btn-clear {
+    -fx-background-color: transparent;
+    -fx-border-color: #f43f5e;
+    -fx-text-fill: #f43f5e;
+    -fx-border-width: 1.5px;
+}
+.btn-clear:hover {
+    -fx-background-color: #f43f5e;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(244, 63, 94, 0.6), 15, 0, 0, 0);
+}
+
+
+/* Predecessor & Successor - Deep Indigo/Purple */
+.btn-status {
+    -fx-background-color: #4338ca;
+    -fx-border-color: #6366f1;
+}
+.btn-status:hover {
+    -fx-background-color: #3730a3;
+    -fx-effect: dropshadow(three-pass-box, rgba(99, 102, 241, 0.5), 15, 0, 0, 0);
+}
+
+
+
+/* 1. Gen Random - Vibrant Purple */
+.btn-random {
+    -fx-background-color: #8b5cf6;
+    -fx-border-color: #a78bfa;
+}
+
+/* 2. Predecessor - Deep Teal/Cyan */
+.btn-pre {
+    -fx-background-color: #0f766e;
+    -fx-border-color: #14b8a6;
+}
+.btn-pre:hover {
+    -fx-background-color: #115e59;
+    -fx-effect: dropshadow(three-pass-box, rgba(20, 184, 166, 0.6), 15, 0, 0, 0);
+}
+
+/* 3. Successor - Deep Blue/Indigo */
+.btn-suc {
+    -fx-background-color: #1e40af;
+    -fx-border-color: #3b82f6;
+}
+.btn-suc:hover {
+    -fx-background-color: #1e3a8a;
+    -fx-effect: dropshadow(three-pass-box, rgba(59, 130, 246, 0.6), 15, 0, 0, 0);
+}
+
+/* 4. Reset Tree - Slate Gray Outline */
+.btn-clear {
+    -fx-background-color: transparent;
+    -fx-border-color: #475569;
+    -fx-text-fill: #94a3b8;
+    -fx-border-width: 1.5px;
+}
+.btn-clear:hover {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+}
+
+/* 5. Traverse & Search - Emerald Green */
+.btn-peek {
+    -fx-background-color: #059669;
+    -fx-border-color: #10b981;
+}
+
+
+
+
+   /*LOGIN PAGE - DARK SPLIT THEME*/
+
+/* --- Root Layout --- */
+.dark-split-root {
+    -fx-background-color: #000000;
+}
+
+/* --- Left Pane (Branding) --- */
+.login-left-pane-dark {
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #020617);
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 0 1 0 0;
+}
+
+.hero-text-small-dark {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+.hero-text-large-dark {
+    -fx-fill: white;
+    -fx-font-size: 55px;
+    -fx-font-weight: 900;
+}
+
+.hero-text-large-accent {
+    -fx-fill: #38bdf8;
+    -fx-font-size: 55px;
+    -fx-font-weight: 900;
+}
+
+.hero-description-dark {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 17px;
+    -fx-line-spacing: 7px;
+    -fx-padding: 15 0 0 0;
+}
+
+/* --- Right Pane (Form) --- */
+.login-right-pane-dark {
+    -fx-background-color: #020617;
+}
+
+.form-title-dark {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.input-label-light {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* Soft Rounded Input */
+.dark-modern-input {
+    -fx-background-color: #0f172a;
+    -fx-text-fill: white;
+    -fx-border-color: #1e293b;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 12 15;
+    -fx-font-size: 15px;
+}
+
+.dark-modern-input:focused {
+    -fx-border-color: #38bdf8;
+    -fx-background-color: #1e293b;
+}
+
+/* Cyan Glowing Button */
+.login-btn-cyan {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-font-size: 15px;
+    -fx-padding: 14;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-margin: 30 0 0 0;
+    -fx-transition: all 0.2s;
+}
+
+.login-btn-cyan:hover {
+    -fx-background-color: #0284c7;
+    -fx-effect: dropshadow(three-pass-box, rgba(14, 165, 233, 0.4), 20, 0, 0, 0);
+    -fx-translate-y: -1;
+}
+
+.form-subtitle-dark {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-padding: 0 0 10 0;
+}

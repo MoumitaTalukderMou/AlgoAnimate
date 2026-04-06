@@ -106,19 +106,18 @@ public class StackController {
         loadPseudocode("push");
         trace(6); // Highlight insertion logic
 
-        // Create the visual block using your existing CSS classes
-        StackPane block = new StackPane();
-        block.getStyleClass().add("array-block"); // From style.css
 
+        StackPane block = new StackPane();
+        block.getStyleClass().add("array-block");
         Text text = new Text(input);
         text.getStyleClass().add("block-text");
         block.getChildren().add(text);
 
-        // Add to the TOP of the VBox (index 0)
+
         stackContainer.getChildren().add(0, block);
         stackSize++;
 
-        // Drop animation
+
         TranslateTransition tt = new TranslateTransition(Duration.millis(300), block);
         tt.setFromY(-50);
         tt.setToY(0);
@@ -145,7 +144,7 @@ public class StackController {
         Text textNode = (Text) topBlock.getChildren().get(0);
         String poppedValue = textNode.getText();
 
-        // Animate out then remove
+
         TranslateTransition tt = new TranslateTransition(Duration.millis(300), topBlock);
         tt.setByY(-50);
         tt.setOnFinished(e -> {
@@ -253,7 +252,7 @@ public class StackController {
         loadPseudocode("isFull");
         boolean full = (stackSize >= MAX_SIZE);
 
-        // Highlight the return true or return false line
+
         trace(full ? 2 : 4);
 
         if (full) {

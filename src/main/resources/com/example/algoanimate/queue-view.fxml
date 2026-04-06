@@ -22,14 +22,31 @@
             <VBox HBox.hgrow="ALWAYS" spacing="25" alignment="TOP_CENTER">
                 <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
-                <HBox spacing="10" alignment="CENTER" styleClass="control-panel-mini">
-                    <TextField fx:id="inputField" promptText="Enter value..." styleClass="input-field" prefWidth="120"/>
-                    <Button text="Enqueue" onAction="#handleEnqueue" styleClass="btn-premium-blue"/>
-                    <Button text="Dequeue" onAction="#handleDequeue" styleClass="btn-premium-red"/>
-                    <Button text="Peek Front" onAction="#handlePeek" styleClass="btn-premium-green"/>
-                    <Button text="Is Empty" onAction="#handleIsEmpty" styleClass="btn-premium-blue"/>
-                    <Button text="Is Full" onAction="#handleIsFull" styleClass="btn-premium-blue"/>
-                    <Button text="Clear" onAction="#handleClear" style="-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-border-color: #ef4444; -fx-border-radius: 5; -fx-cursor: hand;"/>
+                <HBox spacing="12" alignment="CENTER" styleClass="control-panel-mini">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <TextField fx:id="inputField" promptText="Enter value..." styleClass="input-field"
+                               prefWidth="120" minWidth="120" />
+
+                    <Button text="Enqueue" styleClass="action-btn, btn-enqueue" onAction="#handleEnqueue"
+                            prefWidth="105" minWidth="105" />
+
+                    <Button text="Dequeue" styleClass="action-btn, btn-dequeue" onAction="#handleDequeue"
+                            prefWidth="105" minWidth="105" />
+
+                    <Button text="Peek Front" styleClass="action-btn, btn-peek" onAction="#handlePeek"
+                            prefWidth="115" minWidth="115" />
+
+                    <Button text="Is Empty" styleClass="action-btn, btn-status" onAction="#handleIsEmpty"
+                            prefWidth="100" minWidth="100" />
+
+                    <Button text="Is Full" styleClass="action-btn, btn-status" onAction="#handleIsFull"
+                            prefWidth="90" minWidth="90" />
+
+                    <Button text="Clear" styleClass="action-btn, btn-clear" onAction="#handleClear"
+                            prefWidth="85" minWidth="85" />
                 </HBox>
 
                 <VBox alignment="CENTER" VBox.vgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 2 0; -fx-padding: 20;">

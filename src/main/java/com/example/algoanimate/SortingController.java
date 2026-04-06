@@ -174,7 +174,7 @@ public class SortingController {
         }
     }
 
-    // --- NEW: PAUSE & STOP LOGIC ---
+
     @FXML
     private void handlePause() {
         if (sortingThread == null || !sortingThread.isAlive()) return;
@@ -240,13 +240,13 @@ public class SortingController {
 
     private void bubbleSort() throws InterruptedException {
         for (int i = 0; i < array.length - 1; i++) {
-            trace(2); // bool swapped = false;
+            trace(2);
             boolean swapped = false;
-            sleep(); // সিউডোকোড দেখার জন্য একটু বিরতি
+            sleep();
 
             for (int j = 0; j < array.length - i - 1; j++) {
 
-                trace(4); // if (arr[j] > arr[j+1])
+                trace(4);
                 highlight(j, j+1, "compare");
                 updateStats("Comparing " + array[j] + " & " + array[j+1]);
                 sleep();
@@ -254,7 +254,7 @@ public class SortingController {
 
                 if (array[j] > array[j+1]) {
 
-                    trace(5); // swap(arr[j], arr[j+1]);  <-- এই লাইনটি যোগ করা হয়েছে
+                    trace(5); // swap(arr[j], arr[j+1]);
                     highlight(j, j+1, "swap");
                     animateJump(rects[j]); animateJump(rects[j+1]);
 
@@ -270,7 +270,7 @@ public class SortingController {
                 resetColor(j, j+1);
             }
 
-            trace(9); // if (!swapped) break; <-- এই লাইনটি যোগ করা হয়েছে
+            trace(9);
             sleep();
 
             if(!swapped) break;
@@ -624,7 +624,7 @@ public class SortingController {
 
     @FXML
     private void handleBack() throws IOException {
-        stopSorting(); // Stop animation before going back
+        stopSorting();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         Stage stage = (Stage) displayPane.getScene().getWindow();

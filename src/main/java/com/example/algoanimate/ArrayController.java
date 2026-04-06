@@ -33,7 +33,7 @@ public class ArrayController {
     @FXML
     private Label lblSize;
 
-    // Data structure to store array elements
+
     private ArrayList<Integer> arrayList = new ArrayList<>();
     private int arrayCapacity = 0;
     private HBox arrayContainer;
@@ -218,10 +218,10 @@ public class ArrayController {
                     return;
                 }
 
-                // Store the old capacity
+
                 int oldCapacity = arrayCapacity;
 
-                // Add new empty boxes to the existing visualization
+
                 for (int i = oldCapacity; i < newCapacity; i++) {
                     VBox cell = createArrayCell(i);
 
@@ -281,7 +281,7 @@ public class ArrayController {
 
         cell.getChildren().addAll(indexText, valueText);
 
-        // Add hover effect
+
         cell.setOnMouseEntered(e ->
                 cell.setStyle("-fx-border-color: blue; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightblue;"));
         cell.setOnMouseExited(e ->
