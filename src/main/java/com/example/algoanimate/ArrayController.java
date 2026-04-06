@@ -32,14 +32,70 @@ public class ArrayController {
     private Label lblStatus;
     @FXML
     private Label lblSize;
+    @FXML private Button btnPause;
 
 
+
+    // ─── Dark Theme Style Constants ───────────────────────────────────────────
+    private static final String CELL_DEFAULT =
+            "-fx-border-color: #38bdf8; -fx-border-width: 2; -fx-padding: 10; " +
+                    "-fx-background-color: #0f172a; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_HOVER =
+            "-fx-border-color: #7dd3fc; -fx-border-width: 2.5; -fx-padding: 10; " +
+                    "-fx-background-color: #1e293b; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_GREEN =
+            "-fx-border-color: #22c55e; -fx-border-width: 3; -fx-padding: 10; " +
+                    "-fx-background-color: #052e16; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_RED =
+            "-fx-border-color: #ef4444; -fx-border-width: 3; -fx-padding: 10; " +
+                    "-fx-background-color: #450a0a; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_ORANGE =
+            "-fx-border-color: #f97316; -fx-border-width: 3; -fx-padding: 10; " +
+                    "-fx-background-color: #431407; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_PURPLE =
+            "-fx-border-color: #a78bfa; -fx-border-width: 3; -fx-padding: 10; " +
+                    "-fx-background-color: #2e1065; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_BLUE =
+            "-fx-border-color: #60a5fa; -fx-border-width: 3; -fx-padding: 10; " +
+                    "-fx-background-color: #172554; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    private static final String CELL_GOLD =
+            "-fx-border-color: #facc15; -fx-border-width: 3; -fx-padding: 10; " +
+                    "-fx-background-color: #1c1400; -fx-border-radius: 6; -fx-background-radius: 6;";
+
+    // ─── Text Style Constants ─────────────────────────────────────────────────
+    private static final String TEXT_INDEX =
+            "-fx-font-size: 12px; -fx-fill: #38bdf8; -fx-font-weight: bold;";
+
+    private static final String TEXT_VALUE =
+            "-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #f1f5f9;";
+
+    private static final String TEXT_NULL =
+            "-fx-font-size: 13px; -fx-font-weight: normal; -fx-fill: #334155;";
+
+    // ─── Cell Dimensions ──────────────────────────────────────────────────────
+    private static final double CELL_WIDTH = 65;
+    private static final double CELL_HEIGHT = 75;
+    private static final double CELL_SPACING = 12;
+
+    // ─── State ────────────────────────────────────────────────────────────────
     private ArrayList<Integer> arrayList = new ArrayList<>();
     private int arrayCapacity = 0;
     private HBox arrayContainer;
     private boolean isSearching = false;
     private boolean isTraversing = false;
+    // ADD THESE FOR PAUSE/RESUME
+    private Timeline currentTimeline = null;
+    private SequentialTransition currentSequential = null;
+    private boolean isPaused = false;
 
+    // ─────────────────────────────────────────────────────────────────────────
     @FXML
     private void onBackClick() {
         try {
@@ -47,7 +103,6 @@ public class ArrayController {
             Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
             Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.setScene(scene);
-
             stage.setResizable(false);
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,32 +111,20 @@ public class ArrayController {
 
     public void initialize() {
         ArrayChoiceBox.getItems().addAll(
-                "Create",
-                "Append",
-                "Insert",
-                "Delete Value",
-                "Delete Position",
-                "Search",
-                "Traverse",
-                "Update",
-                "Increase Capacity",
-                "Reset Array",
-                "Clear"
+                "Create", "Append", "Insert", "Delete Value", "Delete Position",
+                "Search", "Traverse", "Update", "Increase Capacity", "Decrease Capacity", "Reset Array", "Clear"
         );
-
-
-
         ArrayChoiceBox.setOnAction(e -> handleChoiceSelection());
 
-        // Initialize array container
-        arrayContainer = new HBox(10); // 10px spacing between boxes
-        arrayContainer.setAlignment(Pos.CENTER);
+        arrayContainer = new HBox(CELL_SPACING);
+        arrayContainer.setAlignment(Pos.CENTER_LEFT);
         arrayContainer.setLayoutX(50);
-        arrayContainer.setLayoutY(200);
+        arrayContainer.setLayoutY(180);
         animationPane.getChildren().add(arrayContainer);
-        updateSize();
+
     }
 
+    // ─── Choice Handler ───────────────────────────────────────────────────────
     private void handleChoiceSelection() {
         String selected = ArrayChoiceBox.getValue();
         if (selected == null) return;
@@ -90,84 +133,127 @@ public class ArrayController {
         switch (selected) {
             case "Create":
                 actionListView.getItems().add("Creating new Array...");
-                updateStatus("Creating new Array");
+                updateStatus("Creating");
                 showCreateArrayDialog();
                 break;
             case "Append":
-                actionListView.getItems().add("Appending Value...");
+                actionListView.getItems().add("Appending value...");
                 updateStatus("Append");
                 showAppendDialog();
                 break;
             case "Insert":
-                actionListView.getItems().add("Inserting Value at Position...");
+                actionListView.getItems().add("Inserting value...");
                 updateStatus("Insert");
                 showInsertDialog();
                 break;
             case "Delete Value":
-                actionListView.getItems().add("Deleting Value...");
+                actionListView.getItems().add("Deleting value...");
                 updateStatus("Delete Value");
                 showDeleteValueDialog();
                 break;
             case "Delete Position":
-                actionListView.getItems().add("Deleting Value at Position...");
+                actionListView.getItems().add("Deleting position...");
                 updateStatus("Delete Position");
                 showDeletePositionDialog();
                 break;
             case "Search":
                 actionListView.getItems().add("Searching...");
-                updateStatus("Searching");
+                updateStatus("Search");
                 showSearchDialog();
                 break;
             case "Traverse":
                 actionListView.getItems().add("Traversing...");
-                updateStatus("Traversing");
+                updateStatus("Traverse");
                 traverseArray();
                 break;
             case "Update":
-                actionListView.getItems().add("Updating value at a certain position...");
-                updateStatus("Updating");
+                actionListView.getItems().add("Updating...");
+                updateStatus("Update");
                 showUpdateDialog();
                 break;
             case "Increase Capacity":
                 actionListView.getItems().add("Increasing capacity...");
-                updateStatus("Increasing capacity");
+                updateStatus("Increase Capacity");
                 increaseArrayVisualization();
                 break;
+            case "Decrease Capacity":
+                actionListView.getItems().add("Decreasing capacity...");
+                updateStatus("Decrease Capacity");
+                showDecreaseCapacityDialog();
+                break;
             case "Reset Array":
-                actionListView.getItems().add("Array Reseting to null...");
-                updateStatus("Reset Array");
+                actionListView.getItems().add("Resetting array...");
+                updateStatus("Reset");
                 clearArray();
                 break;
             case "Clear":
-                actionListView.getItems().add("Cleared");
+                actionListView.getItems().add("Cleared.");
                 updateStatus("Cleared");
                 animationPane.getChildren().clear();
+                arrayContainer = new HBox(CELL_SPACING);
+                arrayContainer.setAlignment(Pos.CENTER_LEFT);
+                arrayContainer.setLayoutX(50);
+                arrayContainer.setLayoutY(180);
+                animationPane.getChildren().add(arrayContainer);
+                arrayList.clear();
+                arrayCapacity = 0;
+                updateSize();
                 break;
         }
         ArrayChoiceBox.setValue(null);
     }
 
+    // ─── Create Cell ──────────────────────────────────────────────────────────
+    private VBox createArrayCell(int index) {
+        VBox cell = new VBox(4);
+        cell.setAlignment(Pos.CENTER);
+        cell.setStyle(CELL_DEFAULT);
+        cell.setPrefWidth(CELL_WIDTH);
+        cell.setPrefHeight(CELL_HEIGHT);
+        cell.setMinWidth(CELL_WIDTH);
+        cell.setMaxWidth(CELL_WIDTH);
+        cell.setMinHeight(CELL_HEIGHT);
+        cell.setMaxHeight(CELL_HEIGHT);
+
+        Text indexText = new Text("[" + index + "]");
+        indexText.setStyle(TEXT_INDEX);
+
+        Text valueText = new Text("null");
+        valueText.setStyle(TEXT_NULL);
+
+        cell.getChildren().addAll(indexText, valueText);
+
+        cell.setOnMouseEntered(e -> cell.setStyle(CELL_HOVER));
+        cell.setOnMouseExited(e -> {
+            // restore correct base style based on whether it has a value
+            boolean hasValue = index < arrayList.size();
+            cell.setStyle(CELL_DEFAULT);
+            valueText.setStyle(hasValue ? TEXT_VALUE : TEXT_NULL);
+        });
+
+        return cell;
+    }
+
+    // ─── Create / Increase Array ──────────────────────────────────────────────
     private void showCreateArrayDialog() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Create Array");
         dialog.setHeaderText("Enter the Array Capacity:");
         dialog.setContentText("Capacity:");
 
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(value -> {
+        dialog.showAndWait().ifPresent(value -> {
             try {
-                int capacity = Integer.parseInt(value);
+                int capacity = Integer.parseInt(value.trim());
                 if (capacity <= 0) {
                     actionListView.getItems().add("Please enter a positive number!");
                     return;
                 }
                 if (capacity > 500) {
-                    actionListView.getItems().add("Maximum capacity is 20!");
+                    actionListView.getItems().add("Maximum capacity is 500!");
                     return;
                 }
                 arrayCapacity = capacity;
-                arrayList.clear(); // Clear existing data
+                arrayList.clear();
                 createArrayVisualization();
                 actionListView.getItems().add("Array created with capacity: " + capacity);
                 updateSize();
@@ -178,18 +264,11 @@ public class ArrayController {
     }
 
     private void createArrayVisualization() {
-        // Clear existing boxes
         arrayContainer.getChildren().clear();
-
-        // Create boxes for each position
         for (int i = 0; i < arrayCapacity; i++) {
-            VBox cell = createArrayCell(i);
-            arrayContainer.getChildren().add(cell);
+            arrayContainer.getChildren().add(createArrayCell(i));
         }
-        double requiredWidth = 50 + (arrayCapacity * 50) + 200;
-        if (requiredWidth > animationPane.getPrefWidth()) {
-            animationPane.setPrefWidth(requiredWidth);
-        }
+        updatePaneWidth();
     }
 
     private void increaseArrayVisualization() {
@@ -203,99 +282,196 @@ public class ArrayController {
         dialog.setHeaderText("Current capacity: " + arrayCapacity);
         dialog.setContentText("Enter new capacity:");
 
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(value -> {
+        dialog.showAndWait().ifPresent(value -> {
             try {
-                int newCapacity = Integer.parseInt(value);
-
+                int newCapacity = Integer.parseInt(value.trim());
                 if (newCapacity <= arrayCapacity) {
-                    actionListView.getItems().add("New capacity must be greater than current capacity!");
+                    actionListView.getItems().add("New capacity must be greater than current!");
                     return;
                 }
                 if (newCapacity > 500) {
-                    actionListView.getItems().add("Maximum capacity is 20!");
+                    actionListView.getItems().add("Maximum capacity is 500!");
                     return;
                 }
 
-
                 int oldCapacity = arrayCapacity;
 
+                // Update capacity FIRST so createArrayCell hover logic is correct
+                arrayCapacity = newCapacity;
 
+                // Step 1: append new cells with green flash
                 for (int i = oldCapacity; i < newCapacity; i++) {
                     VBox cell = createArrayCell(i);
-
-                    // Highlight new cells briefly
-                    cell.setStyle("-fx-border-color: green; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightgreen;");
-
+                    cell.setStyle(CELL_GREEN);
+                    ((Text) cell.getChildren().get(1)).setStyle(TEXT_NULL);
                     arrayContainer.getChildren().add(cell);
-
-                    // Reset after a short delay
-                    final int index = i;
-                    new Thread(() -> {
-                        try {
-                            Thread.sleep(300);
-                            javafx.application.Platform.runLater(() -> {
-                                if (index < arrayContainer.getChildren().size()) {
-                                    VBox addedCell = (VBox) arrayContainer.getChildren().get(index);
-                                    addedCell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;");
-                                }
-                            });
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }).start();
                 }
+                updatePaneWidth();
 
-                // Update the capacity
-                arrayCapacity = newCapacity;
-                double requiredWidth = 50 + (arrayCapacity * 50) + 200;
-                if (requiredWidth > animationPane.getPrefWidth()) {
-                    animationPane.setPrefWidth(requiredWidth);
-                }
-
-
-                actionListView.getItems().add("Array capacity increased from " + oldCapacity + " to: " + arrayCapacity);
-                actionListView.getItems().add("Added " + (newCapacity - oldCapacity) + " new empty positions");
+                // Step 2: after flash delay, rebuild cleanly so indices/styles are 100% in sync
+                PauseTransition flashDelay = new PauseTransition(Duration.millis(500));
+                flashDelay.setOnFinished(e -> {
+                    refreshArrayVisualization();   // ← this is the key fix
+                    actionListView.getItems().add("Capacity increased from " + oldCapacity + " → " + arrayCapacity);
+                    actionListView.getItems().add("Added " + (newCapacity - oldCapacity) + " new empty positions.");
+                });
+                flashDelay.play();
 
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
         });
     }
-
-    private VBox createArrayCell(int index) {
-        VBox cell = new VBox(5);
-        cell.setAlignment(Pos.CENTER);
-        cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;");
-        cell.setPrefWidth(30);
-        cell.setPrefHeight(60);
-
-        // Index label
-        Text indexText = new Text("[" + index + "]");
-        indexText.setStyle("-fx-font-weight: bold;");
-
-        // Value display (empty initially)
-        Text valueText = new Text("null");
-        valueText.setStyle("-fx-fill: gray;");
-
-        cell.getChildren().addAll(indexText, valueText);
-
-
-        cell.setOnMouseEntered(e ->
-                cell.setStyle("-fx-border-color: blue; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightblue;"));
-        cell.setOnMouseExited(e ->
-                cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;"));
-
-        return cell;
-    }
-
-    private void showAppendDialog() {
+    // ------- Decrese Array -----
+    private void showDecreaseCapacityDialog() {
         if (arrayCapacity == 0) {
             actionListView.getItems().add("Please create an array first!");
             return;
         }
 
+        TextInputDialog dialog = new TextInputDialog(String.valueOf(arrayCapacity));
+        dialog.setTitle("Decrease Capacity");
+        dialog.setHeaderText("Current capacity: " + arrayCapacity + "\nCurrent size: " + arrayList.size());
+        dialog.setContentText("Enter new capacity (minimum " + arrayList.size() + "):");
+
+        dialog.showAndWait().ifPresent(value -> {
+            try {
+                int newCapacity = Integer.parseInt(value.trim());
+
+                // Validation
+                if (newCapacity < arrayList.size()) {
+                    actionListView.getItems().add("Cannot decrease capacity below current size (" + arrayList.size() + ")!");
+                    actionListView.getItems().add("Please remove elements first or choose a larger capacity.");
+                    return;
+                }
+
+                if (newCapacity >= arrayCapacity) {
+                    actionListView.getItems().add("New capacity must be less than current capacity (" + arrayCapacity + ")!");
+                    actionListView.getItems().add("Use 'Increase Capacity' to make capacity larger.");
+                    return;
+                }
+
+                if (newCapacity <= 0) {
+                    actionListView.getItems().add("Capacity must be positive!");
+                    return;
+                }
+
+                // Perform capacity decrease with animation
+                animateCapacityDecrease(newCapacity);
+
+            } catch (NumberFormatException e) {
+                actionListView.getItems().add("Please enter a valid number!");
+            }
+        });
+    }
+    private void animateCapacityDecrease(int newCapacity) {
+        int oldCapacity = arrayCapacity;
+        int removedCells = oldCapacity - newCapacity;
+
+        actionListView.getItems().add("📉 Decreasing capacity from " + oldCapacity + " → " + newCapacity);
+        actionListView.getItems().add("Removing " + removedCells + " empty position(s) from the end...");
+
+        SequentialTransition seq = new SequentialTransition();
+
+        // Animate removal of cells from the end
+        for (int i = oldCapacity - 1; i >= newCapacity; i--) {
+            final int cellIndex = i;
+
+            if (cellIndex < arrayContainer.getChildren().size()) {
+                VBox cellToRemove = (VBox) arrayContainer.getChildren().get(cellIndex);
+
+                // Check if cell has data (shouldn't happen due to validation, but just in case)
+                Text valueText = (Text) cellToRemove.getChildren().get(1);
+                boolean hasData = !"null".equals(valueText.getText());
+
+                if (hasData) {
+                    // This shouldn't happen due to validation, but handle gracefully
+                    actionListView.getItems().add("⚠️ Warning: Cell [" + cellIndex + "] had data! Aborting.");
+                    refreshArrayVisualization();
+                    return;
+                }
+
+                // Red flash for removal
+                Timeline flash = new Timeline(
+                        new KeyFrame(Duration.millis(0), e -> cellToRemove.setStyle(CELL_RED)),
+                        new KeyFrame(Duration.millis(200), e -> cellToRemove.setStyle(CELL_DEFAULT))
+                );
+
+                // Fade out animation
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), cellToRemove);
+                fadeOut.setFromValue(1.0);
+                fadeOut.setToValue(0.0);
+
+                // Scale down animation for dramatic effect
+                ScaleTransition scaleDown = new ScaleTransition(Duration.millis(300), cellToRemove);
+                scaleDown.setFromX(1.0);
+                scaleDown.setToX(0.0);
+                scaleDown.setFromY(1.0);
+                scaleDown.setToY(0.0);
+
+                ParallelTransition removeAnim = new ParallelTransition(flash, fadeOut, scaleDown);
+
+                removeAnim.setOnFinished(e -> javafx.application.Platform.runLater(() -> {
+                    // Remove the cell from container
+                    if (cellIndex < arrayContainer.getChildren().size()) {
+                        arrayContainer.getChildren().remove(cellIndex);
+                    }
+                    actionListView.getItems().add("  ✗ Removed position [" + cellIndex + "]");
+                }));
+
+                seq.getChildren().add(removeAnim);
+
+                // Small pause between removals
+                if (i > newCapacity) {
+                    seq.getChildren().add(new PauseTransition(Duration.millis(100)));
+                }
+            }
+        }
+
+        seq.setOnFinished(e -> javafx.application.Platform.runLater(() -> {
+            // Update capacity
+            arrayCapacity = newCapacity;
+
+            // Ensure all remaining cells have correct styling
+            for (int i = 0; i < arrayContainer.getChildren().size(); i++) {
+                VBox cell = (VBox) arrayContainer.getChildren().get(i);
+                cell.setStyle(CELL_DEFAULT);
+                cell.setScaleX(1.0);
+                cell.setScaleY(1.0);
+                cell.setOpacity(1.0);
+
+                // Update index text to reflect new indices
+                Text indexText = (Text) cell.getChildren().get(0);
+                indexText.setText("[" + i + "]");
+
+                if (i < arrayList.size()) {
+                    Text valueText = (Text) cell.getChildren().get(1);
+                    valueText.setText(String.valueOf(arrayList.get(i)));
+                    valueText.setStyle(TEXT_VALUE);
+                }
+            }
+
+            updatePaneWidth();
+            actionListView.getItems().add("✅ Capacity successfully decreased to " + newCapacity);
+            actionListView.getItems().add("   Remaining cells: " + arrayContainer.getChildren().size());
+            actionListView.getItems().add("   Data size: " + arrayList.size() + " / " + arrayCapacity);
+            updateSize();
+
+            // Optional: Green flash on remaining cells to show successful operation
+            for (int i = 0; i < arrayContainer.getChildren().size(); i++) {
+                highlightCellWithAnimation(i, "green", 300);
+            }
+        }));
+
+        seq.play();
+    }
+
+    // ─── Append ───────────────────────────────────────────────────────────────
+    private void showAppendDialog() {
+        if (arrayCapacity == 0) {
+            actionListView.getItems().add("Please create an array first!");
+            return;
+        }
         if (arrayList.size() >= arrayCapacity) {
             actionListView.getItems().add("Array is full! Cannot append.");
             return;
@@ -306,16 +482,14 @@ public class ArrayController {
         dialog.setHeaderText("Enter value to append:");
         dialog.setContentText("Value:");
 
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(value -> {
+        dialog.showAndWait().ifPresent(value -> {
             try {
-                int intValue = Integer.parseInt(value);
+                int intValue = Integer.parseInt(value.trim());
                 int position = arrayList.size();
                 arrayList.add(intValue);
                 updateCellValue(position, intValue);
                 highlightCellWithAnimation(position, "green", 1000);
-                actionListView.getItems().add("Appended value " + intValue + " at position " + position);
+                actionListView.getItems().add("Appended " + intValue + " at position [" + position + "]");
                 updateSize();
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
@@ -323,61 +497,49 @@ public class ArrayController {
         });
     }
 
+    // ─── Insert ───────────────────────────────────────────────────────────────
     private void showInsertDialog() {
         if (arrayCapacity == 0) {
             actionListView.getItems().add("Please create an array first!");
             return;
         }
-
         if (arrayList.size() >= arrayCapacity) {
             actionListView.getItems().add("Array is full! Cannot insert.");
             return;
         }
 
-        // First dialog for position
         TextInputDialog posDialog = new TextInputDialog();
         posDialog.setTitle("Insert Value");
         posDialog.setHeaderText("Enter position to insert (0 to " + arrayList.size() + "):");
         posDialog.setContentText("Position:");
 
-        Optional<String> posResult = posDialog.showAndWait();
-
-        posResult.ifPresent(posValue -> {
+        posDialog.showAndWait().ifPresent(posValue -> {
             try {
-                int position = Integer.parseInt(posValue);
+                int position = Integer.parseInt(posValue.trim());
                 if (position < 0 || position > arrayList.size()) {
-                    actionListView.getItems().add("Invalid position! Must be between 0 and " + arrayList.size());
+                    actionListView.getItems().add("Invalid position! Must be 0 to " + arrayList.size());
                     return;
                 }
-
-                // Second dialog for value
                 TextInputDialog valDialog = new TextInputDialog();
                 valDialog.setTitle("Insert Value");
                 valDialog.setHeaderText("Enter value to insert at position " + position + ":");
                 valDialog.setContentText("Value:");
 
-                Optional<String> valResult = valDialog.showAndWait();
-
-                valResult.ifPresent(valValue -> {
+                valDialog.showAndWait().ifPresent(valValue -> {
                     try {
-                        int intValue = Integer.parseInt(valValue);
-
-                        // First, animate right shift to create empty space
+                        int intValue = Integer.parseInt(valValue.trim());
                         animateShiftRightForInsert(position, intValue);
-
-
                     } catch (NumberFormatException e) {
                         actionListView.getItems().add("Please enter a valid number!");
                     }
                 });
-
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid position!");
             }
         });
-
     }
 
+    // ─── Delete Value ─────────────────────────────────────────────────────────
     private void showDeleteValueDialog() {
         if (arrayList.isEmpty()) {
             actionListView.getItems().add("Array is empty!");
@@ -389,40 +551,27 @@ public class ArrayController {
         dialog.setHeaderText("Enter value to delete:");
         dialog.setContentText("Value:");
 
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(value -> {
+        dialog.showAndWait().ifPresent(value -> {
             try {
-                int intValue = Integer.parseInt(value);
-
-                // Find all occurrences
+                int intValue = Integer.parseInt(value.trim());
                 ArrayList<Integer> positions = new ArrayList<>();
                 for (int i = 0; i < arrayList.size(); i++) {
-                    if (arrayList.get(i) == intValue) {
-                        positions.add(i);
-                    }
+                    if (arrayList.get(i) == intValue) positions.add(i);
                 }
-
                 if (positions.isEmpty()) {
-                    actionListView.getItems().add("Value " + intValue + " not found in array!");
+                    actionListView.getItems().add("Value " + intValue + " not found!");
                     return;
                 }
-
-                // Delete from last position to first to avoid index shifting issues
                 for (int i = positions.size() - 1; i >= 0; i--) {
-                    int pos = positions.get(i);
-
-                    // Animate deletion for this position
-                    animateDeleteWithLeftShift(pos, intValue);
+                    animateDeleteWithLeftShift(positions.get(i), intValue);
                 }
-
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
         });
-
     }
 
+    // ─── Delete Position ──────────────────────────────────────────────────────
     private void showDeletePositionDialog() {
         if (arrayList.isEmpty()) {
             actionListView.getItems().add("Array is empty!");
@@ -434,194 +583,139 @@ public class ArrayController {
         dialog.setHeaderText("Enter position to delete (0 to " + (arrayList.size() - 1) + "):");
         dialog.setContentText("Position:");
 
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(value -> {
+        dialog.showAndWait().ifPresent(value -> {
             try {
-                int position = Integer.parseInt(value);
+                int position = Integer.parseInt(value.trim());
                 if (position < 0 || position >= arrayList.size()) {
-                    actionListView.getItems().add("Invalid position! Must be between 0 and " + (arrayList.size() - 1));
+                    actionListView.getItems().add("Invalid position! Must be 0 to " + (arrayList.size() - 1));
                     return;
                 }
-
-                // Animate deletion for this position
                 animateDeleteWithLeftShift(position, arrayList.get(position));
-
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
             }
         });
-        updateSize();
     }
 
+    // ─── Delete Animation ─────────────────────────────────────────────────────
     private void animateDeleteWithLeftShift(int deletePos, int deletedValue) {
-        // First, highlight the cell to be deleted and make it empty
         if (deletePos < arrayContainer.getChildren().size()) {
             VBox cellToDelete = (VBox) arrayContainer.getChildren().get(deletePos);
-
-            // Highlight in red
-            cellToDelete.setStyle("-fx-border-color: red; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightcoral;");
-
-            // Make the cell appear empty
-            Text valueText = (Text) cellToDelete.getChildren().get(1);
-            String oldValue = valueText.getText();
-            valueText.setText("null");
-            valueText.setStyle("-fx-fill: gray;");
-
-            actionListView.getItems().add("Position " + deletePos + " emptied");
+            cellToDelete.setStyle(CELL_RED);
+            Text vt = (Text) cellToDelete.getChildren().get(1);
+            vt.setText("null");
+            vt.setStyle(TEXT_NULL);
+            actionListView.getItems().add("Position [" + deletePos + "] emptied.");
         }
 
-        // Create a sequential animation for shifting elements left one by one
-        SequentialTransition shiftAnimation = new SequentialTransition();
+        SequentialTransition seq = new SequentialTransition();
 
-        // For each element after the deleted position, shift it left
         for (int i = deletePos + 1; i < arrayList.size(); i++) {
-            final int currentIndex = i;
-            final int targetIndex = i - 1;
+            final int ci = i;
+            final int ti = i - 1;
 
-            if (currentIndex < arrayContainer.getChildren().size()) {
-                VBox movingCell = (VBox) arrayContainer.getChildren().get(currentIndex);
-                VBox targetCell = (VBox) arrayContainer.getChildren().get(targetIndex);
-
-                // Get the value from the moving cell
+            if (ci < arrayContainer.getChildren().size()) {
+                VBox movingCell = (VBox) arrayContainer.getChildren().get(ci);
+                VBox targetCell = (VBox) arrayContainer.getChildren().get(ti);
                 Text movingText = (Text) movingCell.getChildren().get(1);
                 String movingValue = movingText.getText();
 
-                // Create animation for this shift
-                ParallelTransition shiftStep = new ParallelTransition();
-
-                // Fade out the moving cell slightly
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(200), movingCell);
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(150), movingCell);
                 fadeOut.setFromValue(1.0);
                 fadeOut.setToValue(0.3);
 
-                // Move the cell left
-                TranslateTransition moveLeft = new TranslateTransition(Duration.millis(300), movingCell);
-                moveLeft.setByX(-40); // Move left by cell width + spacing
+                TranslateTransition moveLeft = new TranslateTransition(Duration.millis(250), movingCell);
+                moveLeft.setByX(-(CELL_WIDTH + CELL_SPACING));
+                moveLeft.setOnFinished(e -> javafx.application.Platform.runLater(() -> {
+                    Text targetText = (Text) targetCell.getChildren().get(1);
+                    targetText.setText(movingValue);
+                    targetText.setStyle(TEXT_VALUE);
+                    targetCell.setStyle(CELL_DEFAULT);
 
-                // After moving, update the target cell's value
-                moveLeft.setOnFinished(e -> {
-                    javafx.application.Platform.runLater(() -> {
-                        // Update the target cell with the moved value
-                        Text targetText = (Text) targetCell.getChildren().get(1);
-                        targetText.setText(movingValue);
-                        targetText.setStyle("-fx-fill: black; -fx-font-weight: bold;");
+                    movingCell.setTranslateX(0);
+                    movingText.setText("null");
+                    movingText.setStyle(TEXT_NULL);
+                    movingCell.setStyle(CELL_DEFAULT);
 
-                        // Reset the moving cell's position and make it null
-                        movingCell.setTranslateX(0);
-                        movingText.setText("null");
-                        movingText.setStyle("-fx-fill: gray;");
+                    FadeTransition fadeIn = new FadeTransition(Duration.millis(100), movingCell);
+                    fadeIn.setFromValue(0.3);
+                    fadeIn.setToValue(1.0);
+                    fadeIn.play();
+                }));
 
-                        // Fade in the moving cell
-                        FadeTransition fadeIn = new FadeTransition(Duration.millis(100), movingCell);
-                        fadeIn.setFromValue(0.3);
-                        fadeIn.setToValue(1.0);
-                        fadeIn.play();
-                    });
-                });
-
-                shiftStep.getChildren().addAll(fadeOut, moveLeft);
-                shiftAnimation.getChildren().add(shiftStep);
+                ParallelTransition step = new ParallelTransition(fadeOut, moveLeft);
+                seq.getChildren().add(step);
             }
         }
 
-        // After all shifts are complete, update the data structure and refresh
-        shiftAnimation.setOnFinished(e -> {
-            javafx.application.Platform.runLater(() -> {
-                // Remove the value from arrayList
-                arrayList.remove(deletePos);
-
-                // Refresh the visualization to ensure everything is in place
-                refreshArrayVisualization();
-
-                actionListView.getItems().add("Deleted value " + deletedValue + " from position " + deletePos);
-                updateSize();
-            });
-        });
-
-        shiftAnimation.play();
+        seq.setOnFinished(e -> javafx.application.Platform.runLater(() -> {
+            arrayList.remove(deletePos);
+            refreshArrayVisualization();
+            actionListView.getItems().add("Deleted value " + deletedValue + " from position [" + deletePos + "]");
+            updateSize();
+        }));
+        seq.play();
     }
 
+    // ─── Insert Animation ─────────────────────────────────────────────────────
     private void animateShiftRightForInsert(int insertPos, int valueToInsert) {
         if (arrayList.size() >= arrayCapacity) {
-            actionListView.getItems().add("Array is full! Cannot insert.");
+            actionListView.getItems().add("Array is full!");
             return;
         }
 
-        // Create a sequential animation for shifting elements right one by one
-        SequentialTransition shiftAnimation = new SequentialTransition();
+        SequentialTransition seq = new SequentialTransition();
 
-        // Shift elements from the end to the insert position
         for (int i = arrayList.size() - 1; i >= insertPos; i--) {
-            final int currentIndex = i;
-            final int targetIndex = i + 1;
+            final int ci = i;
+            final int ti = i + 1;
 
-            if (currentIndex < arrayContainer.getChildren().size() && targetIndex < arrayContainer.getChildren().size()) {
-                VBox movingCell = (VBox) arrayContainer.getChildren().get(currentIndex);
-                VBox targetCell = (VBox) arrayContainer.getChildren().get(targetIndex);
-
-                // Get the value from the moving cell
+            if (ci < arrayContainer.getChildren().size() && ti < arrayContainer.getChildren().size()) {
+                VBox movingCell = (VBox) arrayContainer.getChildren().get(ci);
+                VBox targetCell = (VBox) arrayContainer.getChildren().get(ti);
                 Text movingText = (Text) movingCell.getChildren().get(1);
                 String movingValue = movingText.getText();
 
-                // Create animation for this shift
-                ParallelTransition shiftStep = new ParallelTransition();
-
-                // Fade out the moving cell slightly
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(200), movingCell);
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(150), movingCell);
                 fadeOut.setFromValue(1.0);
                 fadeOut.setToValue(0.3);
 
-                // Move the cell right
-                TranslateTransition moveRight = new TranslateTransition(Duration.millis(300), movingCell);
-                moveRight.setByX(40); // Move right by cell width + spacing
+                TranslateTransition moveRight = new TranslateTransition(Duration.millis(250), movingCell);
+                moveRight.setByX(CELL_WIDTH + CELL_SPACING);
+                moveRight.setOnFinished(e -> javafx.application.Platform.runLater(() -> {
+                    if (!"null".equals(movingValue)) {
+                        Text targetText = (Text) targetCell.getChildren().get(1);
+                        targetText.setText(movingValue);
+                        targetText.setStyle(TEXT_VALUE);
+                        targetCell.setStyle(CELL_DEFAULT);
+                    }
+                    movingCell.setTranslateX(0);
+                    movingText.setText("null");
+                    movingText.setStyle(TEXT_NULL);
+                    movingCell.setStyle(CELL_DEFAULT);
 
-                // After moving, update the target cell's value
-                moveRight.setOnFinished(e -> {
-                    javafx.application.Platform.runLater(() -> {
-                        // Update the target cell with the moved value
-                        if (!movingValue.equals("null")) {
-                            Text targetText = (Text) targetCell.getChildren().get(1);
-                            targetText.setText(movingValue);
-                            targetText.setStyle("-fx-fill: black; -fx-font-weight: bold;");
-                        }
+                    FadeTransition fadeIn = new FadeTransition(Duration.millis(100), movingCell);
+                    fadeIn.setFromValue(0.3);
+                    fadeIn.setToValue(1.0);
+                    fadeIn.play();
+                }));
 
-                        // Reset the moving cell's position
-                        movingCell.setTranslateX(0);
-
-                        // Fade in the moving cell
-                        FadeTransition fadeIn = new FadeTransition(Duration.millis(100), movingCell);
-                        fadeIn.setFromValue(0.3);
-                        fadeIn.setToValue(1.0);
-                        fadeIn.play();
-                    });
-                });
-
-                shiftStep.getChildren().addAll(fadeOut, moveRight);
-                shiftAnimation.getChildren().add(shiftStep);
+                ParallelTransition step = new ParallelTransition(fadeOut, moveRight);
+                seq.getChildren().add(step);
             }
         }
 
-        // After all shifts are complete, insert the new value
-        shiftAnimation.setOnFinished(e -> {
-            javafx.application.Platform.runLater(() -> {
-                // Now insert the new value into arrayList
-                arrayList.add(insertPos, valueToInsert);
-
-                // Refresh to show the new value at the insert position
-                refreshArrayVisualization();
-
-                // Highlight the newly inserted cell
-                highlightCellWithAnimation(insertPos, "orange", 1000);
-
-                actionListView.getItems().add("Inserted value " + valueToInsert + " at position " + insertPos);
-                updateSize();
-            });
-        });
-
-        shiftAnimation.play();
+        seq.setOnFinished(e -> javafx.application.Platform.runLater(() -> {
+            arrayList.add(insertPos, valueToInsert);
+            refreshArrayVisualization();
+            highlightCellWithAnimation(insertPos, "orange", 1200);
+            actionListView.getItems().add("Inserted " + valueToInsert + " at position [" + insertPos + "]");
+            updateSize();
+        }));
+        seq.play();
     }
 
+    // ─── Search ───────────────────────────────────────────────────────────────
     private void showSearchDialog() {
         if (arrayList.isEmpty()) {
             actionListView.getItems().add("Array is empty!");
@@ -633,106 +727,70 @@ public class ArrayController {
         dialog.setHeaderText("Enter value to search:");
         dialog.setContentText("Value:");
 
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(value -> {
+        dialog.showAndWait().ifPresent(value -> {
             try {
-                int searchValue = Integer.parseInt(value);
+                int searchValue = Integer.parseInt(value.trim());
                 isSearching = true;
-
-                // Clear previous items and add header
                 actionListView.getItems().clear();
-                actionListView.getItems().add("🔍 Searching for value: " + searchValue);
+                actionListView.getItems().add("🔍 Searching for: " + searchValue);
 
-                // Store all found positions
                 ArrayList<Integer> foundPositions = new ArrayList<>();
-
-                // Create a sequential animation
-                SequentialTransition searchAnimation = new SequentialTransition();
+                SequentialTransition searchSeq = new SequentialTransition();
 
                 for (int i = 0; i < arrayList.size(); i++) {
-                    final int currentIndex = i;
-                    int currentValue = arrayList.get(i);
+                    final int ci = i;
+                    final int cv = arrayList.get(i);
 
-                    // Create pause between checks (500ms)
-                    PauseTransition pause = new PauseTransition(Duration.millis(500));
+                    PauseTransition pause = new PauseTransition(Duration.millis(450));
 
-                    // Create animation for this element
-                    ParallelTransition checkAnimation = new ParallelTransition();
-
-                    // Highlight the current cell
-                    Timeline highlightTimeline = new Timeline(
+                    Timeline check = new Timeline(
                             new KeyFrame(Duration.millis(0), e -> {
                                 resetAllCellsToDefault();
-                                if (currentIndex < arrayContainer.getChildren().size()) {
-                                    VBox cell = (VBox) arrayContainer.getChildren().get(currentIndex);
-                                    cell.setStyle("-fx-border-color: blue; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightblue;");
+                                if (ci < arrayContainer.getChildren().size()) {
+                                    VBox cell = (VBox) arrayContainer.getChildren().get(ci);
+                                    cell.setStyle(CELL_BLUE);
                                 }
-                            })
-                    );
-
-                    // Check if value matches
-                    Timeline checkResultTimeline = new Timeline(
-                            new KeyFrame(Duration.millis(300), e -> {
-                                if (currentValue == searchValue) {
-                                    // Found match
-                                    foundPositions.add(currentIndex);
-
-                                    // Green flash for found
-                                    if (currentIndex < arrayContainer.getChildren().size()) {
-                                        VBox cell = (VBox) arrayContainer.getChildren().get(currentIndex);
-
-                                        Timeline foundFlash = new Timeline(
-                                                new KeyFrame(Duration.millis(0), ev ->
-                                                        cell.setStyle("-fx-border-color: green; -fx-border-width: 4; -fx-padding: 10; -fx-background-color: lightgreen;")),
-                                                new KeyFrame(Duration.millis(300), ev ->
-                                                        cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;"))
+                            }),
+                            new KeyFrame(Duration.millis(250), e -> {
+                                if (cv == searchValue) {
+                                    foundPositions.add(ci);
+                                    if (ci < arrayContainer.getChildren().size()) {
+                                        VBox cell = (VBox) arrayContainer.getChildren().get(ci);
+                                        Timeline flash = new Timeline(
+                                                new KeyFrame(Duration.millis(0), ev -> cell.setStyle(CELL_GREEN)),
+                                                new KeyFrame(Duration.millis(300), ev -> cell.setStyle(CELL_DEFAULT))
                                         );
-                                        foundFlash.play();
+                                        flash.play();
                                     }
-
-                                    actionListView.getItems().add("  ✓ Position " + currentIndex + ": " + currentValue + " = " + searchValue + " [FOUND]");
+                                    actionListView.getItems().add("  ✓ [" + ci + "] = " + cv + " → FOUND");
                                 } else {
-                                    // Red flash for not found
-                                    if (currentIndex < arrayContainer.getChildren().size()) {
-                                        VBox cell = (VBox) arrayContainer.getChildren().get(currentIndex);
-
-                                        Timeline notFoundFlash = new Timeline(
-                                                new KeyFrame(Duration.millis(0), ev ->
-                                                        cell.setStyle("-fx-border-color: red; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightcoral;")),
-                                                new KeyFrame(Duration.millis(200), ev ->
-                                                        cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;"))
+                                    if (ci < arrayContainer.getChildren().size()) {
+                                        VBox cell = (VBox) arrayContainer.getChildren().get(ci);
+                                        Timeline flash = new Timeline(
+                                                new KeyFrame(Duration.millis(0), ev -> cell.setStyle(CELL_RED)),
+                                                new KeyFrame(Duration.millis(200), ev -> cell.setStyle(CELL_DEFAULT))
                                         );
-                                        notFoundFlash.play();
+                                        flash.play();
                                     }
-
-                                    actionListView.getItems().add("  → Position " + currentIndex + ": " + currentValue + " ≠ " + searchValue);
+                                    actionListView.getItems().add("  → [" + ci + "] = " + cv + " ≠ " + searchValue);
                                 }
                             })
                     );
 
-                    checkAnimation.getChildren().addAll(highlightTimeline, checkResultTimeline);
-
-                    // Add pause and check to sequential animation
-                    searchAnimation.getChildren().add(pause);
-                    searchAnimation.getChildren().add(checkAnimation);
+                    searchSeq.getChildren().addAll(pause, check);
                 }
 
-                // After all elements are checked
-                searchAnimation.setOnFinished(e -> {
+                searchSeq.setOnFinished(e -> {
+                    resetAllCellsToDefault();
                     if (foundPositions.isEmpty()) {
-                        actionListView.getItems().add("❌ Value " + searchValue + " not found anywhere in the array!");
+                        actionListView.getItems().add("❌ Value " + searchValue + " not found.");
                     } else {
-                        actionListView.getItems().add("✅ Search complete! Value " + searchValue + " found at position(s): " + foundPositions);
-
-                        // Highlight all found positions one by one
+                        actionListView.getItems().add("✅ Found at positions: " + foundPositions);
                         highlightFoundPositions(foundPositions);
                     }
                     isSearching = false;
-                    resetAllCellsToDefault();
                 });
-
-                searchAnimation.play();
+                searchSeq.play();
 
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid number!");
@@ -740,51 +798,32 @@ public class ArrayController {
         });
     }
 
-    // Helper method to highlight all found positions
     private void highlightFoundPositions(ArrayList<Integer> positions) {
-        if (positions.isEmpty()) return;
+        actionListView.getItems().add("★ Highlighting found positions:");
+        SequentialTransition seq = new SequentialTransition();
 
-        actionListView.getItems().add(" Highlighting all found positions:");
-
-        SequentialTransition highlightSequence = new SequentialTransition();
-
-        for (int i = 0; i < positions.size(); i++) {
-            final int pos = positions.get(i);
-
-            PauseTransition pause = new PauseTransition(Duration.millis(400));
-
-            ParallelTransition highlightAnimation = new ParallelTransition();
-
-            Timeline flashTimeline = new Timeline(
+        for (int pos : positions) {
+            PauseTransition pause = new PauseTransition(Duration.millis(350));
+            Timeline flash = new Timeline(
                     new KeyFrame(Duration.millis(0), e -> {
-                        if (pos < arrayContainer.getChildren().size()) {
-                            VBox cell = (VBox) arrayContainer.getChildren().get(pos);
-                            cell.setStyle("-fx-border-color: gold; -fx-border-width: 4; -fx-padding: 10; -fx-background-color: lightyellow;");
-                        }
+                        if (pos < arrayContainer.getChildren().size())
+                            ((VBox) arrayContainer.getChildren().get(pos)).setStyle(CELL_GOLD);
                     }),
                     new KeyFrame(Duration.millis(200), e -> {
-                        if (pos < arrayContainer.getChildren().size()) {
-                            VBox cell = (VBox) arrayContainer.getChildren().get(pos);
-                            cell.setStyle("-fx-border-color: green; -fx-border-width: 4; -fx-padding: 10; -fx-background-color: lightgreen;");
-                        }
+                        if (pos < arrayContainer.getChildren().size())
+                            ((VBox) arrayContainer.getChildren().get(pos)).setStyle(CELL_GREEN);
                     }),
-                    new KeyFrame(Duration.millis(400), e -> {
-                        if (pos < arrayContainer.getChildren().size()) {
-                            VBox cell = (VBox) arrayContainer.getChildren().get(pos);
-                            cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;");
-                        }
+                    new KeyFrame(Duration.millis(500), e -> {
+                        if (pos < arrayContainer.getChildren().size())
+                            ((VBox) arrayContainer.getChildren().get(pos)).setStyle(CELL_DEFAULT);
                     })
             );
-
-            highlightAnimation.getChildren().add(flashTimeline);
-
-            highlightSequence.getChildren().add(pause);
-            highlightSequence.getChildren().add(highlightAnimation);
+            seq.getChildren().addAll(pause, flash);
         }
-
-        highlightSequence.play();
+        seq.play();
     }
 
+    // ─── Traverse ─────────────────────────────────────────────────────────────
     private void traverseArray() {
         if (arrayList.isEmpty()) {
             actionListView.getItems().add("Array is empty!");
@@ -793,182 +832,168 @@ public class ArrayController {
 
         isTraversing = true;
         actionListView.getItems().add("Traversing array:");
-
-        // Create a timeline for sequential traversal
         Timeline timeline = new Timeline();
 
         for (int i = 0; i < arrayList.size(); i++) {
-            final int currentIndex = i;
-            int currentValue = arrayList.get(i);
+            final int ci = i;
+            final int cv = arrayList.get(i);
 
-            // Add keyframe for each position
-            timeline.getKeyFrames().add(
-                    new KeyFrame(Duration.millis(i * 500), e -> {
-                        // Reset all cells to default first
-                        resetAllCellsToDefault();
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 500L), e -> {
+                resetAllCellsToDefault();
+                if (ci < arrayContainer.getChildren().size()) {
+                    VBox cell = (VBox) arrayContainer.getChildren().get(ci);
+                    cell.setStyle(CELL_GREEN);
+                    Text vt = (Text) cell.getChildren().get(1);
+                    vt.setStyle(TEXT_VALUE);
+                }
+                actionListView.getItems().add("  [" + ci + "] = " + cv);
 
-                        // Highlight current cell
-                        if (currentIndex < arrayContainer.getChildren().size()) {
-                            VBox cell = (VBox) arrayContainer.getChildren().get(currentIndex);
-                            cell.setStyle("-fx-border-color: green; -fx-border-width: 3; -fx-padding: 10; -fx-background-color: lightgreen;");
-                        }
-
-                        actionListView.getItems().add("  Position " + currentIndex + ": " + currentValue);
-
-                        // If this is the last element
-                        if (currentIndex == arrayList.size() - 1) {
-                            isTraversing = false;
-
-                            // Reset colors after traversal
-                            new Timeline(new KeyFrame(Duration.millis(500), ev -> resetAllCellsToDefault())).play();
-                            actionListView.getItems().add("Traversal complete");
-                            actionListView.getItems().add("Array Size : " + arrayList.size());
-                        }
-                    })
-            );
+                if (ci == arrayList.size() - 1) {
+                    isTraversing = false;
+                    new Timeline(new KeyFrame(Duration.millis(600), ev -> resetAllCellsToDefault())).play();
+                    actionListView.getItems().add("Traversal complete. Size: " + arrayList.size());
+                }
+            }));
         }
-
         timeline.setCycleCount(1);
         timeline.play();
     }
 
+    // ─── Update ───────────────────────────────────────────────────────────────
     private void showUpdateDialog() {
         if (arrayList.isEmpty()) {
             actionListView.getItems().add("Array is empty!");
             return;
         }
 
-        // First dialog for position
         TextInputDialog posDialog = new TextInputDialog();
         posDialog.setTitle("Update Value");
         posDialog.setHeaderText("Enter position to update (0 to " + (arrayList.size() - 1) + "):");
         posDialog.setContentText("Position:");
 
-        Optional<String> posResult = posDialog.showAndWait();
-
-        posResult.ifPresent(posValue -> {
+        posDialog.showAndWait().ifPresent(posValue -> {
             try {
-                int position = Integer.parseInt(posValue);
+                int position = Integer.parseInt(posValue.trim());
                 if (position < 0 || position >= arrayList.size()) {
-                    actionListView.getItems().add("Invalid position! Must be between 0 and " + (arrayList.size() - 1));
+                    actionListView.getItems().add("Invalid position!");
                     return;
                 }
-
-                // Second dialog for new value
-                TextInputDialog valDialog = new TextInputDialog();
+                TextInputDialog valDialog = new TextInputDialog(String.valueOf(arrayList.get(position)));
                 valDialog.setTitle("Update Value");
-                valDialog.setHeaderText("Enter new value for position " + position + " (current: " + arrayList.get(position) + "):");
+                valDialog.setHeaderText("New value for position [" + position + "] (current: " + arrayList.get(position) + "):");
                 valDialog.setContentText("New value:");
 
-                Optional<String> valResult = valDialog.showAndWait();
-
-                valResult.ifPresent(valValue -> {
+                valDialog.showAndWait().ifPresent(valValue -> {
                     try {
-                        int intValue = Integer.parseInt(valValue);
+                        int intValue = Integer.parseInt(valValue.trim());
                         arrayList.set(position, intValue);
                         updateCellValue(position, intValue);
-                        highlightCellWithAnimation(position, "purple", 1000);
-                        actionListView.getItems().add("Updated position " + position + " to value " + intValue);
+                        highlightCellWithAnimation(position, "purple", 1200);
+                        actionListView.getItems().add("Updated [" + position + "] → " + intValue);
                     } catch (NumberFormatException e) {
                         actionListView.getItems().add("Please enter a valid number!");
                     }
                 });
-
             } catch (NumberFormatException e) {
                 actionListView.getItems().add("Please enter a valid position!");
             }
         });
     }
 
+    // ─── Reset ────────────────────────────────────────────────────────────────
     private void clearArray() {
         arrayList.clear();
         refreshArrayVisualization();
-        actionListView.getItems().add("Array cleared");
+        actionListView.getItems().add("Array reset to null.");
         updateSize();
     }
 
+    // ─── Cell Helpers ─────────────────────────────────────────────────────────
     private void updateCellValue(int index, int value) {
-        if (index >= 0 && index < arrayContainer.getChildren().size()) {
-            VBox cell = (VBox) arrayContainer.getChildren().get(index);
-            Text valueText = (Text) cell.getChildren().get(1);
-            valueText.setText(String.valueOf(value));
-            valueText.setStyle("-fx-fill: black; -fx-font-weight: bold;");
-        }
+        if (index < 0 || index >= arrayContainer.getChildren().size()) return;
+        VBox cell = (VBox) arrayContainer.getChildren().get(index);
+        cell.setStyle(CELL_DEFAULT);
+        cell.setPrefWidth(CELL_WIDTH);
+        cell.setPrefHeight(CELL_HEIGHT);
+        Text valueText = (Text) cell.getChildren().get(1);
+        valueText.setText(String.valueOf(value));
+        valueText.setStyle(TEXT_VALUE);
     }
 
     private void highlightCellWithAnimation(int index, String color, int duration) {
-        if (index >= 0 && index < arrayContainer.getChildren().size()) {
-            VBox cell = (VBox) arrayContainer.getChildren().get(index);
+        if (index < 0 || index >= arrayContainer.getChildren().size()) return;
+        VBox cell = (VBox) arrayContainer.getChildren().get(index);
+        Text vt = (Text) cell.getChildren().get(1);
 
-            // Apply highlight color
-            switch (color) {
-                case "green":
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightgreen;");
-                    break;
-                case "red":
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightcoral;");
-                    break;
-                case "yellow":
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: #FFFF00;");
-                    break;
-                case "orange":
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: orange;");
-                    break;
-                case "purple":
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lavender;");
-                    break;
-                case "lightgreen":
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: #90EE90;");
-                    break;
-            }
-
-            // Reset after delay
-            new Timeline(new KeyFrame(Duration.millis(duration), e ->
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;")
-            )).play();
+        String highlightStyle;
+        switch (color) {
+            case "green":
+                highlightStyle = CELL_GREEN;
+                break;
+            case "red":
+                highlightStyle = CELL_RED;
+                break;
+            case "orange":
+                highlightStyle = CELL_ORANGE;
+                break;
+            case "purple":
+                highlightStyle = CELL_PURPLE;
+                break;
+            case "gold":
+                highlightStyle = CELL_GOLD;
+                break;
+            default:
+                highlightStyle = CELL_BLUE;
+                break;
         }
+
+        cell.setStyle(highlightStyle);
+        vt.setStyle(TEXT_VALUE);
+
+        new Timeline(new KeyFrame(Duration.millis(duration), e -> {
+            cell.setStyle(CELL_DEFAULT);
+            vt.setStyle(index < arrayList.size() ? TEXT_VALUE : TEXT_NULL);
+        })).play();
     }
 
     private void resetAllCellsToDefault() {
         for (int i = 0; i < arrayContainer.getChildren().size(); i++) {
             VBox cell = (VBox) arrayContainer.getChildren().get(i);
-            cell.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: lightyellow;");
+            cell.setStyle(CELL_DEFAULT);
+            Text vt = (Text) cell.getChildren().get(1);
+            vt.setStyle(i < arrayList.size() ? TEXT_VALUE : TEXT_NULL);
         }
     }
 
     private void refreshArrayVisualization() {
-        // Clear and recreate all cells with current values
         arrayContainer.getChildren().clear();
+        arrayContainer.setSpacing(CELL_SPACING);
+        arrayContainer.setAlignment(Pos.CENTER_LEFT);
 
         for (int i = 0; i < arrayCapacity; i++) {
             VBox cell = createArrayCell(i);
-
-            // If there's a value at this index, display it
             if (i < arrayList.size()) {
-                Text valueText = (Text) cell.getChildren().get(1);
-                valueText.setText(String.valueOf(arrayList.get(i)));
-                valueText.setStyle("-fx-fill: black; -fx-font-weight: bold;");
-            } else {
-                Text valueText = (Text) cell.getChildren().get(1);
-                valueText.setText("null");
-                valueText.setStyle("-fx-fill: gray;");
+                Text vt = (Text) cell.getChildren().get(1);
+                vt.setText(String.valueOf(arrayList.get(i)));
+                vt.setStyle(TEXT_VALUE);
             }
-
             arrayContainer.getChildren().add(cell);
         }
+        updatePaneWidth();
+    }
 
-        double requiredWidth = 50 + (arrayCapacity * 50) + 200;
-        animationPane.setPrefWidth(Math.max(740, requiredWidth));
+    private void updatePaneWidth() {
+        double required = 80 + arrayCapacity * (CELL_WIDTH + CELL_SPACING) + 100;
+        animationPane.setPrefWidth(Math.max(740, required));
     }
 
     private void updateStatus(String status) {
         lblStatus.setText("Status: " + status);
     }
 
-    /**
-     * Update size label
-     */
     private void updateSize() {
-        lblSize.setText("Size: " +  arrayList.size());
+        lblSize.setText("Size: " + arrayList.size() + " / " + arrayCapacity);
     }
+    @FXML private Label lblAnimationStatus;
+
 }

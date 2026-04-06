@@ -109,19 +109,22 @@ public class SinglyLinkedListController {
                 // node color reset
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
-                if(rect.getFill() == Color.DARKGRAY) {
-                    rect.setFill(Color.LIGHTYELLOW);
+//                if(rect.getFill() == Color.DARKGRAY) {
+//                    rect.setFill(Color.LIGHTYELLOW);
+//                }
+                if (rect.getFill().equals(Color.web("#0f4c75"))) {
+                    rect.setFill(Color.web("#1e293b"));
                 }
 
             }
         }
 
         // Add head Marker at new Head
-        if (headHBox != null  && animationPane.getChildren().contains(headHBox)) {
+        if (headHBox != null && animationPane.getChildren().contains(headHBox)) {
             // Head node কে slightly different color দিন
             StackPane stack = (StackPane) headHBox.getChildren().get(0);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
-            rect.setFill(Color.DARKGRAY);  // head আলাদা color
+            rect.setFill(Color.web("#0f4c75"));  // head আলাদা color
         }
     }
     // Head update method
@@ -138,8 +141,11 @@ public class SinglyLinkedListController {
                 // node color reset
                 StackPane stack = (StackPane) hbox.getChildren().get(0);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
-                if(rect.getFill() == Color.GHOSTWHITE) {
-                    rect.setFill(Color.LIGHTYELLOW);
+//                if(rect.getFill() == Color.GHOSTWHITE) {
+//                    rect.setFill(Color.LIGHTYELLOW);
+//                }
+                if (rect.getFill().equals(Color.web("#164e63"))) {
+                    rect.setFill(Color.web("#1e293b"));
                 }
 
             }
@@ -150,7 +156,7 @@ public class SinglyLinkedListController {
             // Head node কে slightly different color দিন
             StackPane stack = (StackPane) tailHBox.getChildren().get(0);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
-            rect.setFill(Color.GHOSTWHITE);  // tail আলাদা color
+            rect.setFill(Color.web("#164e63"));  // tail আলাদা color
         }
     }
     // Tail update method
@@ -162,16 +168,26 @@ public class SinglyLinkedListController {
     // Node create function
     private HBox createNodeView(int data , boolean isLast) {
         //Rectangle
-        Rectangle rect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+        //Rectangle rect = new Rectangle(60, 40,Color.LIGHTYELLOW);
+        Rectangle rect = new Rectangle(60, 40);
+        rect.setFill(Color.web("#1e293b"));          // dark background
+        rect.setStroke(Color.web("#38bdf8"));         // cyan border
         rect.setArcWidth(10);
         rect.setArcHeight(10);
+
+        // Glow effect
+        javafx.scene.effect.DropShadow glow = new javafx.scene.effect.DropShadow();
+        glow.setColor(Color.web("#38bdf8"));
+        glow.setRadius(10);
+        glow.setSpread(0.2);
+        rect.setEffect(glow);
 
         // Text
         Text text;
 
         text = new Text(String.valueOf(data));
         text.setFont(Font.font(20));
-        text.setFill(Color.DARKBLUE);// text color
+        text.setFill(Color.WHITE);// text color
 
 
         // StackPane to center text on rectangle
@@ -208,14 +224,24 @@ public class SinglyLinkedListController {
         if (isLast) {
 
             //Rectangle
-            Rectangle nullTextRect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+            //Rectangle nullTextRect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+            Rectangle nullTextRect = new Rectangle(60, 40);
+            rect.setFill(Color.web("#1e293b"));          // dark background
+            rect.setStroke(Color.web("#38bdf8"));
             nullTextRect.setArcWidth(10);
             nullTextRect.setArcHeight(10);
 
+            //Glow Effect
+            javafx.scene.effect.DropShadow nullGlow = new javafx.scene.effect.DropShadow();
+            nullGlow.setColor(Color.web("#38bdf8"));
+            nullGlow.setRadius(10);
+            nullGlow.setSpread(0.2);
+            nullTextRect.setEffect(nullGlow);
+
             // Last node → show "null" instead of arrow
             Text nullText = new Text("NULL");
-            nullText.setFont(Font.font(15));
-            nullText.setFill(Color.DARKBLUE);
+            nullText.setFont(Font.font(17));
+            nullText.setFill(Color.WHITE);
             nullText.setTranslateY(0); // vertical alignment
 
             // StackPane to center text on rectangle
@@ -438,11 +464,11 @@ public class SinglyLinkedListController {
         Rectangle rect = (Rectangle) stack.getChildren().get(0);
 
         if (uiNode == headHBox) {
-            rect.setFill(Color.DARKGRAY);
+            rect.setFill(Color.web("#0f4c75"));
         } else if (uiNode == tailHBox) {
-            rect.setFill(Color.GHOSTWHITE);
+            rect.setFill(Color.web("#164e63"));
         } else {
-            rect.setFill(Color.LIGHTYELLOW);
+            rect.setFill(Color.web("#1e293b"));
         }
     }
 
@@ -504,16 +530,17 @@ public class SinglyLinkedListController {
 
             PauseTransition revert = new PauseTransition(Duration.seconds(0.3));
             revert.setOnFinished(ev ->{
-                if(uiNode == headHBox) {
-                    rect.setFill(Color.DARKGRAY);
-                }
-                else if(uiNode == tailHBox) {
-
-                    rect.setFill(Color.GHOSTWHITE);
-                }
-                else {
-                    rect.setFill(Color.LIGHTYELLOW);
-                }
+//                if(uiNode == headHBox) {
+//                    rect.setFill(Color.DARKGRAY);
+//                }
+//                else if(uiNode == tailHBox) {
+//
+//                    rect.setFill(Color.GHOSTWHITE);
+//                }
+//                else {
+//                    rect.setFill(Color.LIGHTYELLOW);
+//                }
+                resetNodeColor(uiNode);
                 traverseNext(curr.next, idx + 1); // next node
 
             });

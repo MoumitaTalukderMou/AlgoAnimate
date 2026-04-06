@@ -17,6 +17,7 @@
             <Region HBox.hgrow="ALWAYS"/>
 
             <Label text="Select Operation:" style="-fx-text-fill: #94a3b8; -fx-font-weight: bold;"/>
+
             <ChoiceBox fx:id="ArrayChoiceBox" prefWidth="200" styleClass="combo-box-custom"/>
         </HBox>
     </top>

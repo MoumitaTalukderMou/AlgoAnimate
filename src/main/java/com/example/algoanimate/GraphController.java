@@ -1,3 +1,4 @@
+
 package com.example.algoanimate;
 
 import javafx.event.ActionEvent;
@@ -827,19 +828,35 @@ public class GraphController {
             int data = entry.getKey();
             Circle oldCircle = entry.getValue();
 
-            // Create new circle for main pane
+//            // Create new circle for main pane
+//            Circle newCircle = new Circle(25);
+//            newCircle.setCenterX(oldCircle.getCenterX());
+//            newCircle.setCenterY(oldCircle.getCenterY());
+//            newCircle.setFill(Color.LIGHTYELLOW);
+//            newCircle.setStroke(Color.BLACK);
+//            newCircle.setStrokeWidth(5);
+
+
+            // Change to:
             Circle newCircle = new Circle(25);
             newCircle.setCenterX(oldCircle.getCenterX());
             newCircle.setCenterY(oldCircle.getCenterY());
-            newCircle.setFill(Color.LIGHTYELLOW);
-            newCircle.setStroke(Color.BLACK);
-            newCircle.setStrokeWidth(5);
+            newCircle.setFill(Color.web("#1e293b"));      // Dark background (slate)
+            newCircle.setStroke(Color.web("#38bdf8"));    // Cyan/blue stroke
+            newCircle.setStrokeWidth(3);                   // Slightly thinner stroke for better look
+
+// Add glow effect
+            javafx.scene.effect.DropShadow glow = new javafx.scene.effect.DropShadow();
+            glow.setColor(Color.web("#38bdf8"));
+            glow.setRadius(10);
+            glow.setSpread(0.2);
+            newCircle.setEffect(glow);
 
             // Create new label
             Text newLabel = new Text(String.valueOf(data));
             newLabel.setX(oldCircle.getCenterX() - 8);
             newLabel.setY(oldCircle.getCenterY() + 5);
-            newLabel.setFill(Color.BLACK);
+            newLabel.setFill(Color.WHITE);
             newLabel.setFont(javafx.scene.text.Font.font("Arial", 14));
 
             // Add to main pane
@@ -893,19 +910,34 @@ public class GraphController {
             int data = entry.getKey();
             Circle oldCircle = entry.getValue();
 
-            // Create new circle for main pane
+//            // Create new circle for main pane
+//            Circle newCircle = new Circle(25);
+//            newCircle.setCenterX(oldCircle.getCenterX());
+//            newCircle.setCenterY(oldCircle.getCenterY());
+//            newCircle.setFill(Color.LIGHTYELLOW);
+//            newCircle.setStroke(Color.BLACK);
+//            newCircle.setStrokeWidth(5);
+
+            // Change to:
             Circle newCircle = new Circle(25);
             newCircle.setCenterX(oldCircle.getCenterX());
             newCircle.setCenterY(oldCircle.getCenterY());
-            newCircle.setFill(Color.LIGHTYELLOW);
-            newCircle.setStroke(Color.BLACK);
-            newCircle.setStrokeWidth(5);
+            newCircle.setFill(Color.web("#1e293b"));      // Dark background
+            newCircle.setStroke(Color.web("#38bdf8"));    // Cyan/blue stroke
+            newCircle.setStrokeWidth(3);
+
+            // Add glow effect
+            javafx.scene.effect.DropShadow glow = new javafx.scene.effect.DropShadow();
+            glow.setColor(Color.web("#38bdf8"));
+            glow.setRadius(10);
+            glow.setSpread(0.2);
+            newCircle.setEffect(glow);
 
             // Create new label
             Text newLabel = new Text(String.valueOf(data));
             newLabel.setX(oldCircle.getCenterX() - 8);
             newLabel.setY(oldCircle.getCenterY() + 5);
-            newLabel.setFill(Color.BLACK);
+            newLabel.setFill(Color.WHITE);
             newLabel.setFont(javafx.scene.text.Font.font("Arial", 14));
 
             // Add to main pane
@@ -926,9 +958,6 @@ public class GraphController {
         selectedNode = null;
         firstNodeForEdge = null;
     }
-
-
-
 
     /**
      * Perform BFS traversal
@@ -957,11 +986,11 @@ public class GraphController {
                     Circle node = nodeCircles.get(nodeData);
                     if (node != null) {
                         javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.YELLOW);
+                            node.setFill(Color.rgb(138, 3, 75));
                         });
                         Thread.sleep(1000);
                         javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.LIGHTBLUE);
+                            node.setFill(Color.rgb(66, 58, 55));
                         });
                     }
                 }
@@ -970,7 +999,7 @@ public class GraphController {
                 // After traversal is complete, ensure all nodes are default yellow
                 javafx.application.Platform.runLater(() -> {
                     for (Circle node : nodeCircles.values()) {
-                        node.setFill(Color.LIGHTYELLOW);
+                        node.setFill(Color.web("#1e293b"));
                     }
                     updateStatus("BFS completed");
                 });
@@ -1009,11 +1038,11 @@ public class GraphController {
                     Circle node = nodeCircles.get(nodeData);
                     if (node != null) {
                         javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.ORANGE);
+                            node.setFill(Color.rgb(73, 89, 23));
                         });
                         Thread.sleep(1000);
                         javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.LIGHTBLUE);
+                            node.setFill(Color.rgb(66, 58, 55));
                         });
                     }
                 }
@@ -1022,7 +1051,7 @@ public class GraphController {
                 // After traversal is complete, ensure all nodes are default yellow
                 javafx.application.Platform.runLater(() -> {
                     for (Circle node : nodeCircles.values()) {
-                        node.setFill(Color.LIGHTYELLOW);
+                        node.setFill(Color.web("#1e293b"));
                     }
                     updateStatus("DFS completed");
                 });
@@ -1086,7 +1115,7 @@ public class GraphController {
                     // First, reset all nodes to default color
                     javafx.application.Platform.runLater(() -> {
                         for (Circle node : nodeCircles.values()) {
-                            node.setFill(Color.LIGHTYELLOW);
+                            node.setFill(Color.web("#1e293b"));
                         }
                     });
 
@@ -1109,7 +1138,7 @@ public class GraphController {
                     // Reset all nodes back to default color
                     javafx.application.Platform.runLater(() -> {
                         for (Circle node : nodeCircles.values()) {
-                            node.setFill(Color.LIGHTYELLOW);
+                            node.setFill(Color.web("#1e293b"));
                         }
                         updateStatus("Cycle detection completed - Cycle found");
                     });
@@ -1137,7 +1166,7 @@ public class GraphController {
 
                     javafx.application.Platform.runLater(() -> {
                         for (Circle node : nodeCircles.values()) {
-                            node.setFill(Color.LIGHTYELLOW);
+                            node.setFill(Color.web("#1e293b"));
                         }
                     });
 

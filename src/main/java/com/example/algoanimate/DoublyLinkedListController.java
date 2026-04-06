@@ -80,8 +80,11 @@ public class DoublyLinkedListController {
                 HBox hbox = (HBox) node;
                 StackPane stack = (StackPane) hbox.getChildren().get(1); // For DLL: [prevArrow, stack, nextArrow]
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
-                if (rect.getFill() == Color.DARKGRAY) {
-                    rect.setFill(Color.LIGHTYELLOW);
+//                if (rect.getFill() == Color.DARKGRAY) {
+//                    rect.setFill(Color.LIGHTYELLOW);
+//                }
+                if (rect.getFill().equals(Color.web("#0f4c75"))) {
+                    rect.setFill(Color.web("#1e293b"));
                 }
             }
         }
@@ -89,7 +92,7 @@ public class DoublyLinkedListController {
         if (headHBox != null && animationPane.getChildren().contains(headHBox)) {
             StackPane stack = (StackPane) headHBox.getChildren().get(1);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
-            rect.setFill(Color.DARKGRAY); // head আলাদা color
+            rect.setFill(Color.web("#0f4c75")); // head আলাদা color
         }
     }
 
@@ -104,8 +107,11 @@ public class DoublyLinkedListController {
                 HBox hbox = (HBox) node;
                 StackPane stack = (StackPane) hbox.getChildren().get(1);
                 Rectangle rect = (Rectangle) stack.getChildren().get(0);
-                if (rect.getFill() == Color.GHOSTWHITE) {
-                    rect.setFill(Color.LIGHTYELLOW);
+//                if (rect.getFill() == Color.GHOSTWHITE) {
+//                    rect.setFill(Color.LIGHTYELLOW);
+//                }
+                if (rect.getFill().equals(Color.web("#164e63"))) {
+                    rect.setFill(Color.web("#1e293b"));
                 }
             }
         }
@@ -113,7 +119,7 @@ public class DoublyLinkedListController {
         if (tailHBox != null && animationPane.getChildren().contains(tailHBox)) {
             StackPane stack = (StackPane) tailHBox.getChildren().get(1);
             Rectangle rect = (Rectangle) stack.getChildren().get(0);
-            rect.setFill(Color.GHOSTWHITE); // tail আলাদা color
+            rect.setFill(Color.web("#164e63")); // tail আলাদা color
         }
     }
 
@@ -125,14 +131,22 @@ public class DoublyLinkedListController {
     // Node create function for Doubly Linked List
     private HBox createNodeView(int data, boolean isFirst, boolean isLast) {
         // Main rectangle for data
-        Rectangle rect = new Rectangle(60, 40, Color.LIGHTYELLOW);
+        Rectangle rect = new Rectangle(60, 40);
+        rect.setFill(Color.web("#1e293b"));
+        rect.setStroke(Color.web("#38bdf8"));
         rect.setArcWidth(10);
         rect.setArcHeight(10);
+
+        javafx.scene.effect.DropShadow glow = new javafx.scene.effect.DropShadow();
+        glow.setColor(Color.web("#38bdf8"));
+        glow.setRadius(10);
+        glow.setSpread(0.2);
+        rect.setEffect(glow);
 
         // Text for data
         Text text = new Text(String.valueOf(data));
         text.setFont(Font.font(20));
-        text.setFill(Color.DARKBLUE);
+        text.setFill(Color.WHITE);
 
         // StackPane to center text on rectangle
         StackPane stack = new StackPane();
@@ -215,13 +229,15 @@ public class DoublyLinkedListController {
     }
 
     private HBox createNullBox() {
-        Rectangle nullRect = new Rectangle(30, 40, Color.LIGHTYELLOW);
+        Rectangle nullRect = new Rectangle(30, 40);
+        nullRect.setFill(Color.web("#1e293b"));
+        nullRect.setStroke(Color.web("#38bdf8"));
         nullRect.setArcWidth(10);
         nullRect.setArcHeight(10);
 
         Text nullText = new Text("null");
         nullText.setFont(Font.font(12));
-        nullText.setFill(Color.DARKBLUE);
+        nullText.setFill(Color.WHITE);
 
         StackPane nullStack = new StackPane();
         nullStack.getChildren().addAll(nullRect, nullText);
@@ -709,11 +725,11 @@ private void updateAdjacentArrows(int nodeIndex) {
         Rectangle rect = (Rectangle) stack.getChildren().get(0);
 
         if (uiNode == headHBox) {
-            rect.setFill(Color.DARKGRAY);
+            rect.setFill(Color.web("#0f4c75"));
         } else if (uiNode == tailHBox) {
-            rect.setFill(Color.GHOSTWHITE);
+            rect.setFill(Color.web("#164e63"));
         } else {
-            rect.setFill(Color.LIGHTYELLOW);
+            rect.setFill(Color.web("#1e293b"));
         }
     }
 
