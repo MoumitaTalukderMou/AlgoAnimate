@@ -51,6 +51,12 @@
                 <Label text="ACTION &amp; STEP-TRACE" styleClass="sub-header" style="-fx-text-fill: #38bdf8;"/>
                 <ListView fx:id="actionListView" styleClass="code-list" VBox.vgrow="ALWAYS"/>
 
+
+                <!-- ADD THIS -->
+                <Button fx:id="btnPause" text="⏸ Pause" onAction="#onPauseClick"
+                        style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 16 6 16; -fx-background-radius: 10;"/>
+
+
                 <VBox spacing="10" styleClass="var-box">
                     <Label fx:id="lblStatus" text="Status: Waiting for input" styleClass="var-text"/>
                     <Label fx:id="lblSize" text="Nodes: 0" styleClass="var-text"/>

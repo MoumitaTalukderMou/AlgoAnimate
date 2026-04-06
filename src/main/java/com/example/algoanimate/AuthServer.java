@@ -11,8 +11,6 @@ public class AuthServer {
     private static final int PORT = 5000;
     private static final String USERS_FILE = "users.txt";
 
-
-
     private static final Map<String, String> users = Collections.synchronizedMap(new HashMap<>());
     static {
         loadUsers();  // Load users from file on startup

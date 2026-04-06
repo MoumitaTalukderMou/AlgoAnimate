@@ -23,6 +23,9 @@ import java.util.*;
 
 public class GraphController {
 
+    private Timeline traversalTimeline = null;//new Added
+
+
     @FXML
     private Button btnBack;
     @FXML
@@ -67,6 +70,26 @@ public class GraphController {
         }
     }
 
+
+
+    @FXML private Button btnPause;
+
+    @FXML
+    private void onPauseClick() {
+        if (traversalTimeline == null) return;
+
+        if (traversalTimeline.getStatus() == Timeline.Status.RUNNING) {
+            traversalTimeline.pause();
+            btnPause.setText("▶ Resume");
+        } else {
+            traversalTimeline.play();
+            btnPause.setText("⏸ Pause");
+        }
+    }
+
+
+
+
     public void initialize() {
         graph = new GraphOperation();
         nodeCircles = new HashMap<>();
@@ -88,6 +111,8 @@ public class GraphController {
         clearGraphDisplay();
         updateStatus("Ready");
         updateSize(0);
+
+        btnPause.setDisable(true);
     }
 
     private void handleChoiceSelection() {
@@ -959,108 +984,222 @@ public class GraphController {
         firstNodeForEdge = null;
     }
 
-    /**
-     * Perform BFS traversal
-     */
+//    /**
+//     * Perform BFS traversal
+//     */
+//    private void performBFS() {
+//        if (graph.getSize() == 0) {
+//            updateStatus("Graph is empty");
+//            return;
+//        }
+//
+//        // Use the BFS method that traverses all components
+//        List<Integer> bfsResult = graph.BFS(); // This now traverses the entire graph
+//
+//        actionListView.getItems().add("BFS Traversal (all components):");
+//        actionListView.getItems().add(bfsResult.toString());
+//
+//        // Display Adjacency List
+//        actionListView.getItems().add("=== ADJACENCY LIST ===");
+//        displayAdjacencyList();
+//        actionListView.getItems().add("");
+//
+//        // Visualize BFS (highlight nodes in order)
+//        new Thread(() -> {
+//            try {
+//                for (int nodeData : bfsResult) {
+//                    Circle node = nodeCircles.get(nodeData);
+//                    if (node != null) {
+//                        javafx.application.Platform.runLater(() -> {
+//                            node.setFill(Color.rgb(138, 3, 75));
+//                        });
+//                        Thread.sleep(1000);
+//                        javafx.application.Platform.runLater(() -> {
+//                            node.setFill(Color.rgb(66, 58, 55));
+//                        });
+//                    }
+//                }
+//                // Wait 2 seconds after traversal completes
+//                Thread.sleep(2000);
+//                // After traversal is complete, ensure all nodes are default yellow
+//                javafx.application.Platform.runLater(() -> {
+//                    for (Circle node : nodeCircles.values()) {
+//                        node.setFill(Color.web("#1e293b"));
+//                    }
+//                    updateStatus("BFS completed");
+//                });
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//
+//
+//    }
+//
+//    /**
+//     * Perform DFS traversal
+//     */
+//    private void performDFS() {
+//        if (graph.getSize() == 0) {
+//            updateStatus("Graph is empty");
+//            return;
+//        }
+//
+//        // Use the DFS method that traverses all components
+//        List<Integer> dfsResult = graph.DFS(); // This now traverses the entire graph
+//
+//        actionListView.getItems().add("DFS Traversal (all components):");
+//        actionListView.getItems().add(dfsResult.toString());
+//
+//        // Display Adjacency List
+//        actionListView.getItems().add("=== ADJACENCY LIST ===");
+//        displayAdjacencyList();
+//        actionListView.getItems().add("");
+//
+//        // Visualize DFS (highlight nodes in order)
+//        new Thread(() -> {
+//            try {
+//                for (int nodeData : dfsResult) {
+//                    Circle node = nodeCircles.get(nodeData);
+//                    if (node != null) {
+//                        javafx.application.Platform.runLater(() -> {
+//                            node.setFill(Color.rgb(73, 89, 23));
+//                        });
+//                        Thread.sleep(1000);
+//                        javafx.application.Platform.runLater(() -> {
+//                            node.setFill(Color.rgb(66, 58, 55));
+//                        });
+//                    }
+//                }
+//                // Wait 2 seconds after traversal completes
+//                Thread.sleep(2000);
+//                // After traversal is complete, ensure all nodes are default yellow
+//                javafx.application.Platform.runLater(() -> {
+//                    for (Circle node : nodeCircles.values()) {
+//                        node.setFill(Color.web("#1e293b"));
+//                    }
+//                    updateStatus("DFS completed");
+//                });
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//
+//
+//    }
+
     private void performBFS() {
         if (graph.getSize() == 0) {
             updateStatus("Graph is empty");
             return;
         }
 
-        // Use the BFS method that traverses all components
-        List<Integer> bfsResult = graph.BFS(); // This now traverses the entire graph
-
-        actionListView.getItems().add("BFS Traversal (all components):");
+        List<Integer> bfsResult = graph.BFS();
+        actionListView.getItems().add("BFS Traversal:");
         actionListView.getItems().add(bfsResult.toString());
-
-        // Display Adjacency List
         actionListView.getItems().add("=== ADJACENCY LIST ===");
         displayAdjacencyList();
-        actionListView.getItems().add("");
 
-        // Visualize BFS (highlight nodes in order)
-        new Thread(() -> {
-            try {
-                for (int nodeData : bfsResult) {
-                    Circle node = nodeCircles.get(nodeData);
-                    if (node != null) {
-                        javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.rgb(138, 3, 75));
-                        });
-                        Thread.sleep(1000);
-                        javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.rgb(66, 58, 55));
-                        });
-                    }
+        // Reset all nodes first
+        for (Circle node : nodeCircles.values()) {
+            node.setFill(Color.web("#1e293b"));
+        }
+
+        btnPause.setDisable(false);
+        GraphChoiceBox.setDisable(true);
+
+        traversalTimeline = new Timeline();
+
+        for (int i = 0; i < bfsResult.size(); i++) {
+            final int nodeData = bfsResult.get(i);
+            final int step = i;
+
+            // Highlight this node
+            traversalTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(step * 1000L), e -> {
+                // Reset previous node
+                if (step > 0) {
+                    int prevData = bfsResult.get(step - 1);
+                    Circle prevNode = nodeCircles.get(prevData);
+                    if (prevNode != null) prevNode.setFill(Color.web("#2d4a6e")); // visited = muted blue
                 }
-                // Wait 2 seconds after traversal completes
-                Thread.sleep(2000);
-                // After traversal is complete, ensure all nodes are default yellow
-                javafx.application.Platform.runLater(() -> {
-                    for (Circle node : nodeCircles.values()) {
-                        node.setFill(Color.web("#1e293b"));
-                    }
-                    updateStatus("BFS completed");
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                Circle node = nodeCircles.get(nodeData);
+                if (node != null) node.setFill(Color.rgb(138, 3, 75)); // active = pink
+                actionListView.getItems().add("  Visiting: " + nodeData);
+            }));
+        }
+
+        // Final cleanup
+        traversalTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(bfsResult.size() * 1000L), e -> {
+            // Mark last node visited
+            if (!bfsResult.isEmpty()) {
+                Circle lastNode = nodeCircles.get(bfsResult.get(bfsResult.size() - 1));
+                if (lastNode != null) lastNode.setFill(Color.web("#2d4a6e"));
             }
-        }).start();
+            updateStatus("BFS completed");
+            btnPause.setText("⏸ Pause");
+            btnPause.setDisable(true);
+            GraphChoiceBox.setDisable(false);
+            traversalTimeline = null;
+        }));
 
-
+        traversalTimeline.setCycleCount(1);
+        traversalTimeline.play();
     }
 
-    /**
-     * Perform DFS traversal
-     */
     private void performDFS() {
         if (graph.getSize() == 0) {
             updateStatus("Graph is empty");
             return;
         }
 
-        // Use the DFS method that traverses all components
-        List<Integer> dfsResult = graph.DFS(); // This now traverses the entire graph
-
-        actionListView.getItems().add("DFS Traversal (all components):");
+        List<Integer> dfsResult = graph.DFS();
+        actionListView.getItems().add("DFS Traversal:");
         actionListView.getItems().add(dfsResult.toString());
-
-        // Display Adjacency List
         actionListView.getItems().add("=== ADJACENCY LIST ===");
         displayAdjacencyList();
-        actionListView.getItems().add("");
 
-        // Visualize DFS (highlight nodes in order)
-        new Thread(() -> {
-            try {
-                for (int nodeData : dfsResult) {
-                    Circle node = nodeCircles.get(nodeData);
-                    if (node != null) {
-                        javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.rgb(73, 89, 23));
-                        });
-                        Thread.sleep(1000);
-                        javafx.application.Platform.runLater(() -> {
-                            node.setFill(Color.rgb(66, 58, 55));
-                        });
-                    }
+        // Reset all nodes first
+        for (Circle node : nodeCircles.values()) {
+            node.setFill(Color.web("#1e293b"));
+        }
+
+        btnPause.setDisable(false);
+        GraphChoiceBox.setDisable(true);
+
+        traversalTimeline = new Timeline();
+
+        for (int i = 0; i < dfsResult.size(); i++) {
+            final int nodeData = dfsResult.get(i);
+            final int step = i;
+
+            traversalTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(step * 1000L), e -> {
+                // Reset previous node
+                if (step > 0) {
+                    int prevData = dfsResult.get(step - 1);
+                    Circle prevNode = nodeCircles.get(prevData);
+                    if (prevNode != null) prevNode.setFill(Color.web("#2d4a6e")); // visited = muted blue
                 }
-                // Wait 2 seconds after traversal completes
-                Thread.sleep(2000);
-                // After traversal is complete, ensure all nodes are default yellow
-                javafx.application.Platform.runLater(() -> {
-                    for (Circle node : nodeCircles.values()) {
-                        node.setFill(Color.web("#1e293b"));
-                    }
-                    updateStatus("DFS completed");
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                Circle node = nodeCircles.get(nodeData);
+                if (node != null) node.setFill(Color.rgb(73, 89, 23)); // active = green
+                actionListView.getItems().add("  Visiting: " + nodeData);
+            }));
+        }
+
+        // Final cleanup
+        traversalTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(dfsResult.size() * 1000L), e -> {
+            if (!dfsResult.isEmpty()) {
+                Circle lastNode = nodeCircles.get(dfsResult.get(dfsResult.size() - 1));
+                if (lastNode != null) lastNode.setFill(Color.web("#2d4a6e"));
             }
-        }).start();
+            updateStatus("DFS completed");
+            btnPause.setText("⏸ Pause");
+            btnPause.setDisable(true);
+            GraphChoiceBox.setDisable(false);
+            traversalTimeline = null;
+        }));
 
-
+        traversalTimeline.setCycleCount(1);
+        traversalTimeline.play();
     }
 
     //function to detect Cycle

@@ -112,7 +112,7 @@ public class ArrayController {
     public void initialize() {
         ArrayChoiceBox.getItems().addAll(
                 "Create", "Append", "Insert", "Delete Value", "Delete Position",
-                "Search", "Traverse", "Update", "Increase Capacity", "Decrease Capacity", "Reset Array", "Clear"
+                "Search", "Traverse", "Update", "Increase Capacity", "Decrease Capacity", "Find minimum", "Find maximum","Reset Array", "Clear"
         );
         ArrayChoiceBox.setOnAction(e -> handleChoiceSelection());
 
@@ -185,6 +185,16 @@ public class ArrayController {
                 actionListView.getItems().add("Resetting array...");
                 updateStatus("Reset");
                 clearArray();
+                break;
+            case "Find minimum" :
+                actionListView.getItems().add("Find minimum...");
+                updateStatus("Find minimum");
+                findingMin();
+                break;
+            case "Find maximum" :
+                actionListView.getItems().add("Find maximum...");
+                updateStatus("Find maximum");
+                findingMax();
                 break;
             case "Clear":
                 actionListView.getItems().add("Cleared.");
@@ -994,6 +1004,164 @@ public class ArrayController {
     private void updateSize() {
         lblSize.setText("Size: " + arrayList.size() + " / " + arrayCapacity);
     }
+
+
+
+
+
+
+
+    // ─── Find Minimum ─────────────────────────────────────────────────────────────
+    private void findingMin() {
+        if (arrayList.isEmpty()) {
+            actionListView.getItems().add("Array is empty!");
+            return;
+        }
+        actionListView.getItems().clear();
+        actionListView.getItems().add("Finding minimum...");
+        ArrayChoiceBox.setDisable(true);
+
+        int firstValue = arrayList.get(0);
+        highlightCellWithFullStyle(0, CELL_PURPLE, String.valueOf(firstValue));
+        actionListView.getItems().add("Start: champion = [0] = " + firstValue);
+
+        runFindMin(1, firstValue, 0);
+    }
+
+    private void runFindMin(int index, int currentMin, int minIndex) {
+        if (index >= arrayList.size()) {
+            // Done
+            resetCellsToDefault();
+            highlightCellWithFullStyle(minIndex, CELL_GREEN, String.valueOf(currentMin));
+            actionListView.getItems().add("✅ Minimum = " + currentMin + " at index [" + minIndex + "]");
+
+            ScaleTransition pulse = new ScaleTransition(Duration.millis(400),
+                    (VBox) arrayContainer.getChildren().get(minIndex));
+            pulse.setFromX(1.0); pulse.setFromY(1.0);
+            pulse.setToX(1.15); pulse.setToY(1.15);
+            pulse.setCycleCount(4);
+            pulse.setAutoReverse(true);
+            pulse.setOnFinished(e -> ArrayChoiceBox.setDisable(false));
+            pulse.play();
+            return;
+        }
+
+        int currentValue = arrayList.get(index);
+
+        // Orange = checking this cell
+        highlightCellWithFullStyle(index, CELL_ORANGE, String.valueOf(currentValue));
+        // Keep champion purple
+        highlightCellWithFullStyle(minIndex, CELL_PURPLE, String.valueOf(currentMin));
+        actionListView.getItems().add("Checking [" + index + "] = " + currentValue);
+
+        PauseTransition pause = new PauseTransition(Duration.millis(800));
+        pause.setOnFinished(e -> {
+            if (currentValue < currentMin) {
+                // New champion
+                actionListView.getItems().add("  ★ " + currentValue + " < " + currentMin + " → new champion!");
+                resetCellWithFullStyle(minIndex);         // old champion back to default
+                highlightCellWithFullStyle(index, CELL_PURPLE, String.valueOf(currentValue));
+                runFindMin(index + 1, currentValue, index);
+            } else {
+                actionListView.getItems().add("  ✗ " + currentValue + " ≥ " + currentMin);
+                resetCellWithFullStyle(index);            // scanned cell back to default
+                highlightCellWithFullStyle(minIndex, CELL_PURPLE, String.valueOf(currentMin)); // re-pin champion
+                runFindMin(index + 1, currentMin, minIndex);
+            }
+        });
+        pause.play();
+    }
+
+    // ─── Find Maximum ─────────────────────────────────────────────────────────────
+    private void findingMax() {
+        if (arrayList.isEmpty()) {
+            actionListView.getItems().add("Array is empty!");
+            return;
+        }
+        actionListView.getItems().clear();
+        actionListView.getItems().add("Finding maximum...");
+        ArrayChoiceBox.setDisable(true);
+
+        int firstValue = arrayList.get(0);
+        highlightCellWithFullStyle(0, CELL_PURPLE, String.valueOf(firstValue));
+        actionListView.getItems().add("Start: champion = [0] = " + firstValue);
+
+        runFindMax(1, firstValue, 0);
+    }
+
+    private void runFindMax(int index, int currentMax, int maxIndex) {
+        if (index >= arrayList.size()) {
+            // Done
+            resetCellsToDefault();
+            highlightCellWithFullStyle(maxIndex, CELL_GREEN, String.valueOf(currentMax));
+            actionListView.getItems().add("✅ Maximum = " + currentMax + " at index [" + maxIndex + "]");
+
+            ScaleTransition pulse = new ScaleTransition(Duration.millis(400),
+                    (VBox) arrayContainer.getChildren().get(maxIndex));
+            pulse.setFromX(1.0); pulse.setFromY(1.0);
+            pulse.setToX(1.15); pulse.setToY(1.15);
+            pulse.setCycleCount(4);
+            pulse.setAutoReverse(true);
+            pulse.setOnFinished(e -> ArrayChoiceBox.setDisable(false));
+            pulse.play();
+            return;
+        }
+
+        int currentValue = arrayList.get(index);
+
+        // Orange = checking this cell
+        highlightCellWithFullStyle(index, CELL_ORANGE, String.valueOf(currentValue));
+        // Keep champion purple
+        highlightCellWithFullStyle(maxIndex, CELL_PURPLE, String.valueOf(currentMax));
+        actionListView.getItems().add("Checking [" + index + "] = " + currentValue);
+
+        PauseTransition pause = new PauseTransition(Duration.millis(800));
+        pause.setOnFinished(e -> {
+            if (currentValue > currentMax) {
+                actionListView.getItems().add("  ★ " + currentValue + " > " + currentMax + " → new champion!");
+                resetCellWithFullStyle(maxIndex);         // old champion back to default
+                highlightCellWithFullStyle(index, CELL_PURPLE, String.valueOf(currentValue));
+                runFindMax(index + 1, currentValue, index);
+            } else {
+                actionListView.getItems().add("  ✗ " + currentValue + " ≤ " + currentMax);
+                resetCellWithFullStyle(index);            // scanned cell back to default
+                highlightCellWithFullStyle(maxIndex, CELL_PURPLE, String.valueOf(currentMax)); // re-pin champion
+                runFindMax(index + 1, currentMax, maxIndex);
+            }
+        });
+        pause.play();
+    }
+    private void highlightCellWithFullStyle(int index, String style, String value) {
+        if (index < 0 || index >= arrayContainer.getChildren().size()) return;
+        VBox cell = (VBox) arrayContainer.getChildren().get(index);
+        cell.setStyle(style);
+        Text valueText = (Text) cell.getChildren().get(1);
+        valueText.setText(value);
+        valueText.setStyle(TEXT_VALUE);
+        cell.setOpacity(1.0);
+    }
+
+    private void resetCellWithFullStyle(int index) {
+        if (index < 0 || index >= arrayContainer.getChildren().size()) return;
+        VBox cell = (VBox) arrayContainer.getChildren().get(index);
+        cell.setStyle(CELL_DEFAULT);
+        Text valueText = (Text) cell.getChildren().get(1);
+        if (index < arrayList.size()) {
+            valueText.setText(String.valueOf(arrayList.get(index)));
+            valueText.setStyle(TEXT_VALUE);
+        } else {
+            valueText.setText("null");
+            valueText.setStyle(TEXT_NULL);
+        }
+        cell.setOpacity(1.0);
+    }
+
+    private void resetCellsToDefault() {
+        for (int i = 0; i < arrayContainer.getChildren().size(); i++) {
+            resetCellWithFullStyle(i);
+        }
+    }
+
     @FXML private Label lblAnimationStatus;
 
 }
