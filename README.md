@@ -35,11 +35,17 @@ AlgoAnimate is an interactive, real-time Data Structures and Algorithms (DSA) vi
 2.  Open the project in your IDE.
 3.  Ensure JavaFX is properly configured in your VM options (e.g., --module-path /path/to/javafx/lib --add-modules javafx.controls,javafx.fxml).
 4.  Start the Server: run the AuthServer class first. This will start the server on port 5000 to listen for login requests.
-5.   Configure the Client Connection (Choose Your Scenario):
+5.  <img width="962" height="508" alt="image" src="https://github.com/user-attachments/assets/9daef5e7-5c2d-46a6-ad76-7eb8bf91ed82" />
+
+6.   Configure the Client Connection (Choose Your Scenario):
 
                Case 1: Running on a Single Machine (Localhost) - Recommended for quick testing
                        If you are running both the server and the client application on the same PC, you do not need an active internet connection.
                         Ensure the connection in LoginController.java is set to localhost:  Socket socket = new Socket("localhost", 5000);
+
+                       <img width="1107" height="385" alt="Screenshot 2026-04-09 211050" src="https://github.com/user-attachments/assets/fbd8d38a-112f-4495-9577-22c0fcd1f4e3" />
+
+                        <img width="1063" height="607" alt="image" src="https://github.com/user-attachments/assets/26ccda20-c85f-439b-88f6-a7536f1e3300" />
 
 
 
@@ -48,11 +54,23 @@ AlgoAnimate is an interactive, real-time Data Structures and Algorithms (DSA) vi
                        both devices must be on the same Wi-Fi network.
 
                         Find the Server PC's IPv4 address using ipconfig (Windows) or ifconfig (Mac/Linux).
+                       <img width="1095" height="638" alt="image" src="https://github.com/user-attachments/assets/506e9aa7-873e-4b06-8474-5ac0690abfbc" />
+
 
                         Update the IP address in LoginController.java on the client machine: // Replace with the actual Server IP
                                                                                              Socket socket = new Socket("192.168.x.x", 5000);
+                         <img width="1064" height="198" alt="image" src="https://github.com/user-attachments/assets/e598d2b0-19e7-4443-957e-2c3943f1c29f" />
+                           <img width="1102" height="181" alt="image" src="https://github.com/user-attachments/assets/65ab1918-5f28-4138-99f1-5c901cdceb74" />
+
      
-6.Finally, run the Launcher class to start the AlgoAnimate application!
+6. Run the Launcher class to start the AlgoAnimate application!
+<img width="937" height="529" alt="image" src="https://github.com/user-attachments/assets/35568856-369c-4d46-9c0f-a39ba02c6857" />
+
+7.Then Register and login to access the workpplace
+<img width="1479" height="986" alt="Screenshot 2026-04-07 163006" src="https://github.com/user-attachments/assets/350d1b4b-bcc9-4fff-9ebb-295a50b030ef" />
+
+
+
 
 
 
