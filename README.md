@@ -40,23 +40,34 @@ AlgoAnimate is an interactive, real-time Data Structures and Algorithms (DSA) vi
 7.   Case 1: Running on a Single Machine (Localhost) - Recommended for quick testing
                        If you are running both the server and the client application on the same PC, you do not need an active internet connection.
                         Ensure the connection in LoginController.java is set to localhost:  Socket socket = new Socket("localhost", 5000);
+     
  <img width="1107" height="385" alt="Screenshot 2026-04-09 211050" src="https://github.com/user-attachments/assets/fbd8d38a-112f-4495-9577-22c0fcd1f4e3" />
+
+ 
  <img width="1063" height="607" alt="image" src="https://github.com/user-attachments/assets/26ccda20-c85f-439b-88f6-a7536f1e3300" />
+ 
    Case 2: Running over a Network (Multiple Machines)
                         If you want to run the AuthServer on one PC (e.g., Team Member 1) and launch the app from another PC (e.g., Team Member 2),
                        both devices must be on the same Wi-Fi network.
 
                         Find the Server PC's IPv4 address using ipconfig (Windows) or ifconfig (Mac/Linux).
  <img width="1095" height="638" alt="image" src="https://github.com/user-attachments/assets/506e9aa7-873e-4b06-8474-5ac0690abfbc" />
+ 
  Update the IP address in LoginController.java on the client machine: // Replace with the actual Server IP
                                                                     Socket socket = new Socket("192.168.x.x", 5000);
                          <img width="1064" height="198" alt="image" src="https://github.com/user-attachments/assets/e598d2b0-19e7-4443-957e-2c3943f1c29f" />
-                        <img width="1102" height="181" alt="image" src="https://github.com/user-attachments/assets/65ab1918-5f28-4138-99f1-5c901cdceb74" />
+                         
+
+                         <img width="1102" height="181" alt="image" src="https://github.com/user-attachments/assets/65ab1918-5f28-4138-99f1-5c901cdceb74" />
+                        
      
 6. Run the Launcher class to start the AlgoAnimate application!
+7. 
 <img width="937" height="529" alt="image" src="https://github.com/user-attachments/assets/35568856-369c-4d46-9c0f-a39ba02c6857" />
 
+
 7.Then Register and login to access the workpplace
+
 <img width="1479" height="986" alt="Screenshot 2026-04-07 163006" src="https://github.com/user-attachments/assets/350d1b4b-bcc9-4fff-9ebb-295a50b030ef" />
 
 
@@ -66,6 +77,7 @@ AlgoAnimate is an interactive, real-time Data Structures and Algorithms (DSA) vi
 
 👥 Meet the Team
 This project was developed by undergraduate students of the CSE Department at BUET.
+
 Moumita Talukder Mou-2405160
 Sabiha Jannat Adiba-2405162
 
