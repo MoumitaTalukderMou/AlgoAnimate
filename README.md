@@ -26,11 +26,7 @@ AlgoAnimate is an interactive, real-time Data Structures and Algorithms (DSA) vi
 * Java Development Kit (JDK) 17 or higher.
 * JavaFX SDK (configured with your IDE).
 * IntelliJ IDEA 
-<img width="1482" height="984" alt="Screenshot 2026-04-09 200138" src="https://github.com/user-attachments/assets/e2b069bd-a060-480a-ac7b-f8fdea1d3db6" />
-<img width="1479" height="991" alt="Screenshot 2026-04-09 200208" src="https://github.com/user-attachments/assets/307060fb-1c20-427c-a51e-8014d45f7380" />
-<img width="1490" height="991" alt="Screenshot 2026-04-09 200229" src="https://github.com/user-attachments/assets/47c950ef-6810-4e3e-9681-8fbc74a45998" />
-<img width="1478" height="984" alt="Screenshot 2026-04-09 201936" src="https://github.com/user-attachments/assets/9eaccbc4-5293-43f4-b4fe-0e5bd7064883" />
-<img width="1480" height="984" alt="Screenshot 2026-04-09 202022" src="https://github.com/user-attachments/assets/51c14703-eef0-41ea-9cab-e9bd83b3517c" />
+
 
 ### Running the Project
 
