@@ -147,9 +147,7 @@ public class SortingController {
         this.rects = new Rectangle[array.length];
         displayPane.getChildren().clear();
 
-        // --- THE REAL FIX ---
-        // বারগুলো নিচে সমান থাকবে, কিন্তু নিচে ২৫০ পিক্সেল ফাঁকা জায়গা (Padding) দেওয়া হলো
-        // যাতে অ্যানিমেশনের সময় বারগুলো আরামে নিচে নামতে পারে!
+
         displayPane.setAlignment(javafx.geometry.Pos.BOTTOM_CENTER);
         displayPane.setPadding(new javafx.geometry.Insets(0, 0, 250, 0));
 
