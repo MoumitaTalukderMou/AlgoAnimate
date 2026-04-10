@@ -80,7 +80,11 @@ public class LoginController implements Initializable {
 
     private boolean authenticate(String username, String password) {
         // TODO: Replace with your actual server IP and port
+
         try (Socket socket = new Socket("localhost", 5000);
+
+        try (Socket socket = new Socket("10.84.112.196", 5000);
+
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
@@ -164,7 +168,11 @@ public class LoginController implements Initializable {
     }
 
     private String register(String username, String password) {
+<<<<<<< HEAD
         try (Socket socket = new Socket("localhost", 5000);
+=======
+        try (Socket socket = new Socket("10.84.112.196", 5000);
+>>>>>>> 2db8591c54236177288cacfb32378a4942a1be36
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
